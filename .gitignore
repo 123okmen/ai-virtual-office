@@ -1,0 +1,12 @@
+# Logs & Caches
+*.log
+__pycache__/
+*.pyc
+.DS_Store
+
+# Temporary upgrade scripts
+update_daemon.py
+update_index_html.py
+add_store3_data.py
+add_cafe_actions.py
+upgrade_v6.py

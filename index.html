@@ -1,0 +1,3151 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Văn Phòng Ảo AI 3D 24/7 | Hệ Thống Nhân Viên AI CODEX × CLAUDE (Quản Lý Chuỗi 3 Quán)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #060913;
+            --bg-panel: #0d1424;
+            --bg-card: #131d33;
+            --bg-card-hover: #1b2847;
+            --bg-input: #090e1a;
+            --primary: #10b981;
+            --primary-glow: rgba(16, 185, 129, 0.25);
+            --secondary: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-cyan: #06b6d4;
+            --text-main: #f8fafc;
+            --text-sub: #94a3b8;
+            --text-muted: #64748b;
+            --border: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(16, 185, 129, 0.45);
+            --radius-lg: 16px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            overflow-x: hidden;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 295px;
+            background: rgba(13, 20, 36, 0.97);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            top: 0; bottom: 0; left: 0;
+            z-index: 100;
+            backdrop-filter: blur(16px);
+        }
+
+        .brand {
+            padding: 1rem 1.15rem;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .brand-logo {
+            width: 44px; height: 44px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), var(--accent-purple), var(--accent-amber));
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 800; font-size: 0.95rem;
+            box-shadow: 0 0 20px var(--primary-glow);
+            flex-shrink: 0;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        .brand-title h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.98rem;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+
+        .brand-title span {
+            font-size: 0.7rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            margin-top: 0.2rem;
+            font-weight: 600;
+        }
+
+        .pulse-dot {
+            width: 8px; height: 8px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.8s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+        }
+
+        /* CHUYỂN ĐỔI 3 QUÁN ĐỘC LẬP */
+        .store-switcher-panel {
+            padding: 0.8rem 0.95rem;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .store-switcher-label {
+            font-size: 0.67rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-sub);
+            margin-bottom: 0.45rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+        }
+
+        .store-btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.42rem;
+        }
+
+        .store-switch-btn {
+            width: 100%;
+            text-align: left;
+            padding: 0.55rem 0.7rem;
+            border-radius: var(--radius-sm);
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .store-switch-btn:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            color: var(--text-main);
+        }
+
+        .store-switch-btn.active-7a {
+            background: rgba(16, 185, 129, 0.16);
+            border-color: var(--primary);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.16);
+        }
+
+        .store-switch-btn.active-cafe {
+            background: rgba(217, 119, 6, 0.22);
+            border-color: #f59e0b;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.25);
+        }
+
+        .active-store-banner-pill.banner-cafe {
+            background: rgba(217, 119, 6, 0.18);
+            border-color: #d97706;
+            color: #fcd34d;
+        }
+
+        .store-finance-card.card-cafe {
+            border-color: rgba(217, 119, 6, 0.35);
+            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(120, 53, 15, 0.12));
+        }
+
+        .store-finance-card.card-cafe.selected-focus {
+            border-color: #d97706;
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.28);
+        }
+
+        .store-switch-btn.active-comtam {
+            background: rgba(245, 158, 11, 0.16);
+            border-color: var(--accent-amber);
+            color: #fff;
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.16);
+        }
+
+        .store-switch-btn .st-title {
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .store-switch-btn .st-addr {
+            font-size: 0.66rem;
+            color: var(--text-sub);
+            margin-top: 0.14rem;
+            display: block;
+        }
+
+        .nav-menu {
+            padding: 0.65rem 0.75rem;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.24rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-muted);
+            padding: 0.45rem 0.55rem 0.12rem;
+            font-weight: 700;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.56rem 0.7rem;
+            border-radius: var(--radius-sm);
+            color: var(--text-sub);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.82rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-main);
+        }
+
+        .nav-item.active {
+            background: rgba(16, 185, 129, 0.14);
+            color: var(--primary);
+            border-color: rgba(16, 185, 129, 0.35);
+            font-weight: 600;
+        }
+
+        .nav-item-left {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+
+        .agent-badge {
+            font-size: 0.62rem;
+            padding: 0.1rem 0.4rem;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.07);
+            color: var(--text-sub);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .nav-item.active .agent-badge {
+            background: rgba(16, 185, 129, 0.25);
+            color: #6ee7b7;
+        }
+
+        .sidebar-footer {
+            padding: 0.75rem 0.95rem;
+            border-top: 1px solid var(--border);
+            background: rgba(6, 9, 19, 0.75);
+        }
+
+        .daemon-toggle-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: var(--bg-card);
+            padding: 0.6rem 0.75rem;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border);
+        }
+
+        .daemon-info h4 { font-size: 0.76rem; font-weight: 700; }
+        .daemon-info p { font-size: 0.65rem; color: var(--text-sub); margin-top: 2px; }
+
+        /* MAIN WRAPPER */
+        .main-wrapper {
+            margin-left: 295px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: calc(100% - 295px);
+        }
+
+        .topbar {
+            height: 62px;
+            background: rgba(13, 20, 36, 0.92);
+            border-bottom: 1px solid var(--border);
+            padding: 0 1.35rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 90;
+            backdrop-filter: blur(12px);
+        }
+
+        .topbar-left {
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+        }
+
+        .active-store-banner-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.34rem 0.75rem;
+            border-radius: 99px;
+            font-size: 0.76rem;
+            font-weight: 700;
+            border: 1px solid var(--primary);
+        }
+
+        .banner-7a {
+            background: rgba(16, 185, 129, 0.15);
+            border-color: var(--primary);
+            color: #6ee7b7;
+        }
+
+        .banner-comtam {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: var(--accent-amber);
+            color: #fcd34d;
+        }
+
+        .active-models-pill {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--bg-card);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+            padding: 0.3rem 0.68rem;
+            border-radius: 99px;
+            font-size: 0.72rem;
+        }
+
+        .model-tag {
+            padding: 0.1rem 0.42rem;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 0.64rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .tag-codex { background: rgba(6, 182, 212, 0.22); color: #67e8f9; border: 1px solid rgba(6, 182, 212, 0.4); }
+        .tag-claude { background: rgba(245, 158, 11, 0.22); color: #fcd34d; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .tag-learn { background: rgba(139, 92, 246, 0.22); color: #ddd6fe; border: 1px solid rgba(139, 92, 246, 0.4); }
+
+        .topbar-right {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.46rem 0.85rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            font-family: inherit;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: #04130d;
+            font-weight: 700;
+        }
+        .btn-primary:hover { background: #059669; color: #fff; }
+
+        .btn-outline {
+            background: var(--bg-card);
+            border-color: var(--border);
+            color: var(--text-main);
+        }
+        .btn-outline:hover { background: var(--bg-card-hover); border-color: var(--text-sub); }
+
+        .btn-purple {
+            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            color: #fff;
+        }
+
+        .btn-amber {
+            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            color: #fff;
+        }
+
+        .btn-cyan {
+            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            color: #fff;
+        }
+
+        /* PAGE CONTAINER */
+        .page-container {
+            padding: 1.2rem 1.4rem;
+            flex: 1;
+        }
+
+        .tab-pane { display: none; animation: fadeIn 0.2s ease; }
+        .tab-pane.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* 3D GAME VIEWPORT CONTAINER */
+        .game-world-wrapper {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            background: radial-gradient(circle at center, #0f1b33 0%, #050811 100%);
+            border-radius: var(--radius-lg);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.75);
+        }
+
+        #threeOfficeCanvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            cursor: grab;
+        }
+
+        #threeOfficeCanvas:active {
+            cursor: grabbing;
+        }
+
+        /* FLOATING 3D CHARACTER LABELS & SPEECH BUBBLES */
+        #labels3DContainer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 10;
+        }
+
+        .char-3d-tag {
+            position: absolute;
+            transform: translate(-50%, -100%);
+            pointer-events: auto;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            transition: transform 0.1s ease-out;
+            user-select: none;
+        }
+
+        .char-speech-bubble {
+            background: rgba(9, 14, 26, 0.93);
+            border: 1px solid rgba(16, 185, 129, 0.55);
+            color: #f8fafc;
+            padding: 0.32rem 0.6rem;
+            border-radius: 10px;
+            font-size: 0.69rem;
+            max-width: 215px;
+            text-align: center;
+            margin-bottom: 4px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
+            line-height: 1.32;
+            backdrop-filter: blur(6px);
+            animation: floatBubble 2.5s ease-in-out infinite;
+        }
+
+        @keyframes floatBubble {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
+        }
+
+        .char-name-plate {
+            background: rgba(15, 23, 42, 0.92);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 7px;
+            padding: 0.2rem 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.68rem;
+            font-weight: 700;
+            white-space: nowrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
+
+        .char-xp-bar-wrap {
+            width: 100%;
+            height: 3px;
+            background: rgba(255,255,255,0.12);
+            border-radius: 99px;
+            margin-top: 2px;
+            overflow: hidden;
+        }
+
+        .char-xp-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
+            transition: width 0.3s ease;
+        }
+
+        /* 3D HUD OVERLAYS */
+        .game-hud-top {
+            position: absolute;
+            top: 12px; left: 14px; right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            z-index: 20;
+            pointer-events: none;
+        }
+
+        .hud-box {
+            background: rgba(9, 14, 26, 0.86);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            padding: 0.55rem 0.8rem;
+            pointer-events: auto;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+        }
+
+        .hud-controls-row {
+            display: flex;
+            gap: 0.38rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .hud-btn {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            color: var(--text-main);
+            padding: 0.3rem 0.58rem;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.18s;
+            font-family: inherit;
+        }
+
+        .hud-btn:hover, .hud-btn.active {
+            background: rgba(16, 185, 129, 0.25);
+            border-color: var(--primary);
+            color: #6ee7b7;
+        }
+
+        .game-hud-bottom {
+            position: absolute;
+            bottom: 12px; left: 14px; right: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            z-index: 20;
+            pointer-events: none;
+            gap: 0.75rem;
+        }
+
+        .char-roster-bar {
+            display: flex;
+            gap: 0.45rem;
+            flex-wrap: wrap;
+            pointer-events: auto;
+        }
+
+        .roster-chip {
+            background: rgba(13, 20, 36, 0.92);
+            border: 1px solid rgba(255,255,255,0.14);
+            border-radius: 8px;
+            padding: 0.35rem 0.62rem;
+            display: flex;
+            align-items: center;
+            gap: 0.42rem;
+            cursor: pointer;
+            font-size: 0.72rem;
+            transition: all 0.2s;
+        }
+
+        .roster-chip:hover, .roster-chip.selected {
+            border-color: var(--primary);
+            background: rgba(16, 185, 129, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .inspector-card-hud {
+            width: 340px;
+            background: rgba(9, 14, 26, 0.93);
+            border: 1px solid var(--border-active);
+            border-radius: 12px;
+            padding: 0.75rem 0.9rem;
+            pointer-events: auto;
+            backdrop-filter: blur(12px);
+        }
+
+        /* 2 THẺ TÀI CHÍNH RIÊNG BIỆT TRÊN DASHBOARD */
+        .separated-stores-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.1rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .store-finance-card {
+            background: var(--bg-panel);
+            border: 2px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1rem 1.15rem;
+            position: relative;
+            transition: all 0.25s;
+        }
+
+        .store-finance-card.card-7a {
+            border-color: rgba(16, 185, 129, 0.35);
+            background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(15, 23, 42, 0.95));
+        }
+
+        .store-finance-card.card-comtam {
+            border-color: rgba(245, 158, 11, 0.35);
+            background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.95));
+        }
+
+        .store-finance-card.selected-focus {
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.18);
+            transform: translateY(-2px);
+        }
+
+        .sfc-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0.75rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .sfc-title h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.98rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .sfc-title p {
+            font-size: 0.72rem;
+            color: var(--text-sub);
+            margin-top: 0.18rem;
+        }
+
+        .sfc-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.6rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .sfc-metric-box {
+            background: rgba(9, 14, 26, 0.75);
+            border: 1px solid var(--border);
+            padding: 0.55rem 0.65rem;
+            border-radius: var(--radius-sm);
+        }
+
+        .sfc-metric-box span {
+            font-size: 0.65rem;
+            color: var(--text-sub);
+            display: block;
+            text-transform: uppercase;
+        }
+
+        .sfc-metric-box strong {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            margin-top: 0.15rem;
+            display: block;
+        }
+
+        .sfc-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+        }
+
+        /* GRID LAYOUTS */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1.55fr 1fr;
+            gap: 1.15rem;
+        }
+
+        .grid-equal {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.15rem;
+        }
+
+        .panel {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 1.15rem;
+            margin-bottom: 1.15rem;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.95rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .panel-title {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        /* LIVE ACTIVITY STREAM */
+        .activity-stream {
+            height: 360px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding-right: 0.25rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.74rem;
+        }
+
+        .log-entry {
+            padding: 0.48rem 0.65rem;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.025);
+            border-left: 3px solid var(--secondary);
+            line-height: 1.45;
+        }
+
+        .log-entry.chat { border-left-color: var(--primary); }
+        .log-entry.schedule { border-left-color: var(--accent-amber); }
+        .log-entry.plan { border-left-color: var(--accent-purple); }
+        .log-entry.report { border-left-color: var(--accent-cyan); }
+        .log-entry.content { border-left-color: var(--accent-rose); }
+
+        .log-time { color: var(--text-muted); font-size: 0.65rem; margin-right: 0.35rem; }
+        .log-agent { font-weight: 700; color: var(--text-main); margin-right: 0.35rem; }
+
+        /* FORMS */
+        .form-group { margin-bottom: 0.8rem; }
+        .form-label {
+            display: block;
+            font-size: 0.76rem;
+            font-weight: 600;
+            color: var(--text-sub);
+            margin-bottom: 0.32rem;
+        }
+
+        .form-input, .form-textarea, .form-select {
+            width: 100%;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 0.58rem 0.78rem;
+            border-radius: var(--radius-sm);
+            font-family: inherit;
+            font-size: 0.83rem;
+            outline: none;
+        }
+
+        .form-input:focus, .form-textarea:focus, .form-select:focus {
+            border-color: var(--primary);
+        }
+
+        .form-textarea { min-height: 90px; resize: vertical; line-height: 1.5; }
+
+        /* CHAT WINDOW */
+        .chat-window {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            height: 410px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .msg {
+            max-width: 85%;
+            padding: 0.68rem 0.88rem;
+            border-radius: 14px;
+            font-size: 0.83rem;
+            line-height: 1.5;
+        }
+
+        .msg-user {
+            background: var(--secondary);
+            color: #fff;
+            align-self: flex-end;
+            border-bottom-right-radius: 3px;
+        }
+
+        .msg-bot {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 3px;
+        }
+
+        .msg-meta { font-size: 0.64rem; color: var(--text-muted); margin-top: 0.24rem; }
+
+        .chat-input-bar {
+            padding: 0.65rem;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* KANBAN & TABLES */
+        .kanban-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+        }
+
+        .kanban-col {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 0.85rem;
+        }
+
+        .kanban-col-header {
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem;
+            margin-bottom: 0.6rem;
+            font-size: 0.79rem;
+        }
+
+        .task-card h4 { font-size: 0.84rem; margin-bottom: 0.25rem; }
+        .task-card p { color: var(--text-sub); font-size: 0.74rem; margin-bottom: 0.45rem; line-height: 1.45; }
+        .task-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.67rem; }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.8rem;
+        }
+
+        .data-table th, .data-table td {
+            padding: 0.65rem 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table th {
+            color: var(--text-sub);
+            font-weight: 600;
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .status-pill {
+            padding: 0.15rem 0.5rem;
+            border-radius: 99px;
+            font-size: 0.67rem;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .pill-green { background: rgba(16, 185, 129, 0.18); color: #34d399; }
+        .pill-amber { background: rgba(245, 158, 11, 0.18); color: #fbbf24; }
+        .pill-blue { background: rgba(59, 130, 246, 0.18); color: #60a5fa; }
+        .pill-purple { background: rgba(139, 92, 246, 0.18); color: #c084fc; }
+        .pill-cyan { background: rgba(6, 182, 212, 0.18); color: #22d3ee; }
+
+        .ai-output-box {
+            background: var(--bg-input);
+            border: 1px solid var(--border-active);
+            border-radius: var(--radius-md);
+            padding: 1rem;
+            line-height: 1.62;
+            font-size: 0.84rem;
+            white-space: pre-wrap;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .portal-iframe-wrap {
+            width: 100%;
+            height: 670px;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border-active);
+            background: #090e1a;
+        }
+
+        .portal-iframe-wrap iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* SWITCH */
+        .switch { position: relative; display: inline-block; width: 42px; height: 22px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-color: #334155; transition: .3s; border-radius: 22px;
+        }
+        .slider:before {
+            position: absolute; content: "";
+            height: 16px; width: 16px; left: 3px; bottom: 3px;
+            background-color: white; transition: .3s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        @media (max-width: 1100px) {
+            .separated-stores-row, .kanban-board, .grid-2, .grid-equal {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="brand-logo" id="sidebarBrandLogo">3D</div>
+            <div class="brand-title">
+                <h1>VĂN PHÒNG AI 3D 24/7</h1>
+                <span><i class="pulse-dot"></i> <span id="officeStatusText">Codex × Claude Tự Học 24/24</span></span>
+            </div>
+        </div>
+
+        <!-- BỘ CHUYỂN ĐỔI TÁCH BẠCH 3 QUÁN (100% ĐỘC LẬP) -->
+        <div class="store-switcher-panel">
+            <div class="store-switcher-label">
+                <span>🔀 CHỌN QUÁN (SẢNH 3D & SỔ RIÊNG)</span>
+                <a href="#" onclick="switchTab('stores'); return false;" style="color:var(--primary);text-decoration:none;">Hồ sơ</a>
+            </div>
+            <div class="store-btn-group">
+                <button id="btnSelect7A" class="store-switch-btn active-7a" onclick="selectSingleStore('store_7a')">
+                    <div class="st-title">
+                        <span>🍔 QUÁN 1: FOOD STATION 7A</span>
+                        <span class="status-pill pill-green" style="font-size:0.6rem;">Sổ 1</span>
+                    </div>
+                    <span class="st-addr">📍 Số 2 Đường 7A, KP. Phước Thiện, Thủ Đức</span>
+                </button>
+                <button id="btnSelectComTam" class="store-switch-btn" onclick="selectSingleStore('store_comtam')">
+                    <div class="st-title">
+                        <span>🍛 QUÁN 2: CƠM TẤM SƯỜN NƯỚNG</span>
+                        <span class="status-pill pill-amber" style="font-size:0.6rem;">Sổ 2</span>
+                    </div>
+                    <span class="st-addr">📍 TRẠM KHỞI NGHIỆP (Tách biệt 100%)</span>
+                </button>
+                <button id="btnSelectCafe" class="store-switch-btn" onclick="selectSingleStore('store_cafe_anvat')">
+                    <div class="st-title">
+                        <span>☕ QUÁN 3: CAFE ĂN VẶT</span>
+                        <span class="status-pill pill-amber" style="font-size:0.6rem;background:rgba(217,119,6,0.2);color:#fbbf24;border:1px solid #d97706;">Sổ 3</span>
+                    </div>
+                    <span class="st-addr">📍 36/5E Nguyễn Thị Ngâu, Đông Thạnh, TP.HCM</span>
+                </button>
+                
+            </div>
+        </div>
+
+        <nav class="nav-menu">
+            <div class="nav-section-title">Không Gian 3D & Tự Học</div>
+            <div class="nav-item active" data-tab="dashboard" onclick="switchTab('dashboard')">
+                <div class="nav-item-left"><i data-lucide="gamepad-2" size="17"></i> Văn Phòng Game 3D & 2 Sổ</div>
+                <span class="agent-badge">3D LIVE</span>
+            </div>
+            <div class="nav-item" data-tab="learning" onclick="switchTab('learning')">
+                <div class="nav-item-left"><i data-lucide="brain-circuit" size="17"></i> Bộ Nhớ Tự Học Codex×Claude</div>
+                <span class="agent-badge" id="navLearnCountBadge">AUTO</span>
+            </div>
+            <div class="nav-item" data-tab="portal" onclick="switchTab('portal')">
+                <div class="nav-item-left"><i data-lucide="monitor-smartphone" size="17"></i> Web Admin & Planner Riêng</div>
+                <span class="agent-badge">POS</span>
+            </div>
+            <div class="nav-item" data-tab="warroom" onclick="switchTab('warroom')">
+                <div class="nav-item-left"><i data-lucide="cpu" size="17"></i> Họp Giao Ban Codex×Claude</div>
+                <span class="agent-badge">CEO</span>
+            </div>
+
+            <div class="nav-section-title">5 Nhân Viên AI 3D (Theo Quán)</div>
+            <div class="nav-item" data-tab="chatbot" onclick="switchTab('chatbot')">
+                <div class="nav-item-left"><i data-lucide="message-square-heart" size="17"></i> NV1. Linh Nhi (Chatbot)</div>
+                <span class="agent-badge">CLAUDE</span>
+            </div>
+            <div class="nav-item" data-tab="scheduler" onclick="switchTab('scheduler')">
+                <div class="nav-item-left"><i data-lucide="calendar-clock" size="17"></i> NV2. Minh Quân (Lịch 3 Ca)</div>
+                <span class="agent-badge">CODEX</span>
+            </div>
+            <div class="nav-item" data-tab="planner" onclick="switchTab('planner')">
+                <div class="nav-item-left"><i data-lucide="kanban-square" size="17"></i> NV3. Hoàng Bách (Kế Hoạch)</div>
+                <span class="agent-badge">DUAL</span>
+            </div>
+            <div class="nav-item" data-tab="reporter" onclick="switchTab('reporter')">
+                <div class="nav-item-left"><i data-lucide="bar-chart-3" size="17"></i> NV4. Tuyết Mai (Sổ Thu Chi)</div>
+                <span class="agent-badge">CODEX</span>
+            </div>
+            <div class="nav-item" data-tab="marketing" onclick="switchTab('marketing')">
+                <div class="nav-item-left"><i data-lucide="megaphone" size="17"></i> NV5. Bảo Ngọc (Marketing)</div>
+                <span class="agent-badge">CLAUDE</span>
+            </div>
+
+            <div class="nav-section-title">Cấu Hình & Hồ Sơ</div>
+            <div class="nav-item" data-tab="stores" onclick="switchTab('stores')">
+                <div class="nav-item-left"><i data-lucide="store" size="17"></i> Hồ Sơ & Menu 3 Quán</div>
+                <span class="agent-badge">3 QUÁN</span>
+            </div>
+            <div class="nav-item" data-tab="settings" onclick="switchTab('settings')">
+                <div class="nav-item-left"><i data-lucide="key-round" size="17"></i> 9Router (Codex × Claude)</div>
+                <span class="agent-badge">API</span>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="daemon-toggle-card">
+                <div class="daemon-info">
+                    <h4>Tự Làm Việc & Học 24/24</h4>
+                    <p>6 NV 3D tự tuần tra & học POS</p>
+                </div>
+                <label class="switch">
+                    <input type="checkbox" id="autoDaemonToggle" checked onchange="toggleAutoDaemon()">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-wrapper">
+        <header class="topbar">
+            <div class="topbar-left">
+                <div id="activeStoreBannerPill" class="active-store-banner-pill banner-7a">
+                    🍔 Sảnh 3D: FOOD STATION 7A
+                </div>
+                <div class="active-models-pill">
+                    <span style="color:var(--primary);font-weight:700;">⚡ Hệ Kép:</span>
+                    <span class="model-tag tag-codex">CODEX (cx/codex-auto-review)</span>
+                    <span style="color:var(--text-muted);">×</span>
+                    <span class="model-tag tag-claude">CLAUDE 4.5 (Sonnet/Haiku)</span>
+                    <span class="model-tag tag-learn" id="topBrainXPBadge">XP Tự Học: 1,250</span>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <button class="btn btn-cyan" onclick="triggerAutonomousLearningCycle(true)">
+                    <i data-lucide="sparkles" size="14"></i> Tự Học Ngay (Codex×Claude)
+                </button>
+                <button class="btn btn-amber" onclick="syncBothStoresSeparately(true)">
+                    <i data-lucide="refresh-cw" size="14"></i> Đồng Bộ 2 Sổ POS
+                </button>
+                <button class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);" onclick="test9RouterConnection()">
+                    <i data-lucide="zap" size="14"></i> Test Codex×Claude
+                </button>
+            </div>
+        </header>
+
+        <div class="page-container">
+
+            <!-- TAB 1: VĂN PHÒNG ẢO MÔ PHỎNG 3D NHƯ GAME + 2 SỔ DOANH THU ĐỘC LẬP -->
+            <div id="tab-dashboard" class="tab-pane active">
+
+                <!-- KHUNG MÔ PHỎNG 3D NHƯ GAME (THREE.JS REAL-TIME) -->
+                <div class="game-world-wrapper" id="gameWorldWrapper">
+                    <canvas id="threeOfficeCanvas"></canvas>
+                    <div id="labels3DContainer"></div>
+
+                    <!-- HUD PHÍA TRÊN TRONG GAME 3D -->
+                    <div class="game-hud-top">
+                        <div class="hud-box">
+                            <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
+                                <span class="pulse-dot"></span>
+                                <strong style="font-family:'Outfit',sans-serif;font-size:0.86rem;" id="hud3DStoreTitle">MÔ PHỎNG 3D: FOOD STATION 7A (PHƯỚC THIỆN)</strong>
+                                <span class="status-pill pill-cyan" id="hudEngineModePill">Codex × Claude Active</span>
+                            </div>
+                            <div style="font-size:0.71rem;color:var(--text-sub);">
+                                🖱️ Kéo chuột để xoay góc nhìn 3D • Cuộn chuột để Zoom • Click vào Nhân viên 3D để giao việc hoặc huấn luyện
+                            </div>
+                        </div>
+
+                        <div class="hud-box">
+                            <div class="hud-controls-row">
+                                <button class="hud-btn active" id="camBtn-iso" onclick="set3DCameraPreset('iso')">🎥 Toàn Cảnh 3D</button>
+                                <button class="hud-btn" id="camBtn-warroom" onclick="set3DCameraPreset('warroom')">🤝 Bàn Họp Giao Ban</button>
+                                <button class="hud-btn" id="camBtn-core" onclick="set3DCameraPreset('core')">🧬 Lõi Tự Học Codex×Claude</button>
+                                <button class="hud-btn" onclick="commandAllAgents3D('gather')">📣 Triệu Tập Họp 3D</button>
+                                <button class="hud-btn" onclick="commandAllAgents3D('work')">💻 Về Bàn Làm Việc</button>
+                                <button class="hud-btn" id="speedBtn3D" onclick="cycleGameSpeed()">⏩ Tốc độ: 1x</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- HUD PHÍA DƯỚI TRONG GAME 3D: CHỌN NHÂN VIÊN & THẺ RPG CHI TIẾT -->
+                    <div class="game-hud-bottom">
+                        <div class="char-roster-bar" id="charRosterBar"></div>
+
+                        <div class="inspector-card-hud" id="selectedAgentHudCard">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.35rem;">
+                                <strong id="hudAgentName" style="font-size:0.84rem;color:#6ee7b7;">👑 CEO Minh Trí (Lv.15)</strong>
+                                <span class="status-pill pill-purple" id="hudAgentBrain">Claude 4.5 × Codex</span>
+                            </div>
+                            <div style="font-size:0.72rem;color:var(--text-sub);margin-bottom:0.45rem;" id="hudAgentTask">
+                                Đang điều phối độc lập mục tiêu doanh thu & kiểm duyệt tự học cho quán đang chọn.
+                            </div>
+                            <div style="display:flex;gap:0.4rem;">
+                                <button class="hud-btn" style="flex:1;background:rgba(16,185,129,0.2);border-color:var(--primary);color:#6ee7b7;" onclick="openSelectedAgentDepartment()">
+                                    Mở Phòng Ban Này →
+                                </button>
+                                <button class="hud-btn" onclick="trainSelectedAgentNow()">
+                                    🧠 Huấn Luyện +XP
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3 BẢNG SỔ KẾ TOÁN & DOANH THU TÁCH BẠCH 100% CHO 3 QUÁN -->
+                <div class="separated-stores-row">
+                    <!-- SỔ 1: FOOD STATION 7A -->
+                    <div id="financeCard7A" class="store-finance-card card-7a selected-focus">
+                        <div class="sfc-header">
+                            <div class="sfc-title">
+                                <h3 style="color:#34d399;">🍔 SỔ QUẢN LÝ 1: FOOD STATION 7A (ĐỘC LẬP)</h3>
+                                <p>📍 Số 2, Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức • 📞 0931.811.872</p>
+                            </div>
+                            <button class="btn btn-primary" style="padding:0.35rem 0.7rem;font-size:0.74rem;" onclick="selectSingleStore('store_7a')">
+                                Đưa 6 NV 3D Sang Quán 7A
+                            </button>
+                        </div>
+                        <div class="sfc-metrics">
+                            <div class="sfc-metric-box">
+                                <span>Doanh Thu Quán 7A</span>
+                                <strong id="dashRev7A" style="color:#34d399;">1,680,000 đ</strong>
+                            </div>
+                            <div class="sfc-metric-box">
+                                <span>Đơn Hàng Quán 7A</span>
+                                <strong id="dashOrders7A">46 đơn</strong>
+                            </div>
+                            <div class="sfc-metric-box">
+                                <span>Kinh Nghiệm Đã Học</span>
+                                <strong id="dashMemCount7A" style="color:#67e8f9;">3 bài học</strong>
+                            </div>
+                        </div>
+                        <div class="sfc-footer">
+                            <span id="dashStatus7A" style="color:var(--text-sub);">30 Món (18K-40K): BBK, Burger, Cơm Gà Xối Mỡ, Mì Xào, Mì Cay</span>
+                            <div style="display:flex;gap:0.4rem;">
+                                <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_7a', 'admin')">Mở #/admin 7A</button>
+                                <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_7a', 'plan')">Mở #/plan 7A</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SỔ 2: TRẠM KHỞI NGHIỆP - CƠM TẤM SƯỜN NƯỚNG -->
+                    <div id="financeCardComTam" class="store-finance-card card-comtam">
+                        <div class="sfc-header">
+                            <div class="sfc-title">
+                                <h3 style="color:#fbbf24;">🍛 SỔ QUẢN LÝ 2: TRẠM KHỞI NGHIỆP – CƠM TẤM (ĐỘC LẬP)</h3>
+                                <p>📍 Cơ sở Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên (Hoạch toán & Quản lý riêng)</p>
+                            </div>
+                            <button class="btn btn-amber" style="padding:0.35rem 0.7rem;font-size:0.74rem;" onclick="selectSingleStore('store_comtam')">
+                                Đưa 6 NV 3D Sang Cơm Tấm
+                            </button>
+                        </div>
+                        <div class="sfc-metrics">
+                            <div class="sfc-metric-box">
+                                <span>Doanh Thu Cơm Tấm (Live)</span>
+                                <strong id="dashRevComTam" style="color:#fbbf24;">470,000 đ</strong>
+                            </div>
+                            <div class="sfc-metric-box">
+                                <span>Đơn Hàng Cơm Tấm</span>
+                                <strong id="dashOrdersComTam">6 đơn (13 món)</strong>
+                            </div>
+                            <div class="sfc-metric-box">
+                                <span>Kinh Nghiệm Đã Học</span>
+                                <strong id="dashMemCountComTam" style="color:#fcd34d;">3 bài học</strong>
+                            </div>
+                        </div>
+                        <div class="sfc-footer">
+                            <span id="dashStatusComTam" style="color:var(--text-sub);">Đã kết nối Google Sheet riêng của Cơm Tấm (NV: Khanh)</span>
+                            <div style="display:flex;gap:0.4rem;">
+                                <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_comtam', 'planner')">Mở #/planner Cơm Tấm</button>
+                                <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_comtam', 'menu')">Mở Menu Cơm Tấm</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SỔ 3: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP - ĐÔNG THẠNH -->
+                    <div id="financeCardCafe" class="store-finance-card card-cafe">
+                        <div class="sfc-header">
+                            <div class="sfc-title">
+                                <h3 style="color:#f59e0b;">☕ SỔ QUẢN LÝ 3: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (ĐỘC LẬP)</h3>
+                                <p>📍 36/5E Nguyễn Thị Ngâu, Trung Đông 8, Xã Đông Thạnh, TP.HCM (Hoạch toán riêng)</p>
+                            </div>
+                            <button class="btn btn-amber" style="padding:0.35rem 0.7rem;font-size:0.74rem;background:#d97706;" onclick="selectSingleStore('store_cafe_anvat')">
+                                Đưa 6 NV 3D Sang Cafe Ăn Vặt
+                            </button>
+                        </div>
+                        <div class="sfc-metrics">
+                            <div class="sfc-metric-box">
+                                <span>Doanh Thu Quán Đông Thạnh</span>
+                                <strong id="dashRevCafe" style="color:#f59e0b;">560,000 đ</strong>
+                            </div>
+                            <div class="sfc-metric-box">
+                                <span>Đơn Hàng Quán Đông Thạnh</span>
+                                <strong id="dashOrdersCafe">22 đơn (Cà phê muối & Ăn vặt)</strong>
+                            </div>
+                            <div class="sfc-metric-box">
+                                <span>Kinh Nghiệm Đã Học</span>
+                                <strong id="dashMemCountCafe" style="color:#fcd34d;">4 bài học</strong>
+                            </div>
+                        </div>
+                        <div class="sfc-footer">
+                            <span id="dashStatusCafe" style="color:var(--text-sub);">28 Món: Cà Phê Muối 20K, Nước Sâm 15K, Cá Viên Bơ Tỏi 30K, Khoai Lắc 25K, Mì Cay 45K</span>
+                            <div style="display:flex;gap:0.4rem;flex-wrap:wrap;">
+                                <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#d97706;color:#fcd34d;" onclick="openSpecificPortal('store_cafe_anvat', 'staff')">Mở POS Bán Hàng</button>
+                                <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_cafe_anvat', 'order')">Mở Menu Gọi Món</button>
+                                <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_cafe_anvat', 'planner')">Mở Báo Cáo</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="brain-circuit" size="19" style="color:var(--accent-purple)"></i>
+                                Bộ Nhớ Tự Học Mới Nhất (Codex × Claude) Của: <span id="floorStoreNameLabel" style="color:var(--primary);">FOOD STATION 7A</span>
+                            </div>
+                            <button class="btn btn-purple" style="padding:0.28rem 0.65rem;font-size:0.72rem;" onclick="switchTab('learning')">
+                                Xem Kho Tri Thức Tự Học →
+                            </button>
+                        </div>
+                        <div id="dashRecentMemoryList" style="display:flex;flex-direction:column;gap:0.55rem;"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="activity" size="19" style="color:var(--accent-cyan)"></i>
+                                Nhật Ký Nhân Viên 3D Làm Việc & Tự Học 24/24
+                            </div>
+                            <button class="btn btn-outline" style="padding:0.22rem 0.55rem;font-size:0.7rem;" onclick="clearLogs()">Xóa log</button>
+                        </div>
+                        <div class="activity-stream" id="liveActivityStream"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB MỚI: TRUNG TÂM TỰ HỌC 24/24 CODEX x CLAUDE (TÁCH BIỆT TỪNG QUÁN) -->
+            <div id="tab-learning" class="tab-pane">
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="brain-circuit" size="20" style="color:var(--accent-cyan)"></i>
+                                Kho Tri Thức Tự Học Độc Lập Của: <span id="learnStoreTitle" style="color:var(--primary);">FOOD STATION 7A</span>
+                            </div>
+                            <button class="btn btn-cyan" onclick="triggerAutonomousLearningCycle(true)">
+                                <i data-lucide="sparkles" size="15"></i> Cho Codex × Claude Tự Phân Tích & Học Ngay
+                            </button>
+                        </div>
+                        <p style="font-size:0.78rem;color:var(--text-sub);margin-bottom:0.85rem;">
+                            💡 <strong>Cơ chế Tự Học 24/24 (Codex × Claude):</strong> Mỗi bài học dưới đây được trích xuất tự động từ doanh thu POS, thực đơn và lịch ca của riêng quán đang chọn. Toàn bộ 6 nhân viên AI 3D sẽ <strong>tự động nạp các bài học này vào bộ nhớ</strong> mỗi khi trả lời khách, lập kế hoạch hoặc viết bài quảng cáo!
+                        </p>
+                        <div id="learningMemoryContainer" style="display:flex;flex-direction:column;gap:0.65rem;max-height:470px;overflow-y:auto;"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="graduation-cap" size="19" style="color:var(--accent-amber)"></i>
+                                Dạy Thêm Kinh Nghiệm Mới Cho Nhân Viên AI (Theo Quán)
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nhân viên AI tiếp nhận bài học:</label>
+                            <select id="manualLearnAgent" class="form-select">
+                                <option value="CEO Minh Trí (Claude × Codex)">👑 CEO Minh Trí (Tổng chỉ huy)</option>
+                                <option value="NV1 Linh Nhi - CSKH (Claude)">💬 NV1 Linh Nhi (Chatbot & Chốt đơn)</option>
+                                <option value="NV2 Minh Quân - Lịch Ca (Codex)">⏰ NV2 Minh Quân (Điều phối 3 Ca)</option>
+                                <option value="NV3 Hoàng Bách - Kế Hoạch (Claude×Codex)">📋 NV3 Hoàng Bách (Chiến lược Kanban)</option>
+                                <option value="NV4 Tuyết Mai - Kế Toán POS (Codex)">📊 NV4 Tuyết Mai (Kiểm toán Thu Chi POS)</option>
+                                <option value="NV5 Bảo Ngọc - Marketing (Claude)">🚀 NV5 Bảo Ngọc (Content & Quảng cáo)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quy tắc / Bí quyết thực chiến của riêng quán đang chọn:</label>
+                            <textarea id="manualLearnInput" class="form-textarea" placeholder="VD: Khách đặt Cơm Gà Xối Mỡ buổi trưa tại Phước Thiện rất thích thêm nước mắm tỏi ớt riêng..."></textarea>
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:1rem;" onclick="addManualMemoryItem()">
+                            <i data-lucide="plus-circle" size="15"></i> Nạp Vào Bộ Nhớ Dài Hạn Của Quán Này (+50 XP)
+                        </button>
+
+                        <div class="panel-header" style="margin-top:0.5rem;">
+                            <div class="panel-title" style="font-size:0.9rem;">
+                                <i data-lucide="terminal" size="17" style="color:var(--primary)"></i>
+                                Kết Quả Phiên Tự Học & Review Bởi Codex × Claude
+                            </div>
+                        </div>
+                        <div id="learningOutputBox" class="ai-output-box" style="max-height:240px;">Nhấn nút "Cho Codex × Claude Tự Phân Tích & Học Ngay" để hệ động cơ kép tự động rà soát dữ liệu của quán đang chọn và rút ra bài học kinh doanh mới.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: TRẠM ĐIỀU KHIỂN WEB ADMIN & PLANNER TÁCH BIỆT TỪNG QUÁN -->
+            <div id="tab-portal" class="tab-pane">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i data-lucide="monitor-smartphone" size="20" style="color:var(--accent-amber)"></i>
+                            Trạm Quản Trị Trực Tiếp Tách Biệt Từng Quán
+                        </div>
+                        <div style="display:flex;gap:0.5rem;flex-wrap:wrap;">
+                            <span style="font-size:0.75rem;color:#34d399;font-weight:700;align-self:center;">[QUÁN 1 - 7A]:</span>
+                            <button class="btn btn-primary" onclick="loadPortalUrl('https://123okmen.github.io/quan-an-nhanh-7a/#/admin')">
+                                🍔 Admin 7A (#/admin)
+                            </button>
+                            <button class="btn btn-outline" style="border-color:var(--primary);color:#34d399;" onclick="loadPortalUrl('https://123okmen.github.io/quan-an-nhanh-7a/#/plan')">
+                                📊 Báo Cáo & Kế Hoạch 7A (#/plan)
+                            </button>
+                            <button class="btn btn-outline" onclick="loadPortalUrl('https://123okmen.github.io/quan-an-nhanh-7a/')">
+                                🛒 Menu Đặt Món 7A
+                            </button>
+
+                            <span style="font-size:0.75rem;color:#fbbf24;font-weight:700;align-self:center;margin-left:0.5rem;">[QUÁN 2 - CƠM TẤM]:</span>
+                            <button class="btn btn-amber" onclick="loadPortalUrl('https://123okmen.github.io/com-tam-suon-nuong/?zarsrc=31&utm_source=zalo&utm_medium=zalo&utm_campaign=zalo#/planner')">
+                                🍛 Báo Cáo & Planner Cơm Tấm (#/planner)
+                            </button>
+                            <button class="btn btn-outline" style="border-color:var(--accent-amber);color:#fbbf24;" onclick="loadPortalUrl('https://123okmen.github.io/com-tam-suon-nuong/')">
+                                🍽️ Menu Đặt Món Cơm Tấm
+                            </button>
+                            <a id="openExternalPortalLink" href="https://123okmen.github.io/quan-an-nhanh-7a/#/admin" target="_blank" class="btn btn-outline">
+                                <i data-lucide="external-link" size="13"></i> Mở Tab Rời
+                            </a>
+                        </div>
+                    </div>
+                    <div class="portal-iframe-wrap">
+                        <iframe id="storePortalIframe" src="https://123okmen.github.io/quan-an-nhanh-7a/#/admin" allow="bluetooth; clipboard-write"></iframe>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: PHÒNG HỌP GIAO BAN CODEX x CLAUDE RIÊNG CHO QUÁN ĐANG CHỌN -->
+            <div id="tab-warroom" class="tab-pane">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i data-lucide="cpu" size="20" style="color:var(--accent-purple)"></i>
+                            Phòng Họp Giao Ban (Claude Lập Chiến Lược × Codex Kiểm Duyệt) Cho: <span id="warRoomStoreTitle" style="color:var(--primary);">FOOD STATION 7A</span>
+                        </div>
+                        <span class="status-pill pill-purple">Song Kiếm Hợp Bích Codex × Claude</span>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Chỉ thị điều hành của Chủ Quán cho cơ sở này:</label>
+                        <textarea id="warRoomPrompt" class="form-textarea"></textarea>
+                    </div>
+                    <div style="display:flex;gap:0.6rem;margin-bottom:1.1rem;flex-wrap:wrap;">
+                        <button class="btn btn-primary" onclick="runWarRoomMeeting()">
+                            <i data-lucide="play" size="15"></i> Triệu Tập 6 Nhân Viên 3D Họp & Lập Phương Án (Codex × Claude)
+                        </button>
+                        <button class="btn btn-outline" onclick="fillStoreSpecificWarRoom('morning')">Chiến dịch Ca Sáng (06h30-10h00)</button>
+                        <button class="btn btn-outline" onclick="fillStoreSpecificWarRoom('lunch')">Bùng nổ đơn Ca Trưa (10h00-14h00)</button>
+                        <button class="btn btn-outline" onclick="fillStoreSpecificWarRoom('evening')">Tăng tốc đơn Ca Chiều Tối (16h00-21h00)</button>
+                    </div>
+                    <div id="warRoomOutput" class="ai-output-box">Nhấn nút "Triệu Tập 6 Nhân Viên 3D" để Claude & Codex phối hợp lập phương án vận hành và tự động trích xuất bài học mới cho quán đang chọn.</div>
+                </div>
+            </div>
+
+            <!-- TAB 4: HỒ SƠ & MENU TỪNG QUÁN ĐỘC LẬP -->
+            <div id="tab-stores" class="tab-pane">
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="store" size="19" style="color:var(--primary)"></i>
+                                Hồ Sơ 3 Quán Hoạt Động Độc Lập Tại 3 Địa Chỉ Khác Nhau
+                            </div>
+                        </div>
+                        <div id="storesListContainer" style="display:flex;flex-direction:column;gap:1rem;"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="edit-3" size="19" style="color:var(--accent-cyan)"></i>
+                                Cập Nhật Địa Chỉ, Thực Đơn Hoặc Thêm Cơ Sở Mới
+                            </div>
+                        </div>
+                        <input type="hidden" id="editStoreId" value="">
+                        <div class="form-group">
+                            <label class="form-label">Tên Quán *</label>
+                            <input type="text" id="storeNameInput" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cấu Trúc 3 Ca Làm Việc Của Quán</label>
+                            <input type="text" id="storeTypeInput" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Địa Chỉ Cụ Thể & Số Điện Thoại Riêng Của Quán</label>
+                            <input type="text" id="storeAddressInput" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Thực Đơn & Bảng Giá Của Riêng Quán Này</label>
+                            <textarea id="storeMenuInput" class="form-textarea"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Định Hướng Tệp Khách Hàng & Ưu Đãi Tại Khu Vực Của Quán</label>
+                            <input type="text" id="storePromoInput" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Link Web Đặt Món & Quản Trị Riêng Của Quán</label>
+                            <input type="text" id="storeLinkInput" class="form-input">
+                        </div>
+                        <div style="display:flex;gap:0.65rem;">
+                            <button class="btn btn-primary" onclick="saveStore()">
+                                <i data-lucide="save" size="15"></i> Lưu Hồ Sơ Quán
+                            </button>
+                            <button class="btn btn-outline" onclick="resetDefaultStores()">Khôi phục mặc định 3 quán</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 5: NV1 LINH NHI - CHATBOT RIÊNG CHO TỪNG QUÁN -->
+            <div id="tab-chatbot" class="tab-pane">
+                <div class="grid-equal">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="message-square-heart" size="19" style="color:var(--primary)"></i>
+                                NV1. Linh Nhi (Claude × Codex) Trực Riêng Cho: <span id="chatbotStoreBadge" style="color:var(--primary);">FOOD STATION 7A</span>
+                            </div>
+                        </div>
+                        <div class="chat-window">
+                            <div class="chat-messages" id="chatMessagesBox"></div>
+                            <div class="chat-input-bar">
+                                <input type="text" id="chatUserInput" class="form-input" placeholder="Nhập câu hỏi của khách hàng cho quán này..." onkeydown="if(event.key==='Enter') sendChatMessage()">
+                                <button class="btn btn-primary" onclick="sendChatMessage()">
+                                    <i data-lucide="send" size="15"></i> Gửi
+                                </button>
+                            </div>
+                        </div>
+                        <div id="chatQuickButtons" style="display:flex;gap:0.45rem;margin-top:0.7rem;flex-wrap:wrap;"></div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="bot" size="19" style="color:var(--accent-cyan)"></i>
+                                Chỉ Thị & Tự Học Kịch Bản Của NV1 Linh Nhi
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Quy tắc trả lời khách của riêng quán này (Không trộn lẫn thực đơn quán kia):</label>
+                            <textarea id="chatbotInstruction" class="form-textarea" style="min-height:130px;"></textarea>
+                        </div>
+                        <button class="btn btn-purple" style="margin-bottom:0.85rem;" onclick="generateChatbotPlaybook()">
+                            <i data-lucide="wand-2" size="15"></i> Tạo Kịch Bản Chốt Đơn Zalo/Fanpage Riêng Cho Quán Này
+                        </button>
+                        <div id="chatbotPlaybookOutput" class="ai-output-box" style="max-height:250px;">Nhấn nút trên để NV1 Linh Nhi (Claude × Codex) tạo kịch bản trả lời nhanh bám sát đúng thực đơn, địa chỉ và bộ nhớ tự học của quán đang chọn.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: NV2 MINH QUÂN - LỊCH 3 CA RIÊNG TỪNG QUÁN -->
+            <div id="tab-scheduler" class="tab-pane">
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="calendar-clock" size="19" style="color:var(--accent-amber)"></i>
+                                NV2. Minh Quân Điều Ca Riêng Cho: <span id="schedStoreTitle" style="color:var(--accent-amber);">FOOD STATION 7A</span>
+                            </div>
+                            <button class="btn btn-primary" onclick="aiGenerateSchedule()">
+                                <i data-lucide="sparkles" size="15"></i> Codex × Claude Lập Checklist 3 Ca Cho Quán Này
+                            </button>
+                        </div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Khung Giờ / Ca</th>
+                                    <th>Quán</th>
+                                    <th>Nội Dung Vận Hành & Chuẩn Bị Bếp</th>
+                                    <th>Phụ Trách</th>
+                                    <th>Trạng Thái</th>
+                                </tr>
+                            </thead>
+                            <tbody id="scheduleTableBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="calendar-plus" size="19" style="color:var(--primary)"></i>
+                                Thêm Lịch Ca / Công Việc Cho Quán Đang Chọn
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Khung Giờ / Ca</label>
+                            <input type="text" id="schedTimeInput" class="form-input" placeholder="VD: 06h00 Đầu Ca Sáng">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Công Việc Cần Thực Hiện Tại Quán Này</label>
+                            <input type="text" id="schedTitleInput" class="form-input" placeholder="Nhập công việc...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Phụ Trách</label>
+                            <select id="schedAgentInput" class="form-select">
+                                <option value="Nhân viên & Bếp">Nhân viên & Bếp tại quán</option>
+                                <option value="NV2 Minh Quân (Lịch)">NV2 Minh Quân (Nhắc tự động)</option>
+                                <option value="NV5 Bảo Ngọc (Content)">NV5 Bảo Ngọc (Đăng bài)</option>
+                                <option value="NV4 Tuyết Mai (POS)">NV4 Tuyết Mai (Chốt sổ ca)</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:1rem;" onclick="addScheduleItem()">
+                            <i data-lucide="plus" size="15"></i> Thêm Vào Lịch Riêng Của Quán Này
+                        </button>
+                        <div id="aiScheduleOutput" class="ai-output-box" style="max-height:240px;">Mỗi quán có lịch chuẩn bị bếp, 3 ca bán hàng và chốt sổ hoàn toàn tách biệt.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 7: NV3 HOÀNG BÁCH - KẾ HOẠCH & KANBAN RIÊNG TỪNG QUÁN -->
+            <div id="tab-planner" class="tab-pane">
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i data-lucide="kanban-square" size="19" style="color:var(--secondary)"></i>
+                            NV3. Hoàng Bách Quản Lý Kanban Độc Lập Của: <span id="planStoreTitle" style="color:var(--primary);">FOOD STATION 7A</span>
+                        </div>
+                        <div style="display:flex;gap:0.6rem;flex-wrap:wrap;">
+                            <input type="text" id="planGoalInput" class="form-input" style="width:330px;" placeholder="Nhập mục tiêu riêng cho quán đang chọn...">
+                            <button class="btn btn-primary" onclick="aiGeneratePlan()">
+                                <i data-lucide="cpu" size="15"></i> Claude × Codex Lập Kế Hoạch Cho Quán Này
+                            </button>
+                        </div>
+                    </div>
+                    <div class="kanban-board" id="kanbanBoardContainer"></div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header">
+                        <div class="panel-title">
+                            <i data-lucide="file-text" size="19" style="color:var(--accent-purple)"></i>
+                            Chi Tiết Kế Hoạch Tăng Trưởng Riêng Cho Quán Đang Chọn
+                        </div>
+                    </div>
+                    <div id="aiPlanDetailOutput" class="ai-output-box">Nhấn "Claude × Codex Lập Kế Hoạch Cho Quán Này" để NV3 Hoàng Bách xây dựng lộ trình riêng biệt phù hợp với thực đơn và vị trí địa lý của quán.</div>
+                </div>
+            </div>
+
+            <!-- TAB 8: NV4 TUYẾT MAI - BÁO CÁO DOANH THU TÁCH BẠCH TỪNG QUÁN -->
+            <div id="tab-reporter" class="tab-pane">
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="bar-chart-3" size="19" style="color:var(--accent-cyan)"></i>
+                                NV4. Tuyết Mai (Codex Kiểm Toán) Sổ Riêng Của: <span id="reportStoreTitle" style="color:var(--primary);">FOOD STATION 7A</span>
+                            </div>
+                            <button class="btn btn-amber" onclick="syncActiveStorePOS(true)">
+                                <i data-lucide="refresh-cw" size="14"></i> Đồng Bộ Sổ Google Sheet Của Quán Này
+                            </button>
+                        </div>
+                        <div class="grid-equal">
+                            <div class="form-group">
+                                <label class="form-label">Doanh Thu Hôm Nay Của Quán Này (VNĐ)</label>
+                                <input type="text" id="repRevenue" class="form-input" oninput="saveCurrentStoreMetricsFromInputs()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Chi Phí Đi Chợ / Nhập Hàng Của Quán Này (VNĐ)</label>
+                                <input type="text" id="repCost" class="form-input" oninput="saveCurrentStoreMetricsFromInputs()">
+                            </div>
+                        </div>
+                        <div class="grid-equal">
+                            <div class="form-group">
+                                <label class="form-label">Số Đơn & Tiền Mặt / Chuyển Khoản / App</label>
+                                <input type="text" id="repOrders" class="form-input" oninput="saveCurrentStoreMetricsFromInputs()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Ca Làm Việc & Nhân Viên Trực Tại Quán Này</label>
+                                <input type="text" id="repLeads" class="form-input" oninput="saveCurrentStoreMetricsFromInputs()">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Chi Tiết Đơn Hàng & Ghi Chú Ca Của Riêng Quán Này:</label>
+                            <textarea id="repNotes" class="form-textarea" style="min-height:130px;font-family:'JetBrains Mono',monospace;font-size:0.78rem;" oninput="saveCurrentStoreMetricsFromInputs()"></textarea>
+                        </div>
+                        <div style="display:flex;gap:0.65rem;flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="generateExecutiveReport()">
+                                <i data-lucide="sparkles" size="15"></i> Codex × Claude Phân Tích Sổ Thu Chi Riêng Của Quán Này
+                            </button>
+                            <button class="btn btn-outline" onclick="exportReportToFile()">
+                                <i data-lucide="download" size="15"></i> Xuất Báo Cáo Riêng (.TXT)
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="clipboard-check" size="19" style="color:var(--primary)"></i>
+                                Báo Cáo Kiểm Toán Độc Lập Từ NV4 Tuyết Mai
+                            </div>
+                            <span class="status-pill pill-cyan">Codex Financial Review</span>
+                        </div>
+                        <div id="reportOutputBox" class="ai-output-box" style="min-height:410px;">Mỗi quán được lưu trữ và đồng bộ một sổ doanh thu, chi phí đi chợ và danh sách đơn hàng hoàn toàn riêng biệt. Nhấn nút phân tích bên trái để xem báo cáo của quán đang chọn.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 9: NV5 BẢO NGỌC - CONTENT MARKETING RIÊNG TỪNG QUÁN -->
+            <div id="tab-marketing" class="tab-pane">
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="megaphone" size="19" style="color:var(--accent-rose)"></i>
+                                NV5. Bảo Ngọc (Claude Creative × Codex) Studio Riêng: <span id="marketingStoreTitle" style="color:var(--accent-rose);">FOOD STATION 7A</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Chọn Định Dạng Bài Viết Cho Quán Này:</label>
+                            <select id="contentFormatSelect" class="form-select">
+                                <option value="Chuỗi 3 bài đăng Fanpage & Hội nhóm cư dân quanh quán (Ca Sáng - Ca Trưa - Ca Tối)">1. Chuỗi 3 bài đăng Fanpage & Hội nhóm khu vực quanh quán (Sáng - Trưa - Tối)</option>
+                                <option value="Tin nhắn Zalo / Nhóm Zalo mời khách đặt món trực tiếp trên link Web của quán">2. Bài đăng Zalo kéo khách bấm Link Đặt Món Online của quán</option>
+                                <option value="Kịch bản 3 Video TikTok / Reels ngắn quay món đặc trưng tại bếp của quán">3. Kịch bản 3 Video TikTok / Reels triệu view quay món chủ lực của quán</option>
+                                <option value="Lịch Content Marketing 30 ngày dành riêng cho thực đơn của quán">4. Lịch Content Marketing 30 ngày độc lập cho quán này</option>
+                                <option value="Chương trình Combo Khuyến mãi & Nội dung Bảng hiệu / Tờ rơi QR tại bàn của quán">5. Thiết kế Combo Khuyến mãi & Nội dung Standee / QR tại bàn</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Món Chủ Lực Hoặc Ưu Đãi Muốn Đẩy Mạnh Tại Quán Này:</label>
+                            <textarea id="contentTopicInput" class="form-textarea"></textarea>
+                        </div>
+                        <div style="display:flex;gap:0.65rem;flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="generateMarketingContent()">
+                                <i data-lucide="sparkles" size="15"></i> Claude × Codex Viết Content Độc Quyền Cho Quán Này
+                            </button>
+                            <button class="btn btn-purple" onclick="scheduleGeneratedContent()">
+                                <i data-lucide="calendar-plus" size="15"></i> Đưa Vào Lịch Đăng Của Quán Này
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="pen-tool" size="19" style="color:var(--accent-amber)"></i>
+                                Bài Viết Hoàn Chỉnh (Chỉ Gắn Menu & Link Của Quán Đang Chọn)
+                            </div>
+                            <button class="btn btn-outline" style="padding:0.25rem 0.65rem;font-size:0.73rem;" onclick="copyText('marketingOutputBox')">Copy bài viết</button>
+                        </div>
+                        <div id="marketingOutputBox" class="ai-output-box" style="min-height:410px;">NV5 Bảo Ngọc cam kết tách biệt 100% nội dung: Khi chọn Quán 7A chỉ viết về Bánh Bao Kẹp, Cơm Gà Xối Mỡ, Mì Xào, Mì Cay; khi chọn Trạm Khởi Nghiệp chỉ viết về Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 10: CẤU HÌNH HỆ ĐỘNG CƠ KÉP CODEX x CLAUDE & 2 GOOGLE SHEETS -->
+            <div id="tab-settings" class="tab-pane">
+                <div class="grid-equal">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="cpu" size="19" style="color:var(--primary)"></i>
+                                Hệ Thống 9Router: Động Cơ Kép CODEX × CLAUDE
+                            </div>
+                            <span class="status-pill pill-green">Codex × Claude Ready</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Chế độ phối hợp bộ não AI (Codex × Claude):</label>
+                            <select id="aiProviderSelect" class="form-select">
+                                <option value="codex_x_claude">⚡ Song Kiếm Hợp Bích: CODEX × CLAUDE Dual-Engine (Khuyên dùng)</option>
+                                <option value="9router">🚀 9Router Multi-AI Hub (Ưu tiên tốc độ cao nhất)</option>
+                                <option value="auto">Tự động chuyển đổi dự phòng</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Cổng 9Router Base URL:</label>
+                            <input type="text" id="nineRouterUrl" class="form-input" value="http://localhost:20128/v1">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Mã API 9Router:</label>
+                            <input type="text" id="nineRouterKey" class="form-input" value="sk-c8ddee65dadacbf8-2orlgk-2451fb73" style="border-color:var(--primary);color:#34d399;font-family:'JetBrains Mono',monospace;">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Chuỗi Model CODEX × CLAUDE Trong 9Router:</label>
+                            <input type="text" id="nineRouterModels" class="form-input" value="cx/codex-auto-review, kr/claude-sonnet-4.5, kr/claude-sonnet-4.5-agentic, kr/claude-haiku-4.5, ag/claude-sonnet-4-6, ag/gemini-3.8-flash-high, ag/gemini-3-flash, ag/gpt-oss-120b-medium" style="font-size:0.74rem;font-family:'JetBrains Mono',monospace;">
+                        </div>
+                        <div class="grid-equal">
+                            <div class="form-group">
+                                <label class="form-label">Google Gemini API Key (Dự phòng):</label>
+                                <input type="password" id="apiKeyGemini" class="form-input" placeholder="AIzaSy...">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">OpenAI API Key (Dự phòng):</label>
+                                <input type="password" id="apiKeyOpenAI" class="form-input" placeholder="sk-proj-...">
+                            </div>
+                        </div>
+                        <div style="display:flex;gap:0.65rem;flex-wrap:wrap;">
+                            <button class="btn btn-primary" onclick="saveApiSettings()">
+                                <i data-lucide="check-circle" size="15"></i> Lưu Cấu Hình Codex × Claude
+                            </button>
+                            <button class="btn btn-purple" onclick="test9RouterConnection()">
+                                <i data-lucide="zap" size="15"></i> Kiểm Tra Phản Hồi Codex × Claude
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="panel-header">
+                            <div class="panel-title">
+                                <i data-lucide="database" size="19" style="color:var(--accent-cyan)"></i>
+                                2 Đường Dẫn Google Sheets POS Độc Lập Cho Từng Quán
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="color:#34d399;">🍔 1. Google Apps Script URL Riêng Của QUÁN 1 (FOOD STATION 7A):</label>
+                            <input type="text" id="gasUrl7A" class="form-input" placeholder="Dán link script.google.com/macros/s/.../exec của riêng Quán 7A vào đây">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" style="color:#fbbf24;">🍛 2. Google Apps Script URL Riêng Của QUÁN 2 (TRẠM KHỞI NGHIỆP Cơm Tấm):</label>
+                            <input type="text" id="gasUrlComTam" class="form-input" value="https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telegram Bot Token (Nhận báo cáo tách bạch từng quán):</label>
+                            <input type="password" id="telegramBotToken" class="form-input" placeholder="123456789:AAH...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Telegram Chat ID của Chủ Quán:</label>
+                            <input type="text" id="telegramChatId" class="form-input" placeholder="VD: 987654321">
+                        </div>
+                        <div style="display:flex;gap:0.65rem;">
+                            <button class="btn btn-primary" onclick="saveApiSettings()">
+                                <i data-lucide="save" size="15"></i> Lưu 2 Nguồn Dữ Liệu Riêng
+                            </button>
+                            <button class="btn btn-outline" onclick="testTelegramPush()">
+                                <i data-lucide="send" size="15"></i> Gửi Báo Cáo Quán Đang Chọn Qua Telegram
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // =========================================================================
+        // 1. DỮ LIỆU TÁCH BẠCH 100% CHO 3 QUÁN + BỘ NHỚ TỰ HỌC CODEX x CLAUDE
+        // =========================================================================
+        const DEFAULT_9ROUTER_URL = 'http://localhost:20128/v1';
+        const DEFAULT_9ROUTER_KEY = 'sk-c8ddee65dadacbf8-2orlgk-2451fb73';
+        const DEFAULT_9ROUTER_MODELS = 'cx/codex-auto-review, kr/claude-sonnet-4.5, kr/claude-sonnet-4.5-agentic, kr/claude-haiku-4.5, ag/claude-sonnet-4-6, ag/gemini-3.8-flash-high, ag/gemini-3-flash, ag/gpt-oss-120b-medium, bazaarlink/auto:free';
+        const DEFAULT_GAS_COMTAM = 'https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec';
+
+        const REAL_STORES_DATA = [
+            {
+                id: 'store_7a',
+                shortName: 'FOOD STATION 7A',
+                name: 'FOOD STATION 7A - Cơm Chiên • Mì Xào • Bánh Bao Kẹp • FastFood',
+                type: 'Ca Sáng (06h30-10h00: BBK, Burger, Sandwich) | Ca Trưa (10h00-14h00: Cơm Gà Xối Mỡ, Bò Lúc Lắc, Mì Xào) | Ca Chiều Tối (16h00-21h00: Full Menu, Mì Cay 7 Cấp Độ, BBK)',
+                address: 'Số 2, Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức | Hotline/Zalo: 0931.811.872',
+                menu: '【Bánh Bao Kẹp & FastFood】BBK Xúc Xích (18K), BBK Gà Rán (20K), BBK Tôm Rán (24K), BBK Sườn BBQ (25K), BBK Tôm Phô Mai (26K), Sandwich Kẹp Trứng Xúc Xích/Gà (22K), Hamburger Bò/Gà Giòn Phô Mai (28K) | 【Cơm & Mì Xào】Cơm Chiên Phủ Trứng (25K), Cơm Gà Xối Mỡ (40K), Cơm Gà Chiên Mắm Tỏi (40K), Cơm Chiên Hải Sản (40K), Cơm Xào Hải Sản (40K), Cơm Bò Lúc Lắc (40K), Cơm Bò Xào Rau Củ (40K), Cơm Sườn Chua Ngọt (40K), Mì Xào Hải Sản (40K), Mì Xào Bò (40K), Mì Xào Giòn (40K), Hủ Tiếu Xào Khô/Nước (40K) | 【Mì Cay & Ăn Vặt】Bánh Tráng Trộn Đặc Biệt (20K), Mì Trộn Thập Cẩm (30K), Mì Cay 7 Cấp Độ Bò/Hải Sản (40K) | 【Topping & Nước】Trứng Ốp La/Trứng Phủ (5K), Phô Mai (5K), Cơm/Mì Thêm (5K), Xúc Xích Thêm (8K), Pepsi/Coca/7Up/Trà Đá (10K).',
+                promo: 'Quán hoạt động độc lập tại Số 2 Đường 7A, KP. Phước Thiện. Chuyên phục vụ tại bàn (quét QR), mang về và giao tận nơi quanh Phước Thiện - Long Bình. Giá học sinh, sinh viên, văn phòng từ 18K - 40K.',
+                link: 'Menu Đặt Món: https://123okmen.github.io/quan-an-nhanh-7a/ | Admin 6 Sheet: https://123okmen.github.io/quan-an-nhanh-7a/#/admin | Báo cáo & Kế hoạch: https://123okmen.github.io/quan-an-nhanh-7a/#/plan'
+            },
+            {
+                id: 'store_comtam',
+                shortName: 'TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng',
+                name: 'TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên',
+                type: 'Ca Sáng (06h30-10h00: Điểm tâm Cơm tấm + Cafe) | Ca Trưa (10h00-14h00: Cao điểm Cơm tấm tại quán & Giao cơm hộp xưởng/văn phòng) | Ca Chiều Tối (16h00-21h00: Cơm Tấm & BBQ)',
+                address: 'Cơ sở TRẠM KHỞI NGHIỆP (Địa điểm độc lập, tách biệt hoàn toàn với Quán 7A) | Đặt món QR tại bàn & Giao cơm hộp',
+                menu: '【Cơm Tấm Sườn Nướng Than Hoa】Cơm Tấm Sườn (30K), Cơm Tấm Sườn Trứng Ốp La (35K), Cơm Tấm Sườn Bì (35K), Cơm Tấm Sườn Chả (40K), Cơm Tấm Sườn Bì Chả (45K), Cơm Tấm Sườn Bì Chả Trứng Đặc Biệt (50K), Cơm Tấm 2 Sườn cho người ăn khỏe/Gymer (55K) | 【Cơm Chiên Hạt Vàng Nóng Hổi】Cơm Chiên Trứng (30K), Cơm Chiên Dương Châu (40K), Cơm Chiên Gà Xé (40K), Cơm Chiên Xá Xíu (40K), Cơm Chiên Cá Mặn (40K), Cơm Chiên Dưa Bò (45K), Cơm Chiên Hải Sản (50K) | 【Topping Thêm】Trứng Ốp La (5K), Cơm Thêm (5K), Trà Đá (5K), Bì Thêm (7K), Chả Trứng Hấp (10K), Lạp Xưởng (10K), Dưa Cải Xào Bò (20K), Sườn Nướng Thêm (25K).',
+                promo: 'Quán hoạt động độc lập, chuyên Sườn cốt lết nướng than hoa thơm lừng, cơm tấm dẻo nóng, có suất 2 Sườn cho Gymer (55K), nhận đặt cơm hộp cho công ty/xưởng quanh khu vực quán.',
+                link: 'Menu Đặt Món: https://123okmen.github.io/com-tam-suon-nuong/ | Planner & Báo cáo Live: https://123okmen.github.io/com-tam-suon-nuong/?zarsrc=31#/planner'
+            }
+        ,
+            {
+                id: 'store_cafe_anvat',
+                shortName: 'CAFE ĂN VẶT TRẠM KHỞI NGHIỆP',
+                name: 'CAFE ĂN VẶT TRẠM KHỞI NGHIỆP – Cà Phê Muối • Nước Sâm • Đồ Ăn Vặt • Mì Trộn Mì Cay',
+                type: 'Ca Sáng (06h30-11h30: Cà phê muối, Bạc xỉu, Trà dâu, Nước sâm) | Ca Trưa (11h30-16h30: Nước ép, Mì trộn, Giải khát) | Ca Tối (16h30-22h30: Cao điểm đồ ăn vặt nóng giòn, Cá viên bơ tỏi, Khoai lắc, Mì cay 7 cấp độ)',
+                address: '36/5E Nguyễn Thị Ngâu, Trung Đông 8, Xã Đông Thạnh, TP.HCM | Hotline/Zalo: 0938.888.xxx',
+                menu: '【Cơm Chiên & Cơm Nóng】Cơm Chiên Phủ Trứng (25K), Cơm Gà Xối Mỡ (40K), Cơm Gà Mắm Tỏi (40K), Cơm Chiên Hải Sản (40K), Cơm Xào Hải Sản (40K), Cơm Bò Lúc Lắc (40K), Cơm Bò Xào Rau Củ (40K), Cơm Sườn Chua Ngọt (40K) | 【Mì Xào & Hủ Tiếu】Mì Xào Hải Sản (40K), Mì Xào Bò (40K), Mì Giòn (40K), Hủ Tiếu Xào Khô (40K), Hủ Tiếu Xào Nước (40K) | 【Bánh Bao Kẹp BBK】BBK Xúc Xích (18K), BBK Gà Rán (20K), BBK Tôm Rán (24K), BBK Tôm Phô Mai (26K), BBK Sườn BBQ (25K) | 【FastFood & Ăn Vặt】Hamburger Bò/Gà Phô Mai (28K), Sandwich Kẹp Trứng (22K), Mì Trộn Thập Cẩm (30K), Mì Cay 7 Cấp Độ (40K), Bánh Tráng Trộn Đặc Biệt (20K) | 【Topping & Nước Uống】Trứng Ốp La (5K), Phô Mai Lát (5K), Xúc Xích Chiên (8K), Cơm/Mì Thêm (5K), Pepsi/Coca/Trà Đá (10K).',
+                promo: 'Quán chi nhánh mới tại 36/5E Nguyễn Thị Ngâu, Đông Thạnh. Phục vụ đồ uống giải khát mát lạnh cả ngày, đồ ăn vặt chiên giòn nóng hổi chiều tối, không gian thoáng mát cho học sinh, giới trẻ và gia đình.',
+                link: 'GitHub Pages Live: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/ | Menu Gọi Món: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/order | POS: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/staff | Báo Cáo: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/planner | Local: http://localhost:8089/'
+            }
+        ];
+
+        const DEFAULT_LEARNED_MEMORY = {
+            store_7a: [
+                {
+                    id: 'm7a_1',
+                    time: 'Tự học Hệ Thống',
+                    agent: '👑 CEO Minh Trí (Claude × Codex)',
+                    engine: 'Codex × Claude',
+                    insight: 'Ca Sáng (06h30-10h00) tại Số 2 Đường 7A cần ưu tiên tốc độ ra món dưới 90 giây cho Bánh Bao Kẹp (18K-26K), Hamburger (28K) và Sandwich (22K) để đón luồng học sinh & người đi làm.'
+                },
+                {
+                    id: 'm7a_2',
+                    time: 'Tự học POS',
+                    agent: '📊 NV4 Tuyết Mai (Codex Audit)',
+                    engine: 'cx/codex-auto-review',
+                    insight: 'Để giữ tỷ lệ Cost nguyên liệu của FOOD STATION 7A dưới 36%, luôn gợi ý khách gọi kèm Trứng/Phô mai (+5K) và Nước ngọt/Trà đá (+10K) khi mua Cơm Gà Xối Mỡ hoặc Mì Cay 40K.'
+                },
+                {
+                    id: 'm7a_3',
+                    time: 'Tự học Marketing',
+                    agent: '🚀 NV5 Bảo Ngọc (Claude Creative)',
+                    engine: 'kr/claude-sonnet-4.5',
+                    insight: 'Khung giờ 10h00 và 16h15 đăng bài hình ảnh thật Cơm Gà Xối Mỡ (40K), Mì Xào Giòn (40K), Mì Cay 7 Cấp Độ (40K) vào hội nhóm cư dân Phước Thiện mang lại lượng bấm link đặt món cao nhất.'
+                }
+            ],
+            store_comtam: [
+                {
+                    id: 'mct_1',
+                    time: 'Tự học Hệ Thống',
+                    agent: '👑 CEO Minh Trí (Claude × Codex)',
+                    engine: 'Codex × Claude',
+                    insight: 'Tại TRẠM KHỞI NGHIỆP Cơm Tấm, cần nướng sườn than hoa theo mẻ liên tục từ 10h15 để kịp đóng hộp Cơm Tấm Sườn Bì Chả (45K) giao cho văn phòng/xưởng trước 11h15.'
+                },
+                {
+                    id: 'mct_2',
+                    time: 'Tự học POS',
+                    agent: '📊 NV4 Tuyết Mai (Codex Audit)',
+                    engine: 'cx/codex-auto-review',
+                    insight: 'Suất Cơm Tấm 2 Sườn Gymer (55K) và các topping Chả Trứng (+10K), Lạp Xưởng (+10K), Sườn Thêm (+25K) là nhóm mang lại biên lợi nhuận ròng cao nhất trên mỗi dĩa cơm tấm.'
+                },
+                {
+                    id: 'mct_3',
+                    time: 'Tự học CSKH',
+                    agent: '💬 NV1 Linh Nhi (Claude Haiku)',
+                    engine: 'kr/claude-haiku-4.5',
+                    insight: 'Khi khách hỏi đặt Cơm Hộp trưa từ 5 phần trở lên, luôn gửi kèm gợi ý Cơm Tấm Sườn Bì Chả 45K + Cơm Chiên Dưa Bò 45K để khách dễ chọn đa dạng món.'
+                }
+            ],
+            store_cafe_anvat: [
+                {
+                    id: 'mcf_1',
+                    time: 'Tự học Hệ Thống',
+                    agent: '👑 CEO Minh Trí (Claude × Codex)',
+                    engine: 'Codex × Claude',
+                    insight: 'Tại CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E Nguyễn Thị Ngâu, Đông Thạnh), khung 06h30-09h30 là vàng cho Cà Phê Muối (20K) & Nước Sâm (15K) mang đi; còn khung 16h30-22h30 là cao điểm học sinh & giới trẻ tụ tập ăn vặt nóng giòn (Cá viên mắm bơ tỏi 30K, Khoai lắc 25K, Mì cay Hàn Quốc 45K).'
+                },
+                {
+                    id: 'mcf_2',
+                    time: 'Tự học POS',
+                    agent: '📊 NV4 Tuyết Mai (Codex Audit)',
+                    engine: 'cx/codex-auto-review',
+                    insight: 'Nhóm đồ uống (Cà phê muối giá vốn 7.5K bán 20K, Nước sâm bí đao vốn 4.5K bán 15K) có tỷ lệ lãi gộp trên 62%-70%, là nguồn sinh lời chính gánh chi phí vận hành mặt bằng Đông Thạnh.'
+                },
+                {
+                    id: 'mcf_3',
+                    time: 'Tự học Marketing',
+                    agent: '🚀 NV5 Bảo Ngọc (Claude Creative)',
+                    engine: 'kr/claude-sonnet-4.5',
+                    insight: 'Khung 16h00 đăng video chảo Cá Viên Chiên Nước Mắm Kẹo Bơ Tỏi bốc khói cùng ly Trà Dâu Tây thanh mát vào các nhóm ẩm thực Hóc Môn / Đông Thạnh mang lại tỷ lệ rủ bạn bè ghé quán cao nhất.'
+                },
+                {
+                    id: 'mcf_4',
+                    time: 'Tự học Lịch Trình',
+                    agent: '⏰ NV2 Minh Quân (Codex Scheduler)',
+                    engine: 'cx/gpt-5.6-sol',
+                    insight: 'Phân chia 3 ca rõ ràng: Ca Sáng (06h30-11h30 pha chế nhanh cafe mang đi), Ca Trưa (11h30-16h30 nước ép giải khát & mì trộn), Ca Tối (16h30-22h30 bếp chiên nhúng đồ ăn vặt & nấu mì cay liên tục).'
+                }
+            ]
+        };
+
+        const REAL_SCHEDULES = [
+            { storeId: 'store_7a', time: '06:00 - 06:30', store: 'FOOD STATION 7A', title: 'Check-in đầu ca sáng tại Số 2 Đường 7A: Bật tủ hấp Bánh Bao Kẹp, chuẩn bị sốt, trứng, gà rán, mì & rau', agent: 'Nhân viên & Bếp 7A', status: 'Đầu Ca 7A' },
+            { storeId: 'store_7a', time: '06:30 - 10:00', store: 'FOOD STATION 7A', title: 'Ca Sáng Quán 7A: Tập trung bán Bánh Bao Kẹp (18K-26K), Hamburger (28K), Sandwich (22K)', agent: 'NV2 Minh Quân', status: 'Ca Sáng 7A' },
+            { storeId: 'store_7a', time: '10:00 - 14:00', store: 'FOOD STATION 7A', title: 'Ca Trưa Quán 7A: Cao điểm Cơm Gà Xối Mỡ (40K), Cơm Bò Lúc Lắc (40K), Mì Xào Giòn/Hải Sản (40K)', agent: 'NV1 Linh Nhi', status: 'Ca Trưa 7A' },
+            { storeId: 'store_7a', time: '16:00 - 21:00', store: 'FOOD STATION 7A', title: 'Ca Chiều Tối Quán 7A: Phục vụ Full Menu, Mì Cay 7 Cấp Độ (40K), Mì Trộn (30K), Bánh Tráng Trộn (20K) & BBK', agent: 'NV2 Minh Quân', status: 'Ca Tối 7A' },
+            { storeId: 'store_7a', time: '21:15 Hàng ngày', store: 'FOOD STATION 7A', title: 'Chốt ca Quán 7A: Nhập phiếu Chi phí đi chợ, đối soát Tiền mặt/CK trên #/admin & tự học số liệu', agent: 'NV4 Tuyết Mai', status: 'Chốt sổ 7A' },
+
+            { storeId: 'store_comtam', time: '05:45 - 06:30', store: 'TRẠM KHỞI NGHIỆP Cơm Tấm', title: 'Chuẩn bị đầu ca: Nhóm than hoa, cắm nồi cơm tấm, ướp sườn cốt lết, chuẩn bị bì, chả trứng hấp & nước mắm kẹo', agent: 'Nhân viên & Bếp Cơm Tấm', status: 'Đầu Ca Cơm Tấm' },
+            { storeId: 'store_comtam', time: '06:30 - 10:00', store: 'TRẠM KHỞI NGHIỆP Cơm Tấm', title: 'Ca Sáng Cơm Tấm: Phục vụ điểm tâm Cơm Tấm Sườn Nướng (30K-50K) & Cafe/Trà đá', agent: 'NV2 Minh Quân', status: 'Ca Sáng Cơm Tấm' },
+            { storeId: 'store_comtam', time: '10:00 - 14:00', store: 'TRẠM KHỞI NGHIỆP Cơm Tấm', title: 'Ca Trưa Cao Điểm Cơm Tấm: Phục vụ khách tại bàn & đóng hộp Cơm Tấm Sườn Bì Chả, Cơm Chiên Dưa Bò giao xưởng/văn phòng', agent: 'NV1 Linh Nhi', status: 'Ca Trưa Cơm Tấm' },
+            { storeId: 'store_comtam', time: '16:00 - 21:00', store: 'TRẠM KHỞI NGHIỆP Cơm Tấm', title: 'Ca Chiều Tối Cơm Tấm: Bán Cơm Tấm Sườn Nướng nóng hổi, Cơm Chiên Dương Châu/Hải Sản & BBQ', agent: 'NV2 Minh Quân', status: 'Ca Tối Cơm Tấm' },
+            { storeId: 'store_comtam', time: '21:15 Hàng ngày', store: 'TRẠM KHỞI NGHIỆP Cơm Tấm', title: 'Đóng cửa & Chốt ca Cơm Tấm: Vệ sinh vỉ nướng, dập than, chốt doanh thu trên #/planner & tự học POS', agent: 'NV4 Tuyết Mai', status: 'Chốt sổ Cơm Tấm' }
+        ,
+            { storeId: 'store_cafe_anvat', time: '06:00 - 06:30', store: 'CAFE ĂN VẶT Đông Thạnh', title: 'Chuẩn bị đầu ca sáng: Kiểm tra máy pha cà phê, nấu sâm bí đao mẻ tươi đầu ngày, kiểm tra tủ lạnh nguyên liệu ăn vặt & đá', agent: 'Nhân viên & Pha chế Cafe', status: 'Đầu Ca Đông Thạnh' },
+            { storeId: 'store_cafe_anvat', time: '06:30 - 11:30', store: 'CAFE ĂN VẶT Đông Thạnh', title: 'Ca Sáng Quán Đông Thạnh: Phục vụ Cà Phê Muối (20K), Bạc Xỉu (20K), Trà Dâu (25K), Nước Sâm (15K) mang đi & tại bàn', agent: 'NV2 Minh Quân', status: 'Ca Sáng Đông Thạnh' },
+            { storeId: 'store_cafe_anvat', time: '11:30 - 16:30', store: 'CAFE ĂN VẶT Đông Thạnh', title: 'Ca Trưa Quán Đông Thạnh: Nước ép cam/dưa hấu giải nhiệt, Mì Trộn Xúc Xích Trứng Đào (30K) cho khách trưa', agent: 'NV1 Linh Nhi', status: 'Ca Trưa Đông Thạnh' },
+            { storeId: 'store_cafe_anvat', time: '16:30 - 22:30', store: 'CAFE ĂN VẶT Đông Thạnh', title: 'Ca Tối Cao Điểm: Bếp chiên nhúng đồ ăn vặt (Cá viên mắm bơ tỏi 30K, Khoai lắc 25K, Gà lắc 30K) & Mì Cay Hàn Quốc (45K)', agent: 'NV2 Minh Quân', status: 'Ca Tối Đông Thạnh' },
+            { storeId: 'store_cafe_anvat', time: '22:30 Hàng ngày', store: 'CAFE ĂN VẶT Đông Thạnh', title: 'Chốt ca đêm Quán Đông Thạnh: Vệ sinh máy pha/nồi chiên dầu, chốt sổ tiền mặt và đối soát trên #/planner', agent: 'NV4 Tuyết Mai', status: 'Chốt sổ Đông Thạnh' }
+        ];
+
+        const REAL_TASKS = [
+            { id: 't7a_1', storeId: 'store_7a', col: 'todo', title: 'Đẩy mạnh Combo Sáng Bánh Bao Kẹp (18K-26K) trước cổng Số 2 Đường 7A', desc: 'Tối ưu tốc độ ra món dưới 90 giây cho học sinh, sinh viên, người đi làm buổi sáng tại KP. Phước Thiện.', agent: 'NV3 Hoàng Bách' },
+            { id: 't7a_2', storeId: 'store_7a', col: 'doing', title: 'Quảng bá Menu Cơm Gà Xối Mỡ & Mì Cay 7 Cấp Độ đồng giá 40K', desc: 'Đăng bài vào các hội nhóm cư dân Phước Thiện - Long Bình kéo khách ăn trưa và ăn tối.', agent: 'NV5 Bảo Ngọc' },
+            { id: 't7a_3', storeId: 'store_7a', col: 'done', title: 'Thiết lập sổ quản trị 6 bảng riêng cho FOOD STATION 7A (#/admin & #/plan)', desc: 'Hoàn toàn độc lập về đơn hàng, chi phí đi chợ, chấm công và kết ca của Quán 7A.', agent: 'NV4 Tuyết Mai' },
+
+            { id: 'tct_1', storeId: 'store_comtam', col: 'todo', title: 'Mở rộng tệp khách đặt Cơm Hộp Trưa cho công ty & xưởng quanh quán Cơm Tấm', desc: 'Chào các suất Cơm Tấm Sườn 30K, Sườn Trứng 35K, Sườn Bì Chả 45K đặt cố định hàng ngày.', agent: 'NV5 Bảo Ngọc' },
+            { id: 'tct_2', storeId: 'store_comtam', col: 'doing', title: 'Đồng bộ trực tiếp đơn hàng POS & Doanh thu Ca lên trang #/planner', desc: 'Tự động đối soát Tiền mặt, Chuyển khoản QR và thống kê món bán chạy hàng ngày.', agent: 'NV4 Tuyết Mai' },
+            { id: 'tct_3', storeId: 'store_comtam', col: 'done', title: 'Chuẩn hóa quy trình nướng sườn than hoa & định lượng 23 món Cơm Tấm/Cơm Chiên', desc: 'Đảm bảo chất lượng sườn mềm thơm và tốc độ phục vụ giờ cao điểm.', agent: 'CEO Minh Trí' }
+        ,
+            { id: 'tcf_1', storeId: 'store_cafe_anvat', col: 'todo', title: 'Tối ưu tốc độ phục vụ Cà Phê Muối & Nước Sâm Bí Đao buổi sáng dưới 60 giây', desc: 'Đóng ly mang đi nhanh chóng cho cư dân đường Nguyễn Thị Ngâu đi làm buổi sáng.', agent: 'NV3 Hoàng Bách' },
+            { id: 'tcf_2', storeId: 'store_cafe_anvat', col: 'doing', title: 'Quảng bá Combo Ăn Vặt Nóng Hổi: Cá Viên Mắm Bơ Tỏi + Trà Dâu Tây 50K', desc: 'Đăng video tiktok/hội nhóm ẩm thực Đông Thạnh & Hóc Môn kéo khách trẻ buổi tối.', agent: 'NV5 Bảo Ngọc' },
+            { id: 'tcf_3', storeId: 'store_cafe_anvat', col: 'done', title: 'Khởi chạy Web App riêng & kết nối trực tiếp vào Văn Phòng Ảo (Port 8089)', desc: 'Tách bạch 100% doanh thu Sổ 3, POS bán hàng, mã đơn và thực đơn 28 món độc lập.', agent: 'CEO Minh Trí' }
+        ];
+
+        const DEFAULT_STORE_METRICS = {
+            store_7a: {
+                revenue: '1,680,000',
+                cost: '620,000',
+                orders: '46 đơn | TM: 980.000đ | CK QR: 700.000đ',
+                leads: 'Ca Sáng + Trưa + Tối | Quán Ăn Nhanh 7A (Số 2 Đường 7A)',
+                notes: 'SỔ THEO DÕI RIÊNG - FOOD STATION 7A (PHƯỚC THIỆN):\n• Ca Sáng: Bán mạnh Bánh Bao Kẹp Gà Rán (20K), BBK Tôm Phô Mai (26K), Hamburger (28K).\n• Ca Trưa: Cơm Gà Xối Mỡ (40K), Cơm Bò Lúc Lắc (40K), Mì Xào Giòn (40K).\n• Ca Tối: Mì Cay 7 Cấp Độ (40K), Mì Trộn Thập Cẩm (30K), Bánh Tráng Trộn (20K).'
+            },
+            store_comtam: {
+                revenue: '470,000',
+                cost: '180,000',
+                orders: '6 đơn (13 món) | Đã đồng bộ Live từ Google Sheets',
+                leads: 'Ca Chiều - Tối (16h00-21h00) | NV: Khanh',
+                notes: 'Đang đồng bộ danh sách đơn hàng thực tế từ Google Sheets riêng của TRẠM KHỞI NGHIỆP - Cơm Tấm Sườn Nướng...'
+            },
+            store_cafe_anvat: {
+                revenue: '560,000',
+                cost: '210,000',
+                orders: '22 đơn | TM: 320.000đ | CK QR: 240.000đ',
+                leads: 'Ca Sáng + Trưa + Tối | 36/5E Nguyễn Thị Ngâu, Đông Thạnh',
+                notes: 'SỔ THEO DÕI RIÊNG - CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (ĐÔNG THẠNH):\n• Ca Sáng: Cà Phê Muối (20K), Bạc Xỉu (20K), Nước Sâm Bí Đao (15K).\n• Ca Trưa: Nước Ép Cam/Dưa Hấu (22K-25K), Mì Trộn Xúc Xích (30K).\n• Ca Tối: Cá Viên Mắm Bơ Tỏi (30K), Khoai Lắc Phô Mai (25K), Mì Cay Hàn Quốc (45K).'
+            }
+        };
+
+        // Hồ sơ 6 Nhân Viên AI 3D
+        const AGENTS_3D_ROSTER = [
+            {
+                id: 'ceo',
+                icon: '👑',
+                name: 'CEO Minh Trí',
+                role: 'Tổng Chỉ Huy',
+                tab: 'warroom',
+                brain: 'Claude Sonnet 4.5 × Codex',
+                colorHex: 0x8b5cf6,
+                colorCss: '#c084fc',
+                deskPos: { x: 0, z: -7.5 },
+                level: 15,
+                xp: 78,
+                speech7A: 'Đang chỉ huy mục tiêu doanh số riêng cho FOOD STATION 7A!',
+                speechCT: 'Đang điều phối đơn Cơm Hộp & Sườn Nướng cho TRẠM KHỞI NGHIỆP!',
+                speechCafe: 'Đang theo dõi doanh thu Cà phê muối & Đồ ăn vặt nóng giòn tại Đông Thạnh!'
+            },
+            {
+                id: 'chatbot',
+                icon: '💬',
+                name: 'NV1. Linh Nhi',
+                role: 'CSKH & Chatbot',
+                tab: 'chatbot',
+                brain: 'Claude Haiku 4.5 × Codex',
+                colorHex: 0x10b981,
+                colorCss: '#34d399',
+                deskPos: { x: -7.2, z: -3.2 },
+                level: 13,
+                xp: 64,
+                speech7A: 'Trực inbox Quán 7A: Tư vấn Bánh Bao Kẹp 18K & Cơm Gà 40K!',
+                speechCT: 'Trực inbox Cơm Tấm: Chốt đơn Cơm Tấm Sườn Bì Chả 45K!',
+                speechCafe: 'Trực inbox Quán Đông Thạnh: Gợi ý Cà phê muối 20K & Mì trộn xúc xích!'
+            },
+            {
+                id: 'scheduler',
+                icon: '⏰',
+                name: 'NV2. Minh Quân',
+                role: 'Điều Phối 3 Ca',
+                tab: 'scheduler',
+                brain: 'Codex Review × Claude',
+                colorHex: 0xf59e0b,
+                colorCss: '#fbbf24',
+                deskPos: { x: 7.2, z: -3.2 },
+                level: 12,
+                xp: 52,
+                speech7A: 'Đã kiểm tra checklist tủ hấp BBK & bếp xào Quán 7A!',
+                speechCT: 'Đã nhắc bếp Cơm Tấm nhóm lò than hoa & ướp sườn cốt lết!',
+                speechCafe: 'Phân ca Cafe Ăn Vặt: Ca sáng đồ uống & Ca tối chiên cá viên, nấu mì cay!'
+            },
+            {
+                id: 'planner',
+                icon: '📋',
+                name: 'NV3. Hoàng Bách',
+                role: 'Kế Hoạch Kanban',
+                tab: 'planner',
+                brain: 'Claude Agentic × Codex',
+                colorHex: 0x3b82f6,
+                colorCss: '#60a5fa',
+                deskPos: { x: -7.2, z: 3.6 },
+                level: 14,
+                xp: 85,
+                speech7A: 'Đang tối ưu phễu đơn Ca Sáng & Ca Tối tại Đường 7A!',
+                speechCT: 'Đang lên kế hoạch mở rộng khách đặt Cơm Hộp văn phòng!',
+                speechCafe: 'Lên kế hoạch nhập nguyên liệu tươi: bí đao, sâm, cá viên, bắp xào bơ tỏi!'
+            },
+            {
+                id: 'reporter',
+                icon: '📊',
+                name: 'NV4. Tuyết Mai',
+                role: 'Kế Toán POS',
+                tab: 'reporter',
+                brain: 'cx/codex-auto-review',
+                colorHex: 0x06b6d4,
+                colorCss: '#22d3ee',
+                deskPos: { x: 7.2, z: 3.6 },
+                level: 16,
+                xp: 91,
+                speech7A: 'Codex đang kiểm toán Sổ 1 (Quán 7A): Giữ Cost dưới 36%!',
+                speechCT: 'Codex đã đồng bộ Live Sổ 2 (Cơm Tấm): 470.000đ (6 đơn)!',
+                speechCafe: 'Đối soát doanh thu Sổ 3 Cafe Ăn Vặt độc lập: Cà phê muối lãi gộp trên 65%!'
+            },
+            {
+                id: 'marketing',
+                icon: '🚀',
+                name: 'NV5. Bảo Ngọc',
+                role: 'Content Marketing',
+                tab: 'marketing',
+                brain: 'Claude Sonnet 4.5 × Codex',
+                colorHex: 0xf43f5e,
+                colorCss: '#fb7185',
+                deskPos: { x: 0, z: 7.5 },
+                level: 14,
+                xp: 70,
+                speech7A: 'Vừa viết xong bài đăng Mì Cay 7 Cấp Độ & BBK cho Quán 7A!',
+                speechCT: 'Vừa tạo bài quảng cáo Cơm Tấm 2 Sườn Gymer 55K cực hút!'
+            }
+        ];
+
+        let savedSettings = JSON.parse(localStorage.getItem('vo_settings_v6')) || {};
+        let appState = {
+            stores: JSON.parse(localStorage.getItem('vo_stores_v6')) || REAL_STORES_DATA,
+            selectedStoreId: localStorage.getItem('vo_selected_store_v6') || 'store_7a',
+            schedules: JSON.parse(localStorage.getItem('vo_schedules_v6')) || REAL_SCHEDULES,
+            tasks: JSON.parse(localStorage.getItem('vo_tasks_v6')) || REAL_TASKS,
+            storeMetrics: JSON.parse(localStorage.getItem('vo_metrics_v6')) || DEFAULT_STORE_METRICS,
+            learnedMemory: JSON.parse(localStorage.getItem('vo_memory_v6')) || DEFAULT_LEARNED_MEMORY,
+            totalXP: parseInt(localStorage.getItem('vo_total_xp_v6') || '1250', 10),
+            selectedAgentId: 'ceo',
+            gameSpeed: 1,
+            settings: {
+                provider: savedSettings.provider || 'codex_x_claude',
+                nineRouterUrl: savedSettings.nineRouterUrl || DEFAULT_9ROUTER_URL,
+                nineRouterKey: savedSettings.nineRouterKey || DEFAULT_9ROUTER_KEY,
+                nineRouterModels: savedSettings.nineRouterModels || DEFAULT_9ROUTER_MODELS,
+                geminiKey: savedSettings.geminiKey || '',
+                openaiKey: savedSettings.openaiKey || '',
+                gasComTam: savedSettings.gasComTam || DEFAULT_GAS_COMTAM,
+                gas7A: savedSettings.gas7A || localStorage.getItem('fastfood_custom_script_url') || '',
+                telegramToken: savedSettings.telegramToken || '',
+                telegramChatId: savedSettings.telegramChatId || ''
+            }
+        };
+
+        function ensureAllStoresPresent() {
+            REAL_STORES_DATA.forEach(rs => {
+                if (!appState.stores.some(s => s.id === rs.id)) {
+                    appState.stores.push(rs);
+                }
+            });
+            if (!appState.storeMetrics.store_cafe_anvat) {
+                appState.storeMetrics.store_cafe_anvat = DEFAULT_STORE_METRICS.store_cafe_anvat;
+            }
+            if (!appState.learnedMemory.store_cafe_anvat) {
+                appState.learnedMemory.store_cafe_anvat = DEFAULT_LEARNED_MEMORY.store_cafe_anvat;
+            }
+            REAL_SCHEDULES.forEach(sch => {
+                if (!appState.schedules.some(s => s.storeId === sch.storeId && s.time === sch.time)) {
+                    appState.schedules.push(sch);
+                }
+            });
+            REAL_TASKS.forEach(tsk => {
+                if (!appState.tasks.some(t => t.id === tsk.id)) {
+                    appState.tasks.push(tsk);
+                }
+            });
+        }
+        ensureAllStoresPresent();
+
+
+        if (appState.selectedStoreId === 'all') appState.selectedStoreId = 'store_7a';
+        let daemonInterval = null;
+        let autoSimInterval = null;
+
+        function saveState() {
+            localStorage.setItem('vo_stores_v6', JSON.stringify(appState.stores));
+            localStorage.setItem('vo_selected_store_v6', appState.selectedStoreId);
+            localStorage.setItem('vo_schedules_v6', JSON.stringify(appState.schedules));
+            localStorage.setItem('vo_tasks_v6', JSON.stringify(appState.tasks));
+            localStorage.setItem('vo_metrics_v6', JSON.stringify(appState.storeMetrics));
+            localStorage.setItem('vo_memory_v6', JSON.stringify(appState.learnedMemory));
+            localStorage.setItem('vo_total_xp_v6', String(appState.totalXP));
+            localStorage.setItem('vo_settings_v6', JSON.stringify(appState.settings));
+
+            if (window.location.protocol.startsWith('http')) {
+                fetch('/api/memory', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ memory: appState.learnedMemory })
+                }).catch(() => {});
+            }
+        }
+
+        function resetDefaultStores() {
+            appState.stores = JSON.parse(JSON.stringify(REAL_STORES_DATA));
+            appState.schedules = JSON.parse(JSON.stringify(REAL_SCHEDULES));
+            appState.tasks = JSON.parse(JSON.stringify(REAL_TASKS));
+            appState.storeMetrics = JSON.parse(JSON.stringify(DEFAULT_STORE_METRICS));
+            appState.learnedMemory = JSON.parse(JSON.stringify(DEFAULT_LEARNED_MEMORY));
+            saveState();
+            applyActiveStoreUI();
+            addLog('plan', 'CEO Minh Trí', 'Đã khôi phục dữ liệu tách bạch chuẩn và bộ nhớ tự học gốc của 3 quán.');
+        }
+
+        function getActiveStore() {
+            return appState.stores.find(s => s.id === appState.selectedStoreId) || appState.stores[0];
+        }
+
+        function selectSingleStore(storeId) {
+            appState.selectedStoreId = storeId;
+            saveState();
+            applyActiveStoreUI();
+            update3DFloorThemeForStore();
+            const st = getActiveStore();
+            addLog('plan', 'Sảnh 3D Codex×Claude', `Đã chuyển toàn bộ 6 Nhân viên AI 3D, Bộ nhớ tự học & Sổ Doanh Thu sang: ${st.shortName || st.name}`);
+        }
+
+        function applyActiveStoreUI() {
+            const st = getActiveStore();
+            const is7A = st.id === 'store_7a';
+            const isCafe = st.id === 'store_cafe_anvat';
+
+            const btn7A = document.getElementById('btnSelect7A');
+            const btnCT = document.getElementById('btnSelectComTam');
+            const btnCF = document.getElementById('btnSelectCafe');
+            if (btn7A) btn7A.className = 'store-switch-btn' + (is7A ? ' active-7a' : '');
+            if (btnCT) btnCT.className = 'store-switch-btn' + (!is7A && !isCafe ? ' active-comtam' : '');
+            if (btnCF) btnCF.className = 'store-switch-btn' + (isCafe ? ' active-cafe' : '');
+
+            const logo = document.getElementById('sidebarBrandLogo');
+            if (logo) logo.textContent = is7A ? '7A' : (isCafe ? 'CF' : 'CT');
+
+            const banner = document.getElementById('activeStoreBannerPill');
+            if (banner) {
+                banner.className = 'active-store-banner-pill ' + (is7A ? 'banner-7a' : (isCafe ? 'banner-cafe' : 'banner-comtam'));
+                banner.innerHTML = is7A
+                    ? '🍔 Sảnh 3D: FOOD STATION 7A (Phước Thiện)'
+                    : (isCafe ? '☕ Sảnh 3D: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (Đông Thạnh)' : '🍛 Sảnh 3D: TRẠM KHỞI NGHIỆP (Cơm Tấm Sườn Nướng)');
+            }
+
+            const hudTitle = document.getElementById('hud3DStoreTitle');
+            if (hudTitle) {
+                hudTitle.textContent = is7A
+                    ? 'MÔ PHỎNG 3D: FOOD STATION 7A (SỐ 2 ĐƯỜNG 7A - SỔ 1)'
+                    : (isCafe ? 'MÔ PHỎNG 3D: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E NGUYỄN THỊ NGÂU - SỔ 3)' : 'MÔ PHỎNG 3D: TRẠM KHỞI NGHIỆP – CƠM TẤM SƯỜN NƯỚNG (SỔ 2)');
+                hudTitle.style.color = is7A ? '#34d399' : (isCafe ? '#f59e0b' : '#fbbf24');
+            }
+
+            const card7A = document.getElementById('financeCard7A');
+            const cardCT = document.getElementById('financeCardComTam');
+            const cardCF = document.getElementById('financeCardCafe');
+            if (card7A) card7A.classList.toggle('selected-focus', is7A);
+            if (cardCT) cardCT.classList.toggle('selected-focus', !is7A && !isCafe);
+            if (cardCF) cardCF.classList.toggle('selected-focus', isCafe);
+
+            const shortTitle = st.shortName || st.name;
+            ['floorStoreNameLabel', 'learnStoreTitle', 'warRoomStoreTitle', 'chatbotStoreBadge', 'schedStoreTitle', 'planStoreTitle', 'reportStoreTitle', 'marketingStoreTitle'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.textContent = shortTitle;
+            });
+
+            if (is7A) {
+                document.getElementById('warRoomPrompt').value = 'Lập phương án tăng doanh số độc lập cho FOOD STATION 7A (Số 2 Đường 7A, KP. Phước Thiện): đẩy mạnh Bánh Bao Kẹp (18K-26K) & Hamburger (28K) vào Ca Sáng, Cơm Gà Xối Mỡ & Mì Xào (40K) vào Ca Trưa, và Mì Cay 7 Cấp Độ (40K) vào Ca Tối.';
+                document.getElementById('chatbotInstruction').value = 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn chuyên nghiệp của FOOD STATION 7A (Số 2 Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức). Quán chuyên Bánh Bao Kẹp 18K-26K, Cơm Gà Xối Mỡ 40K, Mì Cay 7 Cấp Độ 40K. Tuyệt đối không nhầm sang thực đơn Cơm Tấm hay Cà Phê Đông Thạnh.';
+                document.getElementById('marketingGoal').value = 'Chiến dịch tăng doanh số Quán 7A: Đẩy mạnh Bánh Bao Kẹp & FastFood ăn sáng cho cư dân và học sinh quanh Phước Thiện.';
+            } else if (isCafe) {
+                document.getElementById('warRoomPrompt').value = 'Lập phương án bùng nổ doanh thu cho CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E Nguyễn Thị Ngâu, Đông Thạnh, TP.HCM): Khung sáng 06h30-10h00 tập trung Cà phê muối (20K), Bạc xỉu & Nước sâm (15K) mang đi; Khung tối 16h30-22h30 bùng nổ ăn vặt nóng giòn (Cá viên mắm bơ tỏi 30K, Khoai lắc 25K, Mì cay Hàn Quốc 45K).';
+                document.getElementById('chatbotInstruction').value = 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn của CAFE ĂN VẶT TRẠM KHỞI NGHIỆP tại 36/5E Nguyễn Thị Ngâu, Trung Đông 8, Xã Đông Thạnh, TP.HCM (Hotline: 0938.888.xxx). Quán chuyên Cà Phê Muối kem béo 20K, Nước sâm bí đao hạt chia 15K, Cá viên chiên mắm bơ tỏi 30K, Mì trộn xúc xích 30K, Mì cay 45K. Tư vấn nhiệt tình, thân thiện, chốt đơn bàn hoặc mang về nhanh chóng. Tuyệt đối không nhầm thực đơn sang quán Cơm Tấm hay Food Station 7A.';
+                document.getElementById('marketingGoal').value = 'Chiến dịch Khai Trương & Lan Tỏa: Thu hút giới trẻ, học sinh, cư dân Đông Thạnh check-in thưởng thức Cà Phê Muối & Đồ ăn vặt nóng giòn.';
+            } else {
+                document.getElementById('warRoomPrompt').value = 'Lập phương án tăng doanh số độc lập cho TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa: đẩy mạnh đặt Cơm Hộp Trưa 35K-45K cho các công ty & xưởng lân cận, đồng thời đẩy mạnh suất 2 Sườn Gymer (55K) vào buổi tối.';
+                document.getElementById('chatbotInstruction').value = 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn chuyên nghiệp của TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên. Chuyên Cơm Tấm Sườn 30K-50K, Cơm Chiên Dưa Bò/Dương Châu 40K-50K. Nhận đặt cơm hộp văn phòng/xưởng. Tuyệt đối không tư vấn thực đơn Quán 7A hay Quán Cafe Ăn Vặt.';
+                document.getElementById('marketingGoal').value = 'Chiến dịch tăng doanh số TRẠM KHỞI NGHIỆP: Tìm kiếm công ty, xưởng đặt cơm trưa cố định từ 10-30 suất Cơm Tấm Sườn Bì Chả hàng ngày.';
+            }
+
+            renderKanbanTasks();
+            renderShiftSchedules();
+            renderLearnedMemoryList();
+            renderReportsData();
+            updateAgentSpeechesForStore();
+        }
+
+        function update3DFloorThemeForStore() {
+            if (!scene3D || !floorGridHelper3D) return;
+            const is7A = appState.selectedStoreId === 'store_7a';
+            const isCafe = appState.selectedStoreId === 'store_cafe_anvat';
+            scene3D.remove(floorGridHelper3D);
+            const gridColor = is7A ? 0x10b981 : (isCafe ? 0xd97706 : 0xf59e0b);
+            floorGridHelper3D = new THREE.GridHelper(24, 24, gridColor, 0x1e293b);
+            floorGridHelper3D.position.y = 0.02;
+            scene3D.add(floorGridHelper3D);
+        }
+
+        function getStoreAgentSpeech(ag) {
+            if (appState.selectedStoreId === 'store_7a') return ag.speech7A;
+            if (appState.selectedStoreId === 'store_cafe_anvat') return ag.speechCafe || ag.speech7A;
+            return ag.speechCT;
+        }
+
+        function updateAgentSpeechesForStore() {
+            AGENTS_3D_ROSTER.forEach(ag => {
+                const sp = getStoreAgentSpeech(ag);
+                setAgent3DWorkingState(ag.id, sp);
+                const taskEl = document.getElementById(`agentTask_${ag.id}`);
+                if (taskEl) taskEl.textContent = sp;
+            });
+        }
+
+
+        function animate3DOfficeLoop() {
+            requestAnimationFrame(animate3DOfficeLoop);
+            if (!renderer3D || !scene3D || !camera3D) return;
+
+            const time = performance.now() * 0.001 * appState.gameSpeed;
+
+            // Xoay khối Lõi Tự Học Codex x Claude
+            if (coreCrystalMesh3D) {
+                coreCrystalMesh3D.rotation.y = time * 1.1;
+                coreCrystalMesh3D.rotation.x = Math.sin(time * 0.7) * 0.35;
+                coreCrystalMesh3D.position.y = 2.15 + Math.sin(time * 2.2) * 0.16;
+            }
+            if (coreRingMesh3D) {
+                coreRingMesh3D.rotation.z = -time * 0.8;
+            }
+
+            const canvas = renderer3D.domElement;
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+
+            // Cập nhật chuyển động bước đi & tọa độ nhãn 3D của 6 nhân viên
+            characterMeshes3D.forEach(c => {
+                const dx = c.targetX - c.group.position.x;
+                const dz = c.targetZ - c.group.position.z;
+                const dist = Math.hypot(dx, dz);
+
+                if (dist > 0.08) {
+                    const speed = 0.045 * appState.gameSpeed;
+                    c.group.position.x += (dx / dist) * Math.min(dist, speed);
+                    c.group.position.z += (dz / dist) * Math.min(dist, speed);
+                    c.group.lookAt(c.targetX, 0, c.targetZ);
+
+                    // Hiệu ứng vung tay chân khi đi bộ
+                    const walkCycle = Math.sin(time * 9 + c.phase) * 0.45;
+                    c.leftLeg.rotation.x = walkCycle;
+                    c.rightLeg.rotation.x = -walkCycle;
+                    c.leftArm.rotation.x = -walkCycle * 0.8;
+                    c.rightArm.rotation.x = walkCycle * 0.8;
+                    c.group.position.y = Math.abs(Math.sin(time * 9 + c.phase)) * 0.08;
+                } else {
+                    // Đứng làm việc / gõ phím nhẹ nhàng
+                    c.leftLeg.rotation.x = 0;
+                    c.rightLeg.rotation.x = 0;
+                    c.leftArm.rotation.x = Math.sin(time * 4 + c.phase) * 0.12;
+                    c.rightArm.rotation.x = Math.cos(time * 4 + c.phase) * 0.12;
+                    c.group.position.y = Math.sin(time * 2.5 + c.phase) * 0.03;
+                    c.group.lookAt(0, 0, 0);
+                }
+
+                // Chiếu tọa độ 3D lên màn hình 2D cho Bong bóng thoại & Tên nhân viên
+                const headWorldPos = new THREE.Vector3(c.group.position.x, 2.35, c.group.position.z);
+                headWorldPos.project(camera3D);
+                if (headWorldPos.z < 1) {
+                    const screenX = (headWorldPos.x * 0.5 + 0.5) * width;
+                    const screenY = (-(headWorldPos.y * 0.5) + 0.5) * height;
+                    c.tagEl.style.display = 'flex';
+                    c.tagEl.style.left = `${screenX}px`;
+                    c.tagEl.style.top = `${screenY}px`;
+                } else {
+                    c.tagEl.style.display = 'none';
+                }
+            });
+
+            renderer3D.render(scene3D, camera3D);
+        }
+
+        // Vòng lặp hành vi tự động 24/24 của 6 Nhân Viên 3D (Đi họp, trao đổi, tự học tại Lõi Neural, về bàn làm việc)
+        function startAutonomous3DBehaviorLoop() {
+            if (autoSimInterval) clearInterval(autoSimInterval);
+            autoSimInterval = setInterval(() => {
+                const toggle = document.getElementById('autoDaemonToggle');
+                if (toggle && !toggle.checked) return;
+
+                const is7A = appState.selectedStoreId === 'store_7a';
+                const stName = is7A ? 'FOOD STATION 7A' : 'TRẠM KHỞI NGHIỆP Cơm Tấm';
+
+                // Chọn ngẫu nhiên 1-2 nhân viên di chuyển giữa Bàn Làm Việc và Lõi Tự Học Codex x Claude
+                const randIdx = Math.floor(Math.random() * characterMeshes3D.length);
+                const charObj = characterMeshes3D[randIdx];
+                const agInfo = AGENTS_3D_ROSTER[randIdx];
+                if (!charObj || !agInfo) return;
+
+                const goToCore = Math.random() > 0.45;
+                if (goToCore) {
+                    const angle = (randIdx / characterMeshes3D.length) * Math.PI * 2;
+                    charObj.targetX = Math.cos(angle) * 3.2;
+                    charObj.targetZ = Math.sin(angle) * 3.2;
+                    const actionTexts7A = [
+                        `Đang đồng bộ Lõi Codex×Claude cho Quán 7A...`,
+                        `Kiểm tra đơn Bánh Bao Kẹp & Cơm Gà Xối Mỡ 40K...`,
+                        `Rà soát chi phí nguyên liệu Sổ 1 (Quán 7A)...`,
+                        `Tối ưu kịch bản tư vấn Mì Cay 7 Cấp Độ 40K...`
+                    ];
+                    const actionTextsCT = [
+                        `Đang đồng bộ Lõi Codex×Claude cho Quán Cơm Tấm...`,
+                        `Kiểm tra đơn Cơm Tấm Sườn Bì Chả 45K trên #/planner...`,
+                        `Tối ưu lịch nướng sườn than hoa & giao Cơm Hộp...`,
+                        `Đang phân tích doanh thu suất 2 Sườn Gymer 55K...`
+                    ];
+                    const actionTextsCafe = [
+                        `Đang đồng bộ Lõi Codex×Claude cho Quán Đông Thạnh...`,
+                        `Kiểm tra đơn Cà Phê Muối 20K & Cá Viên Bơ Tỏi 30K...`,
+                        `Tối ưu nhiệt độ chiên đồ ăn vặt & ủ mẻ sâm bí đao...`,
+                        `Phân tích biên lợi nhuận Sổ 3 Đông Thạnh (lãi gộp > 65%)...`
+                    ];
+                    const isCafe = appState.selectedStoreId === 'store_cafe_anvat';
+                    const list = is7A ? actionTexts7A : (isCafe ? actionTextsCafe : actionTextsCT);
+                    const msg = list[Math.floor(Math.random() * list.length)];
+                    setAgent3DWorkingState(agInfo.id, msg);
+                } else {
+                    charObj.targetX = charObj.homeX;
+                    charObj.targetZ = charObj.homeZ;
+                    setAgent3DWorkingState(agInfo.id, getStoreAgentSpeech(agInfo));
+                }
+
+                addXPAndLevelUp(agInfo.id, 5);
+            }, 5500);
+        }
+
+        function commandAllAgents3D(mode) {
+            characterMeshes3D.forEach((c, idx) => {
+                const angle = (idx / characterMeshes3D.length) * Math.PI * 2;
+                if (mode === 'gather' || mode === 'core') {
+                    c.targetX = Math.cos(angle) * 3.1;
+                    c.targetZ = Math.sin(angle) * 3.1;
+                } else {
+                    c.targetX = c.homeX;
+                    c.targetZ = c.homeZ;
+                }
+            });
+        }
+
+        function cycleGameSpeed() {
+            const speeds = [1, 2, 4];
+            const nextIdx = (speeds.indexOf(appState.gameSpeed) + 1) % speeds.length;
+            appState.gameSpeed = speeds[nextIdx];
+            const btn = document.getElementById('speedBtn3D');
+            if (btn) btn.textContent = `⏩ Tốc độ: ${appState.gameSpeed}x`;
+        }
+
+        function setAgent3DWorkingState(agentId, speechText) {
+            const el = document.getElementById(`speech3D-${agentId}`);
+            if (el && speechText) el.textContent = speechText;
+            const ag = AGENTS_3D_ROSTER.find(a => a.id === agentId);
+            if (ag) {
+                const lvlEl = document.getElementById(`lvlBadge3D-${agentId}`);
+                const xpEl = document.getElementById(`xpFill3D-${agentId}`);
+                if (lvlEl) lvlEl.textContent = `Lv.${ag.level}`;
+                if (xpEl) xpEl.style.width = `${ag.xp}%`;
+            }
+        }
+
+        function refresh3DSpeechBubblesForStore() {
+            const is7A = appState.selectedStoreId === 'store_7a';
+            AGENTS_3D_ROSTER.forEach(ag => {
+                setAgent3DWorkingState(ag.id, getStoreAgentSpeech(ag));
+            });
+        }
+
+        function renderRosterBar3D() {
+            const bar = document.getElementById('charRosterBar');
+            if (!bar) return;
+            bar.innerHTML = AGENTS_3D_ROSTER.map(ag => `
+                <div class="roster-chip ${appState.selectedAgentId === ag.id ? 'selected' : ''}" onclick="selectAgentIn3D('${ag.id}')">
+                    <span>${ag.icon}</span>
+                    <div>
+                        <div style="font-weight:700;color:var(--text-main);">${escapeHtml(ag.name)}</div>
+                        <div style="font-size:0.62rem;color:${ag.colorCss};">Lv.${ag.level} • ${escapeHtml(ag.role)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function selectAgentIn3D(agentId) {
+            appState.selectedAgentId = agentId;
+            renderRosterBar3D();
+            updateSelectedAgentHud();
+            const c = characterMeshes3D.find(x => x.id === agentId);
+            if (c) {
+                cameraSpherical.targetX = c.group.position.x * 0.45;
+                cameraSpherical.targetZ = c.group.position.z * 0.45;
+                update3DCameraPosition();
+            }
+        }
+
+        function updateSelectedAgentHud() {
+            const ag = AGENTS_3D_ROSTER.find(a => a.id === appState.selectedAgentId) || AGENTS_3D_ROSTER[0];
+            const is7A = appState.selectedStoreId === 'store_7a';
+            const nameEl = document.getElementById('hudAgentName');
+            const brainEl = document.getElementById('hudAgentBrain');
+            const taskEl = document.getElementById('hudAgentTask');
+            if (nameEl) nameEl.textContent = `${ag.icon} ${ag.name} (Lv.${ag.level} • ${ag.xp}/100 XP)`;
+            if (brainEl) brainEl.textContent = ag.brain;
+            if (taskEl) taskEl.textContent = getStoreAgentSpeech(ag);
+        }
+
+        function openSelectedAgentDepartment() {
+            const ag = AGENTS_3D_ROSTER.find(a => a.id === appState.selectedAgentId) || AGENTS_3D_ROSTER[0];
+            switchTab(ag.tab);
+        }
+
+        function trainSelectedAgentNow() {
+            triggerAutonomousLearningCycle(true);
+        }
+
+        // =========================================================================
+        // 4. ĐỒNG BỘ 2 SỔ DOANH THU & CÁC PHÒNG BAN ĐỘC LẬP TỪNG QUÁN
+        // =========================================================================
+        window.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            loadSettingsToForm();
+            applyActiveStoreUI();
+            renderStoresList();
+            init3DOfficeGame();
+            syncBothStoresSeparately(false);
+            startAutoDaemon();
+
+            addLog('chat', 'Codex × Claude 3D', 'Đã khởi tạo Văn Phòng Ảo 3D 24/24 với 6 Nhân viên AI tự học. Tách bạch 100% doanh thu & bộ nhớ của 3 quán.');
+        });
+
+        function loadCurrentStoreMetricsToInputs() {
+            const stId = appState.selectedStoreId;
+            const m = appState.storeMetrics[stId] || DEFAULT_STORE_METRICS[stId] || { revenue: '0', cost: '0', orders: '', leads: '', notes: '' };
+            document.getElementById('repRevenue').value = m.revenue;
+            document.getElementById('repCost').value = m.cost;
+            document.getElementById('repOrders').value = m.orders;
+            document.getElementById('repLeads').value = m.leads;
+            document.getElementById('repNotes').value = m.notes;
+
+            if (appState.storeMetrics.store_7a) {
+                document.getElementById('dashRev7A').textContent = appState.storeMetrics.store_7a.revenue + ' đ';
+                document.getElementById('dashOrders7A').textContent = appState.storeMetrics.store_7a.orders.split('|')[0].trim();
+            }
+            if (appState.storeMetrics.store_comtam) {
+                document.getElementById('dashRevComTam').textContent = appState.storeMetrics.store_comtam.revenue + ' đ';
+                document.getElementById('dashOrdersComTam').textContent = appState.storeMetrics.store_comtam.orders.split('|')[0].trim();
+            }
+            if (appState.storeMetrics.store_cafe_anvat) {
+                const elRev = document.getElementById('dashRevCafe');
+                const elOrd = document.getElementById('dashOrdersCafe');
+                if (elRev) elRev.textContent = appState.storeMetrics.store_cafe_anvat.revenue + ' đ';
+                if (elOrd) elOrd.textContent = appState.storeMetrics.store_cafe_anvat.orders.split('|')[0].trim();
+            }
+            const elMemCF = document.getElementById('dashMemCountCafe');
+            if (elMemCF) elMemCF.textContent = ((appState.learnedMemory && appState.learnedMemory.store_cafe_anvat) || []).length + ' bài học';
+        }
+
+        function saveCurrentStoreMetricsFromInputs() {
+            const stId = appState.selectedStoreId;
+            appState.storeMetrics[stId] = {
+                revenue: document.getElementById('repRevenue').value,
+                cost: document.getElementById('repCost').value,
+                orders: document.getElementById('repOrders').value,
+                leads: document.getElementById('repLeads').value,
+                notes: document.getElementById('repNotes').value
+            };
+            saveState();
+            if (stId === 'store_7a') {
+                document.getElementById('dashRev7A').textContent = appState.storeMetrics.store_7a.revenue + ' đ';
+                document.getElementById('dashOrders7A').textContent = appState.storeMetrics.store_7a.orders.split('|')[0].trim();
+            } else if (stId === 'store_comtam') {
+                document.getElementById('dashRevComTam').textContent = appState.storeMetrics.store_comtam.revenue + ' đ';
+                document.getElementById('dashOrdersComTam').textContent = appState.storeMetrics.store_comtam.orders.split('|')[0].trim();
+            }
+        }
+
+        async function syncBothStoresSeparately(showAlert = false) {
+            const urlCT = appState.settings.gasComTam || DEFAULT_GAS_COMTAM;
+            if (urlCT) {
+                try {
+                    const res = await fetch(urlCT + '?action=data', { headers: { 'Accept': 'application/json' } });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data && data.ok) {
+                            const rev = data.kpi?.doanhThu || 0;
+                            const soDon = data.kpi?.soDon || (data.donHang ? data.donHang.length : 0);
+                            const soMon = data.kpi?.soMon || 0;
+                            const tienMat = data.kpi?.tienMat || 0;
+                            const tienCK = data.kpi?.tienChuyenKhoan || 0;
+
+                            let orderLines = '';
+                            if (Array.isArray(data.donHang) && data.donHang.length > 0) {
+                                orderLines = data.donHang.slice(0, 12).map(d =>
+                                    `• [${d.date} ${d.time}] #${d.id} (${d.staff || 'NV'} - ${d.paymentMethod}): ${d.items} => ${(d.total || 0).toLocaleString('vi-VN')}đ`
+                                ).join('\n');
+                            }
+
+                            appState.storeMetrics.store_comtam = {
+                                revenue: rev.toLocaleString('vi-VN'),
+                                cost: appState.storeMetrics.store_comtam?.cost || '180,000',
+                                orders: `${soDon} đơn (${soMon} món) | TM: ${tienMat.toLocaleString('vi-VN')}đ | CK: ${tienCK.toLocaleString('vi-VN')}đ`,
+                                leads: `${data.ca || 'Ca hiện tại'} | Cập nhật lúc ${data.thoiGian || ''}`,
+                                notes: `SỔ ĐƠN HÀNG ĐỘC LẬP - ${data.store} (Ngày ${data.ngay}):\n${orderLines}`
+                            };
+                            document.getElementById('dashStatusComTam').textContent = `Live POS Cơm Tấm (${data.ngay} - ${data.thoiGian}): ${soDon} đơn • ${soMon} món`;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            const url7A = appState.settings.gas7A;
+            if (url7A && url7A.startsWith('https://script.google.com/')) {
+                try {
+                    const res7 = await fetch(url7A + '?action=data', { headers: { 'Accept': 'application/json' } });
+                    if (res7.ok) {
+                        const data7 = await res7.json();
+                        if (data7 && data7.ok) {
+                            const rev7 = data7.kpi?.doanhThu || 0;
+                            const soDon7 = data7.kpi?.soDon || (data7.donHang ? data7.donHang.length : 0);
+                            const soMon7 = data7.kpi?.soMon || 0;
+                            const tm7 = data7.kpi?.tienMat || 0;
+                            const ck7 = data7.kpi?.tienChuyenKhoan || 0;
+
+                            let lines7 = '';
+                            if (Array.isArray(data7.donHang) && data7.donHang.length > 0) {
+                                lines7 = data7.donHang.slice(0, 12).map(d =>
+                                    `• [${d.date} ${d.time}] #${d.id} (${d.staff || 'NV'} - ${d.paymentMethod}): ${d.items} => ${(d.total || 0).toLocaleString('vi-VN')}đ`
+                                ).join('\n');
+                            }
+
+                            appState.storeMetrics.store_7a = {
+                                revenue: rev7.toLocaleString('vi-VN'),
+                                cost: appState.storeMetrics.store_7a?.cost || '620,000',
+                                orders: `${soDon7} đơn (${soMon7} món) | TM: ${tm7.toLocaleString('vi-VN')}đ | CK: ${ck7.toLocaleString('vi-VN')}đ`,
+                                leads: `${data7.ca || 'Ca hiện tại'} | Cập nhật lúc ${data7.thoiGian || ''}`,
+                                notes: `SỔ ĐƠN HÀNG ĐỘC LẬP - FOOD STATION 7A (Ngày ${data7.ngay}):\n${lines7}`
+                            };
+                            document.getElementById('dashStatus7A').textContent = `Live POS Quán 7A (${data7.ngay} - ${data7.thoiGian}): ${soDon7} đơn`;
+                        }
+                    }
+                } catch (e) {}
+            }
+
+            saveState();
+            loadCurrentStoreMetricsToInputs();
+            if (showAlert) {
+                alert('✅ Đã đồng bộ tách bạch 2 Sổ Doanh Thu riêng biệt cho FOOD STATION 7A và TRẠM KHỞI NGHIỆP Cơm Tấm!');
+            }
+        }
+
+        function syncActiveStorePOS(showAlert = false) {
+            syncBothStoresSeparately(showAlert);
+        }
+
+        function openSpecificPortal(storeId, viewType) {
+            selectSingleStore(storeId);
+            switchTab('portal');
+            if (storeId === 'store_7a') {
+                if (viewType === 'admin') loadPortalUrl('https://123okmen.github.io/quan-an-nhanh-7a/#/admin');
+                else if (viewType === 'plan') loadPortalUrl('https://123okmen.github.io/quan-an-nhanh-7a/#/plan');
+                else loadPortalUrl('https://123okmen.github.io/quan-an-nhanh-7a/');
+            } else if (storeId === 'store_cafe_anvat') {
+                if (viewType === 'staff' || viewType === 'pos') loadPortalUrl('https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/staff');
+                else if (viewType === 'planner') loadPortalUrl('https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/planner');
+                else if (viewType === 'plan') loadPortalUrl('https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/plan');
+                else loadPortalUrl('https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/order');
+            } else {
+                if (viewType === 'planner') loadPortalUrl('https://123okmen.github.io/com-tam-suon-nuong/?zarsrc=31&utm_source=zalo&utm_medium=zalo&utm_campaign=zalo#/planner');
+                else loadPortalUrl('https://123okmen.github.io/com-tam-suon-nuong/');
+            }
+        }
+
+        function loadPortalUrl(url) {
+            const iframe = document.getElementById('storePortalIframe');
+            const extLink = document.getElementById('openExternalPortalLink');
+            if (iframe) iframe.src = url;
+            if (extLink) extLink.href = url;
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+            const targetPane = document.getElementById('tab-' + tabId);
+            if (targetPane) targetPane.classList.add('active');
+
+            const navBtn = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
+            if (navBtn) navBtn.classList.add('active');
+            lucide.createIcons();
+        }
+
+        async function test9RouterConnection() {
+            const st = getActiveStore();
+            addLog('plan', 'Codex × Claude Hub', `Đang kiểm tra kết nối hệ động cơ kép cho: ${st.shortName || st.name}...`);
+            const chain = getRoleModelChain('CODEX_AUDIT');
+            const result = await call9RouterDirectOrProxy([
+                { role: 'system', content: `Bạn là Trợ lý AI vận hành trên hệ CODEX × CLAUDE riêng cho quán ${st.name}.` },
+                { role: 'user', content: `Hãy chào Chủ quán 1 câu ngắn gọn và xác nhận hệ thống nhân viên AI 3D đang làm việc & tự học độc lập cho ${st.shortName || st.name}.` }
+            ], chain);
+
+            if (result && result.text) {
+                addLog('chat', `Codex×Claude [${result.model}]`, result.text);
+                alert(`✅ HỆ ĐỘNG CƠ KÉP CODEX × CLAUDE HOẠT ĐỘNG TỐT!\n\n• Model phản hồi: ${result.model}\n• Quán đang chọn: ${st.shortName || st.name}\n• Phản hồi:\n"${result.text}"`);
+            } else {
+                alert('Đã lưu cấu hình 9Router (Codex × Claude). Hệ thống 3D đang sẵn sàng phục vụ tách biệt cho từng quán!');
+            }
+        }
+
+        function generateSingleStoreFallback(agentRole, userPrompt, st, m) {
+            const is7A = st.id === 'store_7a';
+            const nowStr = new Date().toLocaleString('vi-VN');
+
+            if (agentRole === 'CHATBOT') {
+                if (is7A) {
+                    return `Dạ **FOOD STATION 7A** (Số 2 Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức - ĐT/Zalo: **0931.811.872**) xin chào Anh/Chị ạ! 🍔🥟\n\nEm là **NV1 Linh Nhi** gửi bảng giá thực đơn riêng của Quán 7A:\n🥟 **Bánh Bao Kẹp (BBK) & FastFood:**\n- BBK Xúc Xích: 18K | BBK Gà Rán: 20K | BBK Tôm Rán: 24K\n- BBK Sườn BBQ: 25K | BBK Tôm Phô Mai: 26K\n- Sandwich Trứng Xúc Xích/Gà: 22K | Hamburger Bò/Gà Phô Mai: 28K\n\n🍛 **Cơm - Mì Xào - Mì Cay (Đồng giá 40K, Cơm Chiên Trứng 25K):**\n- Cơm Gà Xối Mỡ (40K), Cơm Gà Mắm Tỏi (40K), Cơm Bò Lúc Lắc (40K), Cơm Sườn Chua Ngọt (40K)\n- Mì Xào Bò/Hải Sản (40K), Mì Xào Giòn (40K), Hủ Tiếu Xào (40K)\n- Mì Cay 7 Cấp Độ Bò/Hải Sản (40K), Mì Trộn Thập Cẩm (30K), Bánh Tráng Trộn (20K)\n\n👉 Đặt món trực tiếp tại: https://123okmen.github.io/quan-an-nhanh-7a/ ạ!\n💡 [BÀI HỌC TỰ RÚT RA]: Khách hỏi menu Quán 7A cần được gợi ý kèm Trứng/Phô mai (+5K) và Nước ngọt (+10K).`;
+                } else {
+                    return `Dạ **TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên** xin chào Anh/Chị ạ! 🔥🍛\n\nEm là **NV1 Linh Nhi** gửi bảng giá thực đơn riêng của quán:\n🔥 **Cơm Tấm Sườn Nướng Than Hoa:**\n- Cơm Tấm Sườn: 30.000đ | Sườn Trứng / Sườn Bì: 35.000đ\n- Cơm Tấm Sườn Chả: 40.000đ | Sườn Bì Chả: 45.000đ\n- Cơm Tấm Sườn Bì Chả Trứng (Đặc Biệt): 50.000đ\n- Cơm Tấm 2 Sườn (Suất ăn khỏe / Gymer): 55.000đ\n\n🍳 **Cơm Chiên Hạt Vàng Nóng Hổi:**\n- Cơm Chiên Trứng: 30.000đ | Dương Châu / Gà Xé / Xá Xíu / Cá Mặn: 40.000đ\n- Cơm Chiên Dưa Bò: 45.000đ | Cơm Chiên Hải Sản: 50.000đ\n\n👉 Đặt món trực tiếp tại: https://123okmen.github.io/com-tam-suon-nuong/ ạ!\n💡 [BÀI HỌC TỰ RÚT RA]: Luôn giới thiệu suất Cơm Tấm 2 Sườn (55K) và Chả Trứng (+10K) để tăng giá trị đơn.`;
+                }
+            }
+
+            if (agentRole === 'REPORTER') {
+                return `📊 BÁO CÁO KIỂM TOÁN ĐỘC LẬP (NV4 TUYẾT MAI - CODEX × CLAUDE)
+🏪 Quán: ${st.name}
+📍 Địa chỉ: ${st.address}
+🕒 Thời điểm: ${nowStr}
+--------------------------------------------------------------------
+1. SỐ LIỆU HẠCH TOÁN RIÊNG CỦA QUÁN:
+- Tổng Doanh Thu: ${m.revenue} VNĐ
+- Tổng Chi Phí Đi Chợ / Nhập Nguyên Liệu: ${m.cost} VNĐ
+- Cơ Cấu Đơn Hàng & Thanh Toán: ${m.orders}
+- Ca & Nhân Sự Trực: ${m.leads}
+
+2. CHI TIẾT GHI NHẬN TRONG CA:
+${m.notes}
+
+💡 [BÀI HỌC TỰ RÚT RA]: ${is7A
+    ? 'Giữ tỷ lệ Cost nguyên liệu Quán 7A dưới 36% bằng cách đẩy mạnh bán kèm Topping (+5K) và Nước (+10K).'
+    : 'Tăng số lượng đơn Cơm Hộp văn phòng buổi trưa và gợi ý Sườn Thêm (+25K) để tối ưu lợi nhuận ròng.'}`;
+            }
+
+            return `✅ PHƯƠNG ÁN ĐIỀU HÀNH CODEX × CLAUDE CHO: ${st.name.toUpperCase()}
+📍 Địa chỉ: ${st.address}
+🕒 Thời gian: ${nowStr}
+--------------------------------------------------------------------
+- Thực đơn trọng tâm của quán: ${st.menu}
+- Yêu cầu xử lý: "${userPrompt}"
+- Đã đồng bộ nhiệm vụ cho 6 Nhân viên AI 3D và lưu vào bộ nhớ tự học riêng của ${st.shortName}.`;
+        }
+
+        function initChatWelcome() {
+            const st = getActiveStore();
+            const box = document.getElementById('chatMessagesBox');
+            box.innerHTML = `
+                <div class="msg msg-bot">
+                    Dạ xin chào Anh/Chị! Em là <strong>💬 NV1. Linh Nhi (Claude × Codex)</strong> trực độc lập 24/24 của riêng quán:<br>
+                    🏪 <strong>${escapeHtml(st.name)}</strong><br>
+                    📍 <em>${escapeHtml(st.address)}</em><br><br>
+                    Em đã nạp đầy đủ <strong>Bộ Nhớ Tự Học</strong> và bảng giá riêng của <strong>${escapeHtml(st.shortName || st.name)}</strong>. Anh/Chị bấm nút hỏi thử bên dưới nhé!
+                    <div class="msg-meta">NV1 Linh Nhi • Codex × Claude Active</div>
+                </div>
+            `;
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatUserInput');
+            const text = input.value.trim();
+            if (!text) return;
+            input.value = '';
+
+            const st = getActiveStore();
+            const box = document.getElementById('chatMessagesBox');
+            box.innerHTML += `<div class="msg msg-user">${escapeHtml(text)}<div class="msg-meta" style="color:rgba(255,255,255,0.75);">Khách hỏi ${escapeHtml(st.shortName)} • Vừa xong</div></div>`;
+            box.scrollTop = box.scrollHeight;
+
+            const sysPrompt = document.getElementById('chatbotInstruction').value;
+            const reply = await callBestAI(sysPrompt, text, 'CHATBOT', 'chatbot');
+
+            box.innerHTML += `<div class="msg msg-bot">${escapeHtml(reply).replace(/\n/g, '<br>')}<div class="msg-meta">NV1 Linh Nhi (${escapeHtml(st.shortName)}) • Tự học +35 XP</div></div>`;
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function quickAskChat(q) {
+            document.getElementById('chatUserInput').value = q;
+            sendChatMessage();
+        }
+
+        async function generateChatbotPlaybook() {
+            const st = getActiveStore();
+            const out = document.getElementById('chatbotPlaybookOutput');
+            out.textContent = `⏳ NV1 Linh Nhi đang tạo bộ kịch bản chốt đơn riêng cho ${st.shortName}...`;
+            const res = await callBestAI(
+                `Bạn là NV1 Linh Nhi - Chuyên gia Chatbot CSKH riêng của quán ${st.name}.`,
+                `Hãy soạn 5 mẫu tin nhắn trả lời nhanh trên Zalo/Fanpage dành riêng cho thực đơn của ${st.name}.`,
+                'CLAUDE_CREATIVE',
+                'chatbot'
+            );
+            out.textContent = res;
+        }
+
+        function renderScheduleTable() {
+            const st = getActiveStore();
+            const filtered = appState.schedules.filter(item => item.storeId === st.id);
+            const tbody = document.getElementById('scheduleTableBody');
+            tbody.innerHTML = filtered.map(item => {
+                const realIdx = appState.schedules.indexOf(item);
+                return `
+                    <tr>
+                        <td style="font-family:'JetBrains Mono',monospace;color:var(--accent-amber);font-weight:600;">${escapeHtml(item.time)}</td>
+                        <td><span class="status-pill ${st.id === 'store_7a' ? 'pill-green' : 'pill-amber'}">${escapeHtml(item.store)}</span></td>
+                        <td>${escapeHtml(item.title)}</td>
+                        <td><span class="status-pill pill-blue">${escapeHtml(item.agent)}</span></td>
+                        <td>
+                            <span class="status-pill pill-green">${escapeHtml(item.status)}</span>
+                            <button class="btn btn-outline" style="padding:0.12rem 0.4rem;font-size:0.68rem;margin-left:0.35rem;" onclick="removeScheduleItem(${realIdx})">Xóa</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function addScheduleItem() {
+            const st = getActiveStore();
+            const time = document.getElementById('schedTimeInput').value.trim();
+            const title = document.getElementById('schedTitleInput').value.trim();
+            const agent = document.getElementById('schedAgentInput').value;
+            if (!time || !title) { alert('Vui lòng nhập Khung Giờ và Nội dung!'); return; }
+            appState.schedules.unshift({
+                storeId: st.id,
+                time,
+                store: st.shortName || st.name,
+                title,
+                agent,
+                status: 'Chạy 24/7'
+            });
+            addXPAndLevelUp('scheduler', 20);
+            saveState();
+            renderScheduleTable();
+            document.getElementById('schedTimeInput').value = '';
+            document.getElementById('schedTitleInput').value = '';
+            addLog('schedule', `[${st.shortName}] NV2 Minh Quân`, `Đã thêm lịch riêng [${time}]: ${title}`);
+        }
+
+        function removeScheduleItem(idx) {
+            appState.schedules.splice(idx, 1);
+            saveState();
+            renderScheduleTable();
+        }
+
+        async function aiGenerateSchedule() {
+            const st = getActiveStore();
+            const out = document.getElementById('aiScheduleOutput');
+            out.textContent = `⏳ NV2 Minh Quân đang lập Checklist bàn giao 3 Ca riêng cho ${st.shortName}...`;
+            const res = await callBestAI(
+                `Bạn là NV2 Minh Quân - Quản lý Điều Ca riêng của quán ${st.name}.`,
+                `Hãy lập Checklist chuẩn bị bếp, bán hàng và bàn giao cuối ca cho 3 Ca (Ca Sáng, Ca Trưa, Ca Chiều Tối) dành riêng cho đặc thù món ăn của ${st.name}.`,
+                'CODEX_AUDIT',
+                'scheduler'
+            );
+            out.textContent = res;
+        }
+
+        function renderKanbanBoard() {
+            const st = getActiveStore();
+            const cols = [
+                { key: 'todo', title: '📌 Cần Làm Tại Quán Này', pill: 'pill-amber' },
+                { key: 'doing', title: '⚡ Đang Chạy 24/7', pill: 'pill-blue' },
+                { key: 'done', title: '✅ Đã Hoàn Thành', pill: 'pill-green' }
+            ];
+            const board = document.getElementById('kanbanBoardContainer');
+            board.innerHTML = cols.map(c => {
+                const items = appState.tasks.filter(t => t.storeId === st.id && t.col === c.key);
+                return `
+                    <div class="kanban-col">
+                        <div class="kanban-col-header">
+                            <span>${c.title}</span>
+                            <span class="status-pill ${c.pill}">${items.length}</span>
+                        </div>
+                        ${items.map(t => `
+                            <div class="task-card">
+                                <h4>${escapeHtml(t.title)}</h4>
+                                <p>${escapeHtml(t.desc)}</p>
+                                <div class="task-meta">
+                                    <span style="color:var(--accent-cyan);font-weight:600;">${escapeHtml(t.agent)}</span>
+                                    ${c.key !== 'done' ? `<button class="btn btn-outline" style="padding:0.12rem 0.45rem;font-size:0.68rem;" onclick="moveTask('${t.id}')">Chuyển bước →</button>` : ''}
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function moveTask(id) {
+            const t = appState.tasks.find(x => x.id === id);
+            if (!t) return;
+            if (t.col === 'todo') t.col = 'doing';
+            else if (t.col === 'doing') t.col = 'done';
+            addXPAndLevelUp('planner', 25);
+            saveState();
+            renderKanbanBoard();
+        }
+
+        async function aiGeneratePlan() {
+            const st = getActiveStore();
+            const goal = document.getElementById('planGoalInput').value.trim() || `Tăng 30% số đơn và doanh thu riêng cho ${st.shortName} trong 14 ngày tới`;
+            const out = document.getElementById('aiPlanDetailOutput');
+            out.textContent = `⏳ NV3 Hoàng Bách đang lập kế hoạch chiến lược riêng cho ${st.shortName}...`;
+            const res = await callBestAI(
+                `Bạn là NV3 Hoàng Bách - Trưởng phòng Kế hoạch riêng của quán ${st.name}.`,
+                `Mục tiêu của quán: "${goal}". Hãy lập kế hoạch hành động chi tiết cho từng Ca Sáng, Ca Trưa, Ca Chiều Tối của riêng quán này.`,
+                'PLANNER',
+                'planner'
+            );
+            out.textContent = res;
+            appState.tasks.unshift({
+                id: 't_' + Date.now(),
+                storeId: st.id,
+                col: 'doing',
+                title: goal.substring(0, 52),
+                desc: `Kế hoạch độc lập của ${st.shortName} (Codex × Claude).`,
+                agent: `NV3 Hoàng Bách`
+            });
+            saveState();
+            renderKanbanBoard();
+        }
+
+        async function generateExecutiveReport() {
+            saveCurrentStoreMetricsFromInputs();
+            const st = getActiveStore();
+            const m = appState.storeMetrics[st.id];
+            const out = document.getElementById('reportOutputBox');
+            out.textContent = `⏳ NV4 Tuyết Mai (Codex Audit) đang phân tích sổ thu chi độc lập của ${st.shortName}...`;
+
+            const prompt = `Sổ thu chi độc lập của ${st.name}:\n- Doanh thu: ${m.revenue} VNĐ\n- Chi phí đi chợ/nhập hàng: ${m.cost} VNĐ\n- Đơn hàng & Thanh toán: ${m.orders}\n- Ca trực: ${m.leads}\n- Chi tiết đơn: ${m.notes}\n\nHãy tính lợi nhuận ròng, tỷ lệ chi phí/doanh thu và đề xuất 3 giải pháp tăng doanh số riêng cho quán này vào ngày mai.`;
+            const res = await callBestAI(
+                `Bạn là NV4 Tuyết Mai - Kế toán trưởng POS (vận hành trên Codex × Claude) riêng của quán ${st.name}.`,
+                prompt,
+                'REPORTER',
+                'reporter'
+            );
+            out.textContent = res;
+            addLog('report', `[${st.shortName}] NV4 Tuyết Mai`, `Đã xuất báo cáo kiểm toán doanh thu độc lập (${m.revenue} đ).`);
+        }
+
+        function exportReportToFile() {
+            const st = getActiveStore();
+            const content = document.getElementById('reportOutputBox').textContent;
+            const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Bao_Cao_Rieng_${st.id}_${new Date().toISOString().slice(0, 10)}.txt`;
+            a.click();
+        }
+
+        async function generateMarketingContent() {
+            const st = getActiveStore();
+            const format = document.getElementById('contentFormatSelect').value;
+            const topic = document.getElementById('contentTopicInput').value.trim();
+            const out = document.getElementById('marketingOutputBox');
+            out.textContent = `⏳ NV5 Bảo Ngọc (Claude × Codex) đang sáng tạo Content Marketing độc quyền cho ${st.shortName}...`;
+
+            const res = await callBestAI(
+                `Bạn là NV5 Bảo Ngọc - Giám đốc Content Marketing riêng của quán ${st.name}.`,
+                `Định dạng: ${format}\nChủ đề: ${topic}\nHãy viết bài quảng cáo thu hút khách hàng quanh khu vực của quán, chỉ nêu đúng các món và bảng giá của ${st.name}, kèm link đặt món riêng của quán.`,
+                'MARKETING',
+                'marketing'
+            );
+            out.textContent = res;
+            addLog('content', `[${st.shortName}] NV5 Bảo Ngọc`, `Đã tạo bài viết Marketing riêng cho ${st.shortName}.`);
+        }
+
+        function scheduleGeneratedContent() {
+            const st = getActiveStore();
+            appState.schedules.unshift({
+                storeId: st.id,
+                time: '06:15 • 10:00 • 16:30',
+                store: st.shortName || st.name,
+                title: `Đăng bài Content Marketing riêng của ${st.shortName} vào đầu 3 Ca`,
+                agent: 'NV5 Bảo Ngọc',
+                status: 'Lịch riêng'
+            });
+            saveState();
+            renderScheduleTable();
+            alert(`Đã thêm vào lịch đăng bài riêng của ${st.shortName}!`);
+        }
+
+        function fillStoreSpecificWarRoom(shiftType) {
+            const st = getActiveStore();
+            const is7A = st.id === 'store_7a';
+            const el = document.getElementById('warRoomPrompt');
+            if (shiftType === 'morning') {
+                el.value = is7A
+                    ? 'Tối ưu chiến dịch Ca Sáng (06h30-10h00) riêng cho FOOD STATION 7A tại Số 2 Đường 7A Phước Thiện: đẩy mạnh Bánh Bao Kẹp (18K-26K), Hamburger (28K), Sandwich (22K) bán mang đi nhanh gọn.'
+                    : 'Tối ưu chiến dịch Ca Sáng (06h30-10h00) riêng cho TRẠM KHỞI NGHIỆP Cơm Tấm: đẩy mạnh điểm tâm Cơm Tấm Sườn Nướng Than Hoa (30K-50K) nóng hổi vừa ra lò.';
+            } else if (shiftType === 'lunch') {
+                el.value = is7A
+                    ? 'Bùng nổ đơn Ca Trưa (10h00-14h00) riêng cho FOOD STATION 7A: đẩy mạnh Cơm Gà Xối Mỡ (40K), Cơm Gà Mắm Tỏi (40K), Cơm Bò Lúc Lắc (40K), Mì Xào Giòn (40K) ăn tại quán và giao quanh Phước Thiện.'
+                    : 'Bùng nổ đơn Ca Trưa (10h00-14h00) riêng cho TRẠM KHỞI NGHIỆP Cơm Tấm: khai thác tối đa khách ăn tại bàn và đơn đặt Cơm Hộp (Cơm Tấm Sườn Bì Chả 45K, Cơm Tấm 2 Sườn 55K, Cơm Chiên Dưa Bò 45K) cho công ty, nhà xưởng.';
+            } else {
+                el.value = is7A
+                    ? 'Tăng tốc doanh thu Ca Chiều Tối (16h00-21h00) riêng cho FOOD STATION 7A: thu hút khách ăn Mì Cay 7 Cấp Độ (40K), Mì Trộn Thập Cẩm (30K), Bánh Tráng Trộn (20K) và Bánh Bao Kẹp.'
+                    : 'Tăng tốc doanh thu Ca Chiều Tối (16h00-21h00) riêng cho TRẠM KHỞI NGHIỆP Cơm Tấm: phục vụ Cơm Tấm Sườn Nướng chiều tối, Cơm Chiên Hải Sản (50K) và mảng nướng BBQ.';
+            }
+        }
+
+        async function runWarRoomMeeting() {
+            const st = getActiveStore();
+            const prompt = document.getElementById('warRoomPrompt').value.trim();
+            if (!prompt) return;
+            commandAllAgents3D('gather');
+            const out = document.getElementById('warRoomOutput');
+            out.textContent = `⚡ CEO Minh Trí đang triệu tập 5 Nhân viên 3D họp giao ban trên hệ CODEX × CLAUDE cho riêng ${st.shortName}...`;
+            const res = await callBestAI(
+                `Bạn là CEO Minh Trí - Giám đốc Điều hành độc lập của riêng quán ${st.name}.`,
+                `Chỉ thị của Chủ quán: "${prompt}". Hãy phối hợp 5 nhân viên (NV1 Linh Nhi Chatbot, NV2 Minh Quân Lịch 3 Ca, NV3 Hoàng Bách Kế hoạch Kanban, NV4 Tuyết Mai Kế toán POS, NV5 Bảo Ngọc Content Marketing) lập phương án thực thi chi tiết dành riêng cho ${st.name}.`,
+                'WARROOM',
+                'ceo'
+            );
+            out.textContent = res;
+        }
+
+        function renderStoresList() {
+            const container = document.getElementById('storesListContainer');
+            container.innerHTML = appState.stores.map(s => `
+                <div class="task-card" style="margin-bottom:0;border-left:4px solid ${s.id === 'store_7a' ? 'var(--primary)' : 'var(--accent-amber)'};">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.45rem;">
+                        <div>
+                            <h4 style="font-size:0.96rem;color:var(--text-main);">${escapeHtml(s.name)}</h4>
+                            <span style="font-size:0.73rem;color:var(--accent-amber);display:block;margin-top:0.15rem;">⏰ ${escapeHtml(s.type)}</span>
+                            <span style="font-size:0.73rem;color:var(--accent-cyan);display:block;margin-top:0.15rem;">📍 ${escapeHtml(s.address)}</span>
+                        </div>
+                        <div style="display:flex;gap:0.4rem;">
+                            <button class="btn btn-primary" style="padding:0.25rem 0.6rem;font-size:0.72rem;" onclick="selectSingleStore('${s.id}')">Quản lý quán này</button>
+                            <button class="btn btn-outline" style="padding:0.25rem 0.6rem;font-size:0.72rem;" onclick="editStore('${s.id}')">Sửa</button>
+                        </div>
+                    </div>
+                    <p style="margin-bottom:0.4rem;color:var(--text-main);background:rgba(0,0,0,0.25);padding:0.55rem;border-radius:6px;font-size:0.75rem;"><strong>🍽️ Thực đơn riêng:</strong> ${escapeHtml(s.menu)}</p>
+                    <div style="font-size:0.72rem;color:var(--primary);word-break:break-all;">🔗 ${escapeHtml(s.link)}</div>
+                </div>
+            `).join('');
+        }
+
+        function editStore(id) {
+            const s = appState.stores.find(x => x.id === id);
+            if (!s) return;
+            document.getElementById('editStoreId').value = s.id;
+            document.getElementById('storeNameInput').value = s.name;
+            document.getElementById('storeTypeInput').value = s.type;
+            document.getElementById('storeAddressInput').value = s.address;
+            document.getElementById('storeMenuInput').value = s.menu;
+            document.getElementById('storePromoInput').value = s.promo;
+            document.getElementById('storeLinkInput').value = s.link;
+        }
+
+        function saveStore() {
+            const id = document.getElementById('editStoreId').value;
+            const name = document.getElementById('storeNameInput').value.trim();
+            if (!name) { alert('Vui lòng nhập Tên Quán!'); return; }
+            const storeObj = {
+                id: id || ('store_' + Date.now()),
+                shortName: name.split('-')[0].trim(),
+                name,
+                type: document.getElementById('storeTypeInput').value.trim(),
+                address: document.getElementById('storeAddressInput').value.trim(),
+                menu: document.getElementById('storeMenuInput').value.trim(),
+                promo: document.getElementById('storePromoInput').value.trim(),
+                link: document.getElementById('storeLinkInput').value.trim()
+            };
+            if (id) {
+                const idx = appState.stores.findIndex(x => x.id === id);
+                if (idx > -1) appState.stores[idx] = storeObj;
+            } else {
+                appState.stores.push(storeObj);
+            }
+            saveState();
+            renderStoresList();
+            applyActiveStoreUI();
+            alert('Đã lưu hồ sơ riêng của quán thành công!');
+        }
+
+        function addLog(type, agentName, message) {
+            const stream = document.getElementById('liveActivityStream');
+            if (!stream) return;
+            const timeStr = new Date().toLocaleTimeString('vi-VN');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.innerHTML = `<span class="log-time">[${timeStr}]</span><span class="log-agent">${escapeHtml(agentName)}:</span> ${escapeHtml(message)}`;
+            stream.prepend(entry);
+        }
+
+        function clearLogs() {
+            document.getElementById('liveActivityStream').innerHTML = '';
+        }
+
+        function startAutoDaemon() {
+            if (daemonInterval) clearInterval(daemonInterval);
+            daemonInterval = setInterval(() => {
+                const toggle = document.getElementById('autoDaemonToggle');
+                if (toggle && toggle.checked) {
+                    syncBothStoresSeparately(false);
+                }
+            }, 30000);
+        }
+
+        function toggleAutoDaemon() {
+            const checked = document.getElementById('autoDaemonToggle').checked;
+            document.getElementById('officeStatusText').textContent = checked ? 'Codex × Claude Tự Học 24/24' : 'Tạm dừng tự động';
+        }
+
+        function loadSettingsToForm() {
+            const s = appState.settings;
+            document.getElementById('aiProviderSelect').value = s.provider || 'codex_x_claude';
+            document.getElementById('nineRouterUrl').value = s.nineRouterUrl || DEFAULT_9ROUTER_URL;
+            document.getElementById('nineRouterKey').value = s.nineRouterKey || DEFAULT_9ROUTER_KEY;
+            document.getElementById('nineRouterModels').value = s.nineRouterModels || DEFAULT_9ROUTER_MODELS;
+            document.getElementById('apiKeyGemini').value = s.geminiKey || '';
+            document.getElementById('apiKeyOpenAI').value = s.openaiKey || '';
+            document.getElementById('gasUrlComTam').value = s.gasComTam || DEFAULT_GAS_COMTAM;
+            document.getElementById('gasUrl7A').value = s.gas7A || '';
+            document.getElementById('telegramBotToken').value = s.telegramToken || '';
+            document.getElementById('telegramChatId').value = s.telegramChatId || '';
+        }
+
+        function saveApiSettings() {
+            appState.settings = {
+                provider: document.getElementById('aiProviderSelect').value,
+                nineRouterUrl: document.getElementById('nineRouterUrl').value.trim() || DEFAULT_9ROUTER_URL,
+                nineRouterKey: document.getElementById('nineRouterKey').value.trim() || DEFAULT_9ROUTER_KEY,
+                nineRouterModels: document.getElementById('nineRouterModels').value.trim() || DEFAULT_9ROUTER_MODELS,
+                geminiKey: document.getElementById('apiKeyGemini').value.trim(),
+                openaiKey: document.getElementById('apiKeyOpenAI').value.trim(),
+                gasComTam: document.getElementById('gasUrlComTam').value.trim() || DEFAULT_GAS_COMTAM,
+                gas7A: document.getElementById('gasUrl7A').value.trim(),
+                telegramToken: document.getElementById('telegramBotToken').value.trim(),
+                telegramChatId: document.getElementById('telegramChatId').value.trim()
+            };
+            saveState();
+            syncBothStoresSeparately(false);
+            alert('Đã lưu cấu hình Hệ Động Cơ Kép Codex × Claude và 2 đường dẫn Google Sheets tách biệt!');
+        }
+
+        async function testTelegramPush() {
+            saveApiSettings();
+            const token = appState.settings.telegramToken;
+            const chatId = appState.settings.telegramChatId;
+            if (!token || !chatId) {
+                alert('Vui lòng nhập Telegram Bot Token và Chat ID!');
+                return;
+            }
+            const st = getActiveStore();
+            const m = appState.storeMetrics[st.id] || {};
+            const text = `🏢 [VĂN PHÒNG AI 3D 24/24 - CODEX × CLAUDE]\n🏪 Quán: ${st.name}\n📍 Địa chỉ: ${st.address}\n💰 Doanh thu riêng: ${m.revenue} VNĐ\n💸 Chi phí đi chợ: ${m.cost} VNĐ\n🧾 Đơn hàng: ${m.orders}`;
+            try {
+                const res = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text })
+                });
+                if (res.ok) alert(`Đã gửi báo cáo riêng của ${st.shortName} qua Telegram thành công!`);
+                else alert('Lỗi gửi Telegram. Vui lòng kiểm tra lại Token/Chat ID.');
+            } catch (e) {
+                alert('Lỗi kết nối: ' + e.message);
+            }
+        }
+
+        function copyText(id) {
+            navigator.clipboard.writeText(document.getElementById(id).textContent);
+            alert('Đã sao chép nội dung!');
+        }
+
+        function escapeHtml(str) {
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+    </script>
+</body>
+</html>

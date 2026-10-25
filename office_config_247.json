@@ -1,0 +1,30 @@
+{
+  "office_name": "Văn Phòng Ảo AI 3D 24/7 - Hệ Động Cơ Kép CODEX x CLAUDE",
+  "address": "Số 2, Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức",
+  "hotline": "0931.811.872",
+  "nine_router_url": "http://localhost:20128/v1",
+  "nine_router_key": "sk-c8ddee65dadacbf8-2orlgk-2451fb73",
+  "preferred_models": [
+    "cx/codex-auto-review",
+    "kr/claude-sonnet-4.5",
+    "kr/claude-sonnet-4.5-agentic",
+    "kr/claude-haiku-4.5",
+    "ag/claude-sonnet-4-6",
+    "ag/gemini-3.8-flash-high",
+    "ag/gemini-3-flash",
+    "gemini/gemini-3-flash-preview",
+    "ag/gpt-oss-120b-medium",
+    "bazaarlink/auto:free"
+  ],
+  "auto_schedule_times": [
+    "06:15",
+    "10:00",
+    "14:00",
+    "16:00",
+    "21:15"
+  ],
+  "gas_url_comtam": "https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec",
+  "gas_url_7a": "",
+  "telegram_bot_token": "",
+  "telegram_chat_id": ""
+}

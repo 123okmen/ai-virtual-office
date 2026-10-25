@@ -1,0 +1,104 @@
+{
+  "store_7a": [
+    {
+      "id": "mem_1792899191393",
+      "time": "10:33:11",
+      "agent": "📊 NV4. Tuyết Mai",
+      "engine": "Codex × Claude (cx/codex-auto-review)",
+      "insight": "Tỷ lệ chi phí 36,9% đang sát ngưỡng mục tiêu, vì vậy FOOD STATION 7A nên tăng giá trị mỗi đơn bằng topping 5K và nước 10K thay vì chỉ giảm giá món chính."
+    },
+    {
+      "id": "mem_1792899180751",
+      "time": "10:33:00",
+      "agent": "⏰ NV2. Minh Quân",
+      "engine": "Codex × Claude (cx/codex-auto-review)",
+      "insight": "Quy tắc:** Với mỗi đơn dưới **40.000đ**, luôn chốt thêm **trứng/phô mai 5.000đ hoặc nước 10.000đ** để nâng giá trị đơn trung bình từ **36.500đ lên tối thiểu 40.000đ**, đồng thời giữ **chi phí nguyên liệu không vượt 38% doanh thu**."
+    },
+    {
+      "id": "m7a_1",
+      "time": "Tự học Hệ Thống",
+      "agent": "👑 CEO Minh Trí (Claude × Codex)",
+      "engine": "Codex × Claude",
+      "insight": "Ca Sáng (06h30-10h00) tại Số 2 Đường 7A cần ưu tiên tốc độ ra món dưới 90 giây cho Bánh Bao Kẹp (18K-26K), Hamburger (28K) và Sandwich (22K) để đón luồng học sinh & người đi làm."
+    },
+    {
+      "id": "m7a_2",
+      "time": "Tự học POS",
+      "agent": "📊 NV4 Tuyết Mai (Codex Audit)",
+      "engine": "cx/codex-auto-review",
+      "insight": "Để giữ tỷ lệ Cost nguyên liệu của FOOD STATION 7A dưới 36%, luôn gợi ý khách gọi kèm Trứng/Phô mai (+5K) và Nước ngọt/Trà đá (+10K) khi mua Cơm Gà Xối Mỡ hoặc Mì Cay 40K."
+    },
+    {
+      "id": "m7a_3",
+      "time": "Tự học Marketing",
+      "agent": "🚀 NV5 Bảo Ngọc (Claude Creative)",
+      "engine": "kr/claude-sonnet-4.5",
+      "insight": "Khung giờ 10h00 và 16h15 đăng bài hình ảnh thật Cơm Gà Xối Mỡ (40K), Mì Xào Giòn (40K), Mì Cay 7 Cấp Độ (40K) vào hội nhóm cư dân Phước Thiện mang lại lượng bấm link đặt món cao nhất."
+    }
+  ],
+  "store_comtam": [
+    {
+      "id": "mem_1792899532966",
+      "time": "10:38:52",
+      "agent": "📋 NV3. Hoàng Bách",
+      "engine": "Codex × Claude (ag/gemini-3.8-flash-high)",
+      "insight": "Việc tăng 30% doanh thu không nằm ở việc tăng giá bán mà phụ thuộc vào việc cố định khung giờ nướng sườn đón đầu lúc 10h15 để nuốt trọn đơn cơm hộp văn phòng/xưởng, kết hợp ép triệt để tỷ lệ upsell Topping biên lợi nhuận cao (Sườn thêm, Chả trứng, Lạp xưởng) trên từng dĩa cơm tấm."
+    },
+    {
+      "id": "mem_1792899424998",
+      "time": "10:37:04",
+      "agent": "🚀 NV5. Bảo Ngọc",
+      "engine": "Codex × Claude (cx/codex-auto-review)",
+      "insight": "Ca sáng nên tập trung thông điệp “nóng hổi – no bụng – giá dễ chọn” để thu hút khách quanh quán."
+    },
+    {
+      "id": "mem_1792899387884",
+      "time": "10:36:27",
+      "agent": "💬 NV1. Linh Nhi",
+      "engine": "Codex × Claude (cx/codex-auto-review)",
+      "insight": "Quy tắc:** Tạm dừng mọi chi phí không thiết yếu và chỉ ghi nhận “đơn hàng” khi có món cụ thể, giá trị thanh toán (TM/CK) và đối soát thành công; trong 48 giờ tới, tập trung bán combo chủ lực **Cơm Tấm Sườn 30K** qua QR/giao cơm để biến 50 đơn 0 món thành doanh thu thực thu, tránh tiếp tục phát sinh chi phí khi dữ liệu chưa tạo tiền."
+    },
+    {
+      "id": "mem_1792899381299",
+      "time": "10:36:21",
+      "agent": "👑 CEO Minh Trí",
+      "engine": "Codex × Claude (ag/gemini-3.8-flash-high)",
+      "insight": "Việc tận dụng hiệu ứng khói thơm từ lò nướng than hoa mặt tiền vào khung giờ 16h30 kết hợp quảng bá chảo Cơm Chiên Hải Sản (50K) hạt vàng nóng hổi là đòn bẩy tự nhiên hiệu quả nhất để kéo khách vãng lai tan tầm vào quán mà không tốn thêm chi phí quảng cáo."
+    },
+    {
+      "id": "mem_1792899223158",
+      "time": "10:33:43",
+      "agent": "📊 NV4. Tuyết Mai",
+      "engine": "Codex × Claude (cx/codex-auto-review)",
+      "insight": "Dữ liệu đơn chi tiết phải được đối chiếu cuối từng ca; chỉ cần lệch tổng hợp là toàn bộ lợi nhuận và dòng tiền của quán bị báo sai."
+    },
+    {
+      "id": "mem_1792899202607",
+      "time": "10:33:22",
+      "agent": "📊 NV4. Tuyết Mai",
+      "engine": "Codex × Claude (cx/codex-auto-review)",
+      "insight": "Luôn đối chiếu tổng quan hệ thống với từng mã đơn; dữ liệu chi tiết hiện cho thấy TRẠM KHỞI NGHIỆP đã có 875.000 VNĐ doanh thu nhưng phần tổng hợp đang bị lệch."
+    },
+    {
+      "id": "mct_1",
+      "time": "Tự học Hệ Thống",
+      "agent": "👑 CEO Minh Trí (Claude × Codex)",
+      "engine": "Codex × Claude",
+      "insight": "Tại TRẠM KHỞI NGHIỆP Cơm Tấm, cần nướng sườn than hoa theo mẻ liên tục từ 10h15 để kịp đóng hộp Cơm Tấm Sườn Bì Chả (45K) giao cho văn phòng/xưởng trước 11h15."
+    },
+    {
+      "id": "mct_2",
+      "time": "Tự học POS",
+      "agent": "📊 NV4 Tuyết Mai (Codex Audit)",
+      "engine": "cx/codex-auto-review",
+      "insight": "Suất Cơm Tấm 2 Sườn Gymer (55K) và các topping Chả Trứng (+10K), Lạp Xưởng (+10K), Sườn Thêm (+25K) là nhóm mang lại biên lợi nhuận ròng cao nhất trên mỗi dĩa cơm tấm."
+    },
+    {
+      "id": "mct_3",
+      "time": "Tự học CSKH",
+      "agent": "💬 NV1 Linh Nhi (Claude Haiku)",
+      "engine": "kr/claude-haiku-4.5",
+      "insight": "Khi khách hỏi đặt Cơm Hộp trưa từ 5 phần trở lên, luôn gửi kèm gợi ý Cơm Tấm Sườn Bì Chả 45K + Cơm Chiên Dưa Bò 45K để khách dễ chọn đa dạng món."
+    }
+  ]
+}
