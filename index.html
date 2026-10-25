@@ -980,7 +980,62 @@
                 grid-template-columns: 1fr;
             }
         }
-    </style>
+    
+        /* MOBILE RESPONSIVE OPTIMIZATIONS */
+        .mobile-menu-btn {
+            display: none;
+            position: fixed;
+            top: 12px;
+            right: 12px;
+            z-index: 1000;
+            background: var(--bg-card);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+            align-items: center;
+            gap: 6px;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+            z-index: 95;
+        }
+
+        @media (max-width: 900px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            .sidebar-overlay.mobile-open {
+                display: block;
+            }
+            .mobile-menu-btn {
+                display: flex;
+            }
+            .main-content {
+                margin-left: 0 !important;
+                width: 100% !important;
+                padding: 1rem !important;
+                padding-top: 60px !important;
+            }
+            .office-canvas-container {
+                height: 280px !important;
+            }
+        }
+
+</style>
 </head>
 <body>
 
@@ -3147,5 +3202,19 @@ ${m.notes}
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
     </script>
+
+    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+        <span>🍔 Menu</span>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+    <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar) sidebar.classList.toggle('mobile-open');
+            if (overlay) overlay.classList.toggle('mobile-open');
+        }
+    </script>
+
 </body>
 </html>
