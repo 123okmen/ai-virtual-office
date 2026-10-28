@@ -1341,6 +1341,7 @@
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#d97706;color:#fcd34d;" onclick="openSpecificPortal('store_cafe_anvat', 'staff')">Mở POS Bán Hàng</button>
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_cafe_anvat', 'order')">Mở Menu Gọi Món</button>
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_cafe_anvat', 'planner')">Mở Báo Cáo</button>
+                                <a href="https://docs.google.com/spreadsheets/d/1tq1r_PA6TwHrg6f1qXXGR5x13FU4TLqpIGja6YOsSYI/edit" target="_blank" class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#10b981;color:#34d399;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">📊 Mở Google Sheet</a>
                             </div>
                         </div>
                     </div>
@@ -1930,7 +1931,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                         </div>
                         <div class="form-group">
                             <label class="form-label" style="color:#f59e0b;">☕ 3. Google Apps Script URL Riêng Của QUÁN 3 (CAFE ĂN VẶT ĐÔNG THẠNH):</label>
-                            <input type="text" id="gasUrlCafe" class="form-input" value="https://script.google.com/macros/s/AKfycbyETg2znWnDrNsgq3G2eB0IJxFeb_GdLKo5N68FkFlJVMvTzdt_M_C3YFzL7fcgiyY1/exec">
+                            <input type="text" id="gasUrlCafe" class="form-input" value="https://script.google.com/macros/s/AKfycbyktPQSBZEi6FSVMDBV27SWCQSzHMItoKHG8_um4TtAvREYmkVx1PTRncc1-E-3CVZk/exec">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Telegram Bot Token (Nhận báo cáo tách bạch từng quán):</label>
@@ -1974,7 +1975,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         const DEFAULT_9ROUTER_KEY = 'sk-c8ddee65dadacbf8-2orlgk-2451fb73';
         const DEFAULT_9ROUTER_MODELS = 'cx/codex-auto-review, kr/claude-sonnet-4.5, kr/claude-sonnet-4.5-agentic, kr/claude-haiku-4.5, ag/claude-sonnet-4-6, ag/gemini-3.8-flash-high, ag/gemini-3-flash, ag/gpt-oss-120b-medium, bazaarlink/auto:free';
         const DEFAULT_GAS_COMTAM = 'https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec';
-        const DEFAULT_GAS_CAFE = 'https://script.google.com/macros/s/AKfycbyETg2znWnDrNsgq3G2eB0IJxFeb_GdLKo5N68FkFlJVMvTzdt_M_C3YFzL7fcgiyY1/exec';
+        const DEFAULT_GAS_CAFE = 'https://script.google.com/macros/s/AKfycbyktPQSBZEi6FSVMDBV27SWCQSzHMItoKHG8_um4TtAvREYmkVx1PTRncc1-E-3CVZk/exec';
 
         const REAL_STORES_DATA = [
             {
@@ -3645,10 +3646,48 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                 } catch (e) {}
             }
 
+            const urlCF = appState.settings.gasCafe || DEFAULT_GAS_CAFE;
+            if (urlCF && urlCF.startsWith('https://script.google.com/')) {
+                try {
+                    const resCF = await fetch(urlCF + '?action=data', { headers: { 'Accept': 'application/json' } });
+                    if (resCF.ok) {
+                        const dataCF = await resCF.json();
+                        if (dataCF && dataCF.ok) {
+                            const revCF = dataCF.kpi?.doanhThu || 0;
+                            const soDonCF = dataCF.kpi?.soDon || (dataCF.donHang ? dataCF.donHang.length : 0);
+                            const soMonCF = dataCF.kpi?.soMon || 0;
+                            const tmCF = dataCF.kpi?.tienMat || 0;
+                            const ckCF = dataCF.kpi?.tienChuyenKhoan || 0;
+
+                            let linesCF = '';
+                            if (Array.isArray(dataCF.donHang) && dataCF.donHang.length > 0) {
+                                linesCF = dataCF.donHang.slice(0, 12).map(d =>
+                                    • [ ] # ( - ):  => đ
+                                ).join('\n');
+                            }
+
+                            appState.storeMetrics.store_cafe_anvat = {
+                                revenue: revCF.toLocaleString('vi-VN'),
+                                cost: '0',
+                                orders: ${soDonCF} đơn ( món) | TM: đ | CK: đ,
+                                leads: Ca hiện tại | Cập nhật lúc ,
+                                notes: SỔ ĐƠN HÀNG ĐỘC LẬP - CAFE ĂN VẶT ĐÔNG THẠNH:\n
+                            };
+                            const elRev = document.getElementById('dashRevCafe');
+                            const elOrd = document.getElementById('dashOrdersCafe');
+                            const elStat = document.getElementById('dashStatusCafe');
+                            if (elRev) elRev.textContent = revCF.toLocaleString('vi-VN') + ' đ';
+                            if (elOrd) elOrd.textContent = ${soDonCF} đơn ( món);
+                            if (elStat) elStat.textContent = Live POS Đông Thạnh:  đơn • Doanh thu thật:  đ;
+                        }
+                    }
+                } catch (e) {}
+            }
+
             saveState();
             loadCurrentStoreMetricsToInputs();
             if (showAlert) {
-                alert('✅ Đã đồng bộ tách bạch 2 Sổ Doanh Thu riêng biệt cho FOOD STATION 7A và TRẠM KHỞI NGHIỆP Cơm Tấm!');
+                alert('✅ Đã đồng bộ tách bạch 3 Sổ Doanh Thu thực tế cho FOOD STATION 7A, TRẠM KHỞI NGHIỆP Cơm Tấm và CAFE ĂN VẶT ĐÔNG THẠNH!');
             }
         }
 

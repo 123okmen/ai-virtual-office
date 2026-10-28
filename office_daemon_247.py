@@ -52,7 +52,7 @@ NINE_ROUTER_API_KEY = "sk-c8ddee65dadacbf8-2orlgk-2451fb73"
 
 # Live Google Apps Script endpoints (100% Real Sheet Data)
 GAS_URL_COMTAM = "https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec"
-GAS_URL_CAFE = "https://script.google.com/macros/s/AKfycbyETg2znWnDrNsgq3G2eB0IJxFeb_GdLKo5N68FkFlJVMvTzdt_M_C3YFzL7fcgiyY1/exec"
+GAS_URL_CAFE = "https://script.google.com/macros/s/AKfycbyktPQSBZEi6FSVMDBV27SWCQSzHMItoKHG8_um4TtAvREYmkVx1PTRncc1-E-3CVZk/exec"
 GAS_URL_7A = ""
 
 # Local Repository Paths
