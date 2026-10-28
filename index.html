@@ -3042,6 +3042,474 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
             updateAgentSpeechesForStore();
         }
 
+        
+        // =========================================================================
+        // HỆ THỐNG MÔ PHỎNG 3D VĂN PHÒNG NHƯ GAME (THREE.JS REAL-TIME SIMULATOR)
+        // =========================================================================
+        let scene3D = null;
+        let camera3D = null;
+        let renderer3D = null;
+        let floorGridHelper3D = null;
+        let coreCrystalMesh3D = null;
+        let coreRingMesh3D = null;
+        let characterMeshes3D = [];
+        let raycaster3D = new THREE.Raycaster();
+        let mouseRay3D = new THREE.Vector2();
+
+        const cameraSpherical = {
+            radius: 23,
+            theta: Math.PI / 4,
+            phi: Math.PI / 3.4,
+            targetX: 0,
+            targetY: 1.2,
+            targetZ: 0
+        };
+        let is3DMouseDown = false;
+        let mouse3DLastX = 0, mouse3DLastY = 0;
+
+        function update3DCameraPosition() {
+            if (!camera3D) return;
+            cameraSpherical.phi = Math.max(0.15, Math.min(Math.PI / 2 - 0.05, cameraSpherical.phi));
+            cameraSpherical.radius = Math.max(6, Math.min(48, cameraSpherical.radius));
+            camera3D.position.x = cameraSpherical.targetX + cameraSpherical.radius * Math.sin(cameraSpherical.phi) * Math.sin(cameraSpherical.theta);
+            camera3D.position.y = cameraSpherical.targetY + cameraSpherical.radius * Math.cos(cameraSpherical.phi);
+            camera3D.position.z = cameraSpherical.targetZ + cameraSpherical.radius * Math.sin(cameraSpherical.phi) * Math.cos(cameraSpherical.theta);
+            camera3D.lookAt(cameraSpherical.targetX, cameraSpherical.targetY, cameraSpherical.targetZ);
+        }
+
+        function set3DCameraPreset(preset) {
+            document.querySelectorAll('.hud-btn[id^="camBtn-"]').forEach(btn => btn.classList.remove('active'));
+            const btn = document.getElementById('camBtn-' + preset);
+            if (btn) btn.classList.add('active');
+
+            if (preset === 'iso') {
+                cameraSpherical.radius = 23;
+                cameraSpherical.theta = Math.PI / 4;
+                cameraSpherical.phi = Math.PI / 3.4;
+                cameraSpherical.targetX = 0;
+                cameraSpherical.targetY = 1.2;
+                cameraSpherical.targetZ = 0;
+            } else if (preset === 'warroom') {
+                cameraSpherical.radius = 12;
+                cameraSpherical.theta = 0.15;
+                cameraSpherical.phi = Math.PI / 3.6;
+                cameraSpherical.targetX = 0;
+                cameraSpherical.targetY = 1.2;
+                cameraSpherical.targetZ = -4.5;
+            } else if (preset === 'core') {
+                cameraSpherical.radius = 9;
+                cameraSpherical.theta = Math.PI / 3;
+                cameraSpherical.phi = Math.PI / 3;
+                cameraSpherical.targetX = 0;
+                cameraSpherical.targetY = 1.6;
+                cameraSpherical.targetZ = 0;
+            }
+            update3DCameraPosition();
+        }
+
+        function init3DOfficeGame() {
+            const canvas = document.getElementById('threeOfficeCanvas');
+            const wrapper = document.getElementById('gameWorldWrapper');
+            if (!canvas || !wrapper) return;
+
+            const width = wrapper.clientWidth || 900;
+            const height = wrapper.clientHeight || 520;
+
+            // 1. Renderer
+            renderer3D = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance' });
+            renderer3D.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer3D.setSize(width, height, false);
+            renderer3D.shadowMap.enabled = true;
+            renderer3D.shadowMap.type = THREE.PCFSoftShadowMap;
+
+            // 2. Scene & Fog
+            scene3D = new THREE.Scene();
+            scene3D.background = new THREE.Color(0x070c17);
+            scene3D.fog = new THREE.FogExp2(0x070c17, 0.022);
+
+            // 3. Camera
+            camera3D = new THREE.PerspectiveCamera(45, width / height, 0.1, 100);
+            update3DCameraPosition();
+
+            // 4. Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+            scene3D.add(ambientLight);
+
+            const sunLight = new THREE.DirectionalLight(0xffffff, 0.85);
+            sunLight.position.set(15, 25, 15);
+            sunLight.castShadow = true;
+            sunLight.shadow.mapSize.width = 1024;
+            sunLight.shadow.mapSize.height = 1024;
+            sunLight.shadow.camera.near = 0.5;
+            sunLight.shadow.camera.far = 60;
+            sunLight.shadow.camera.left = -18;
+            sunLight.shadow.camera.right = 18;
+            sunLight.shadow.camera.top = 18;
+            sunLight.shadow.camera.bottom = -18;
+            scene3D.add(sunLight);
+
+            // Đèn màu trang trí Sci-Fi
+            const cyanLight = new THREE.PointLight(0x06b6d4, 2.5, 18);
+            cyanLight.position.set(0, 3.2, 0);
+            scene3D.add(cyanLight);
+
+            const purpleLight = new THREE.PointLight(0xa855f7, 1.8, 16);
+            purpleLight.position.set(0, 4.0, -7.5);
+            scene3D.add(purpleLight);
+
+            // 5. Sci-Fi Sàn Văn Phòng
+            const floorGeo = new THREE.PlaneGeometry(34, 34);
+            const floorMat = new THREE.MeshStandardMaterial({ color: 0x090e1a, roughness: 0.35, metalness: 0.65 });
+            const floorMesh = new THREE.Mesh(floorGeo, floorMat);
+            floorMesh.rotation.x = -Math.PI / 2;
+            floorMesh.receiveShadow = true;
+            scene3D.add(floorMesh);
+
+            // Lưới Grid tương tác theo màu quán
+            const is7A = appState.selectedStoreId === 'store_7a';
+            const isCafe = appState.selectedStoreId === 'store_cafe_anvat';
+            const gridColor = is7A ? 0x10b981 : (isCafe ? 0xd97706 : 0xf59e0b);
+            floorGridHelper3D = new THREE.GridHelper(26, 26, gridColor, 0x1e293b);
+            floorGridHelper3D.position.y = 0.02;
+            scene3D.add(floorGridHelper3D);
+
+            // Viền phòng phát sáng Cyberpunk
+            const wallBorderGeo = new THREE.BoxGeometry(26, 0.2, 0.2);
+            const wallMat = new THREE.MeshStandardMaterial({ color: 0x38bdf8, emissive: 0x0284c7, roughness: 0.2 });
+            const b1 = new THREE.Mesh(wallBorderGeo, wallMat); b1.position.set(0, 0.1, -13); scene3D.add(b1);
+            const b2 = new THREE.Mesh(wallBorderGeo, wallMat); b2.position.set(0, 0.1, 13); scene3D.add(b2);
+            const b3 = new THREE.Mesh(wallBorderGeo, wallMat); b3.rotation.y = Math.PI / 2; b3.position.set(-13, 0.1, 0); scene3D.add(b3);
+            const b4 = new THREE.Mesh(wallBorderGeo, wallMat); b4.rotation.y = Math.PI / 2; b4.position.set(13, 0.1, 0); scene3D.add(b4);
+
+            // 6. Lõi Tự Học Codex × Claude ở Trung Tâm
+            const coreBaseGeo = new THREE.CylinderGeometry(2.2, 2.7, 0.35, 6);
+            const coreBaseMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.2, metalness: 0.85 });
+            const coreBase = new THREE.Mesh(coreBaseGeo, coreBaseMat);
+            coreBase.position.y = 0.18;
+            coreBase.receiveShadow = true;
+            scene3D.add(coreBase);
+
+            const corePedGeo = new THREE.CylinderGeometry(0.9, 1.2, 1.2, 6);
+            const corePedMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.7 });
+            const corePed = new THREE.Mesh(corePedGeo, corePedMat);
+            corePed.position.y = 0.95;
+            scene3D.add(corePed);
+
+            // Tinh thể Lõi Neural
+            const crystalGeo = new THREE.IcosahedronGeometry(0.85, 0);
+            const crystalMat = new THREE.MeshStandardMaterial({
+                color: 0x38bdf8,
+                emissive: 0x0284c7,
+                roughness: 0.1,
+                metalness: 0.9,
+                wireframe: false
+            });
+            coreCrystalMesh3D = new THREE.Mesh(crystalGeo, crystalMat);
+            coreCrystalMesh3D.position.y = 2.2;
+            scene3D.add(coreCrystalMesh3D);
+
+            // Vòng quỹ đạo ánh sáng
+            const ringGeo = new THREE.TorusGeometry(1.65, 0.045, 16, 64);
+            const ringMat = new THREE.MeshStandardMaterial({ color: 0xa855f7, emissive: 0x7c3aed, roughness: 0.2 });
+            coreRingMesh3D = new THREE.Mesh(ringGeo, ringMat);
+            coreRingMesh3D.position.y = 2.2;
+            coreRingMesh3D.rotation.x = Math.PI / 3;
+            scene3D.add(coreRingMesh3D);
+
+            // 7. Bàn Họp Giao Ban War Room
+            const tableGeo = new THREE.CylinderGeometry(2.4, 2.4, 0.18, 32);
+            const tableMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.4, metalness: 0.6 });
+            const warTable = new THREE.Mesh(tableGeo, tableMat);
+            warTable.position.set(0, 0.75, -4.6);
+            warTable.castShadow = true;
+            warTable.receiveShadow = true;
+            scene3D.add(warTable);
+
+            const tableLegGeo = new THREE.CylinderGeometry(0.5, 0.7, 0.75, 16);
+            const tableLeg = new THREE.Mesh(tableLegGeo, coreBaseMat);
+            tableLeg.position.set(0, 0.38, -4.6);
+            scene3D.add(tableLeg);
+
+            // Hologram trung tâm bàn họp
+            const holoGeo = new THREE.CylinderGeometry(1.0, 1.0, 0.02, 32);
+            const holoMat = new THREE.MeshStandardMaterial({ color: 0x10b981, emissive: 0x059669, roughness: 0.2 });
+            const holoDisk = new THREE.Mesh(holoGeo, holoMat);
+            holoDisk.position.set(0, 0.85, -4.6);
+            scene3D.add(holoDisk);
+
+            // 8. 6 Bàn Làm Việc Cho 6 Nhân Viên AI
+            AGENTS_3D_ROSTER.forEach(ag => {
+                buildDeskStation(ag.deskPos.x, ag.deskPos.z, ag.colorHex);
+            });
+
+            // 8 Bệ Đứng Cho 8 Agency Tinh Hoa (Perimeter Agency Stations)
+            const agencyCoords = [
+                { x: -10.5, z: -8.5, color: 0xa855f7, icon: '👑', name: 'Orchestrator' },
+                { x: 10.5, z: -8.5, color: 0x06b6d4, icon: '⚙️', name: 'Operations' },
+                { x: -11.5, z: 0, color: 0xf59e0b, icon: '💎', name: 'Pricing' },
+                { x: 11.5, z: 0, color: 0x10b981, icon: '📈', name: 'Growth' },
+                { x: -10.5, z: 8.5, color: 0xf43f5e, icon: '📱', name: 'Social' },
+                { x: 10.5, z: 8.5, color: 0x3b82f6, icon: '📊', name: 'Analytics' },
+                { x: -4.5, z: 11.5, color: 0xec4899, icon: '🎧', name: 'CS' },
+                { x: 4.5, z: 11.5, color: 0x84cc16, icon: '🔄', name: 'Workflow' }
+            ];
+            agencyCoords.forEach(ac => {
+                const podGeo = new THREE.CylinderGeometry(0.8, 0.95, 0.25, 6);
+                const podMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: ac.color, emissiveIntensity: 0.35, roughness: 0.3 });
+                const pod = new THREE.Mesh(podGeo, podMat);
+                pod.position.set(ac.x, 0.12, ac.z);
+                scene3D.add(pod);
+
+                const glowRingGeo = new THREE.TorusGeometry(0.75, 0.025, 8, 32);
+                const glowRingMat = new THREE.MeshStandardMaterial({ color: ac.color, emissive: ac.color });
+                const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
+                glowRing.rotation.x = Math.PI / 2;
+                glowRing.position.set(ac.x, 0.26, ac.z);
+                scene3D.add(glowRing);
+            });
+
+            // 9. 6 Nhân Viên 3D Voxel (Head, Body, Arms, Legs)
+            const labelsContainer = document.getElementById('labels3DContainer');
+            if (labelsContainer) labelsContainer.innerHTML = '';
+            characterMeshes3D = [];
+
+            AGENTS_3D_ROSTER.forEach(ag => {
+                const charObj = createCharacterMesh(ag, labelsContainer);
+                characterMeshes3D.push(charObj);
+                scene3D.add(charObj.group);
+            });
+
+            // 10. Mouse & Touch Controls (Orbit & Raycasting)
+            setup3DMouseEvents(canvas);
+
+            // 11. Start loops
+            animate3DOfficeLoop();
+            startAutonomous3DBehaviorLoop();
+            renderRosterBar3D();
+            updateSelectedAgentHud();
+
+            // 12. Handle window resize
+            window.addEventListener('resize', on3DWindowResize);
+        }
+
+        function buildDeskStation(x, z, colorHex) {
+            const group = new THREE.Group();
+            group.position.set(x, 0, z);
+
+            // Mặt bàn
+            const topGeo = new THREE.BoxGeometry(2.3, 0.1, 1.25);
+            const topMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.3, metalness: 0.7 });
+            const tableTop = new THREE.Mesh(topGeo, topMat);
+            tableTop.position.y = 0.75;
+            tableTop.castShadow = true;
+            tableTop.receiveShadow = true;
+            group.add(tableTop);
+
+            // Chân bàn kim loại
+            const legGeo = new THREE.BoxGeometry(0.08, 0.75, 1.15);
+            const legMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, metalness: 0.9, roughness: 0.2 });
+            const legL = new THREE.Mesh(legGeo, legMat); legL.position.set(-1.05, 0.375, 0); group.add(legL);
+            const legR = new THREE.Mesh(legGeo, legMat); legR.position.set(1.05, 0.375, 0); group.add(legR);
+
+            // 2 Màn hình cong hiển thị code/số liệu
+            const monGeo = new THREE.BoxGeometry(0.85, 0.5, 0.04);
+            const monMat = new THREE.MeshStandardMaterial({ color: 0x020617, metalness: 0.9 });
+            const screenMat = new THREE.MeshStandardMaterial({ color: colorHex, emissive: colorHex, emissiveIntensity: 0.45 });
+
+            const mon1 = new THREE.Mesh(monGeo, screenMat);
+            mon1.position.set(-0.45, 1.15, -0.2);
+            mon1.rotation.y = 0.15;
+            group.add(mon1);
+
+            const mon2 = new THREE.Mesh(monGeo, screenMat);
+            mon2.position.set(0.45, 1.15, -0.2);
+            mon2.rotation.y = -0.15;
+            group.add(mon2);
+
+            // Chân đế màn hình
+            const standGeo = new THREE.CylinderGeometry(0.03, 0.03, 0.35);
+            const s1 = new THREE.Mesh(standGeo, monMat); s1.position.set(-0.45, 0.95, -0.2); group.add(s1);
+            const s2 = new THREE.Mesh(standGeo, monMat); s2.position.set(0.45, 0.95, -0.2); group.add(s2);
+
+            // Ghế văn phòng cao cấp
+            const seatGeo = new THREE.BoxGeometry(0.65, 0.1, 0.65);
+            const chairMat = new THREE.MeshStandardMaterial({ color: 0x334155, roughness: 0.5 });
+            const seat = new THREE.Mesh(seatGeo, chairMat);
+            seat.position.set(0, 0.48, 0.55);
+            group.add(seat);
+
+            const backGeo = new THREE.BoxGeometry(0.65, 0.75, 0.08);
+            const back = new THREE.Mesh(backGeo, chairMat);
+            back.position.set(0, 0.85, 0.85);
+            group.add(back);
+
+            scene3D.add(group);
+        }
+
+        function createCharacterMesh(ag, labelsContainer) {
+            const group = new THREE.Group();
+            group.position.set(ag.deskPos.x, 0, ag.deskPos.z);
+            group.userData = { agentId: ag.id };
+
+            const skinMat = new THREE.MeshStandardMaterial({ color: 0xffdbac, roughness: 0.6 });
+            const clothMat = new THREE.MeshStandardMaterial({ color: ag.colorHex, roughness: 0.4 });
+            const darkMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, roughness: 0.5 });
+
+            // Thân (Body)
+            const bodyGeo = new THREE.BoxGeometry(0.65, 0.8, 0.4);
+            const body = new THREE.Mesh(bodyGeo, clothMat);
+            body.position.y = 0.95;
+            body.castShadow = true;
+            group.add(body);
+
+            // Đầu (Head)
+            const headGeo = new THREE.BoxGeometry(0.55, 0.55, 0.55);
+            const head = new THREE.Mesh(headGeo, skinMat);
+            head.position.y = 1.62;
+            head.castShadow = true;
+            group.add(head);
+
+            // Mắt / Kính Cyber
+            const visorGeo = new THREE.BoxGeometry(0.42, 0.12, 0.06);
+            const visorMat = new THREE.MeshStandardMaterial({ color: ag.colorHex, emissive: ag.colorHex, emissiveIntensity: 0.8 });
+            const visor = new THREE.Mesh(visorGeo, visorMat);
+            visor.position.set(0, 1.64, 0.28);
+            group.add(visor);
+
+            // Tóc / Nón
+            const hairGeo = new THREE.BoxGeometry(0.58, 0.2, 0.58);
+            const hair = new THREE.Mesh(hairGeo, darkMat);
+            hair.position.y = 1.9;
+            group.add(hair);
+
+            // Tay trái
+            const armGeo = new THREE.BoxGeometry(0.18, 0.65, 0.2);
+            const leftArm = new THREE.Mesh(armGeo, clothMat);
+            leftArm.position.set(-0.42, 0.95, 0);
+            leftArm.castShadow = true;
+            group.add(leftArm);
+
+            // Tay phải
+            const rightArm = new THREE.Mesh(armGeo, clothMat);
+            rightArm.position.set(0.42, 0.95, 0);
+            rightArm.castShadow = true;
+            group.add(rightArm);
+
+            // Chân trái
+            const legGeo = new THREE.BoxGeometry(0.24, 0.65, 0.25);
+            const leftLeg = new THREE.Mesh(legGeo, darkMat);
+            leftLeg.position.set(-0.2, 0.325, 0);
+            leftLeg.castShadow = true;
+            group.add(leftLeg);
+
+            // Chân phải
+            const rightLeg = new THREE.Mesh(legGeo, darkMat);
+            rightLeg.position.set(0.2, 0.325, 0);
+            rightLeg.castShadow = true;
+            group.add(rightLeg);
+
+            // Tạo nhãn HTML 2D hiển thị trên đầu nhân vật
+            let tagEl = null;
+            if (labelsContainer) {
+                tagEl = document.createElement('div');
+                tagEl.className = 'char-3d-tag';
+                tagEl.id = `tag3D-${ag.id}`;
+                tagEl.innerHTML = `
+                    <div class="char-speech-bubble" id="speech3D-${ag.id}">${getStoreAgentSpeech(ag)}</div>
+                    <div style="background:rgba(9, 14, 26, 0.94); border:1px solid ${ag.colorCss}; border-radius:12px; padding:2px 8px; display:flex; align-items:center; gap:5px; box-shadow:0 4px 14px rgba(0,0,0,0.65);">
+                        <span>${ag.icon}</span>
+                        <span style="font-weight:700;font-size:0.75rem;color:#f8fafc;">${escapeHtml(ag.name)}</span>
+                        <span id="lvlBadge3D-${ag.id}" style="font-size:0.65rem;background:${ag.colorCss}33;color:${ag.colorCss};padding:1px 5px;border-radius:4px;font-weight:700;">Lv.${ag.level}</span>
+                    </div>
+                    <div style="width:54px;height:3px;background:rgba(255,255,255,0.18);border-radius:2px;margin-top:2px;overflow:hidden;">
+                        <div id="xpFill3D-${ag.id}" style="width:${ag.xp}%;height:100%;background:${ag.colorCss};"></div>
+                    </div>
+                `;
+                tagEl.onclick = (e) => {
+                    e.stopPropagation();
+                    selectAgentIn3D(ag.id);
+                };
+                labelsContainer.appendChild(tagEl);
+            }
+
+            return {
+                id: ag.id,
+                group,
+                leftArm,
+                rightArm,
+                leftLeg,
+                rightLeg,
+                homeX: ag.deskPos.x,
+                homeZ: ag.deskPos.z,
+                targetX: ag.deskPos.x,
+                targetZ: ag.deskPos.z,
+                phase: Math.random() * Math.PI * 2,
+                tagEl
+            };
+        }
+
+        function setup3DMouseEvents(canvas) {
+            canvas.addEventListener('mousedown', (e) => {
+                is3DMouseDown = true;
+                mouse3DLastX = e.clientX;
+                mouse3DLastY = e.clientY;
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!is3DMouseDown) return;
+                const deltaX = e.clientX - mouse3DLastX;
+                const deltaY = e.clientY - mouse3DLastY;
+                mouse3DLastX = e.clientX;
+                mouse3DLastY = e.clientY;
+
+                cameraSpherical.theta -= deltaX * 0.0075;
+                cameraSpherical.phi -= deltaY * 0.0075;
+                update3DCameraPosition();
+            });
+
+            window.addEventListener('mouseup', () => {
+                is3DMouseDown = false;
+            });
+
+            canvas.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                cameraSpherical.radius += e.deltaY * 0.02;
+                update3DCameraPosition();
+            }, { passive: false });
+
+            // Raycast click
+            canvas.addEventListener('click', (e) => {
+                const rect = canvas.getBoundingClientRect();
+                mouseRay3D.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+                mouseRay3D.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+                raycaster3D.setFromCamera(mouseRay3D, camera3D);
+                const intersects = raycaster3D.intersectObjects(scene3D.children, true);
+                if (intersects.length > 0) {
+                    let hit = intersects[0].object;
+                    while (hit && hit.parent && hit !== scene3D) {
+                        if (hit.userData && hit.userData.agentId) {
+                            selectAgentIn3D(hit.userData.agentId);
+                            break;
+                        }
+                        hit = hit.parent;
+                    }
+                }
+            });
+        }
+
+        function on3DWindowResize() {
+            if (!renderer3D || !camera3D) return;
+            const wrapper = document.getElementById('gameWorldWrapper');
+            if (!wrapper) return;
+            const w = wrapper.clientWidth;
+            const h = wrapper.clientHeight;
+            camera3D.aspect = w / h;
+            camera3D.updateProjectionMatrix();
+            renderer3D.setSize(w, h, false);
+        }
+
+
         function update3DFloorThemeForStore() {
             if (!scene3D || !floorGridHelper3D) return;
             const is7A = appState.selectedStoreId === 'store_7a';
