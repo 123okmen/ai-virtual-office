@@ -1272,6 +1272,7 @@
                             <div style="display:flex;gap:0.4rem;">
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_7a', 'admin')">Mở #/admin 7A</button>
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_7a', 'plan')">Mở #/plan 7A</button>
+                                <a href="https://docs.google.com/spreadsheets/d/13nzzZ8IfPTQUYwWT2AUKf5xPMv36SKwj5C2EQDwOjxQ/edit" target="_blank" class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#10b981;color:#34d399;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">📊 Mở Google Sheet</a>
                             </div>
                         </div>
                     </div>
@@ -1923,7 +1924,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                         </div>
                         <div class="form-group">
                             <label class="form-label" style="color:#34d399;">🍔 1. Google Apps Script URL Riêng Của QUÁN 1 (FOOD STATION 7A):</label>
-                            <input type="text" id="gasUrl7A" class="form-input" placeholder="Dán link script.google.com/macros/s/.../exec của riêng Quán 7A vào đây">
+                            <input type="text" id="gasUrl7A" class="form-input" value="https://script.google.com/macros/s/AKfycbyCtOrTDhFcBA7rMl-VsHttNOVCJWQv5V9yzZ2N9CGLTfr2Y99zW6ayU0exKvX4syM9/exec">
                         </div>
                         <div class="form-group">
                             <label class="form-label" style="color:#fbbf24;">🍛 2. Google Apps Script URL Riêng Của QUÁN 2 (TRẠM KHỞI NGHIỆP Cơm Tấm):</label>
@@ -1976,6 +1977,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         const DEFAULT_9ROUTER_MODELS = 'cx/codex-auto-review, kr/claude-sonnet-4.5, kr/claude-sonnet-4.5-agentic, kr/claude-haiku-4.5, ag/claude-sonnet-4-6, ag/gemini-3.8-flash-high, ag/gemini-3-flash, ag/gpt-oss-120b-medium, bazaarlink/auto:free';
         const DEFAULT_GAS_COMTAM = 'https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec';
         const DEFAULT_GAS_CAFE = 'https://script.google.com/macros/s/AKfycbyktPQSBZEi6FSVMDBV27SWCQSzHMItoKHG8_um4TtAvREYmkVx1PTRncc1-E-3CVZk/exec';
+        const DEFAULT_GAS_7A = 'https://script.google.com/macros/s/AKfycbyCtOrTDhFcBA7rMl-VsHttNOVCJWQv5V9yzZ2N9CGLTfr2Y99zW6ayU0exKvX4syM9/exec';
 
         const REAL_STORES_DATA = [
             {
@@ -2506,7 +2508,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                 openaiKey: savedSettings.openaiKey || '',
                 gasComTam: savedSettings.gasComTam || DEFAULT_GAS_COMTAM,
                 gasCafe: savedSettings.gasCafe || DEFAULT_GAS_CAFE,
-                gas7A: savedSettings.gas7A || localStorage.getItem('fastfood_custom_script_url') || '',
+                gas7A: savedSettings.gas7A || DEFAULT_GAS_7A,
                 telegramToken: savedSettings.telegramToken || '',
                 telegramChatId: savedSettings.telegramChatId || ''
             }
@@ -3613,7 +3615,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                 } catch (e) {}
             }
 
-            const url7A = appState.settings.gas7A;
+            const url7A = appState.settings.gas7A || DEFAULT_GAS_7A;
             if (url7A && url7A.startsWith('https://script.google.com/')) {
                 try {
                     const res7 = await fetch(url7A + '?action=data', { headers: { 'Accept': 'application/json' } });
@@ -3661,24 +3663,24 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
 
                             let linesCF = '';
                             if (Array.isArray(dataCF.donHang) && dataCF.donHang.length > 0) {
-                                linesCF = dataCF.donHang.slice(0, 12).map(d =>
-                                    • [ ] # ( - ):  => đ
-                                ).join('\n');
+                                linesCF = dataCF.donHang.slice(0, 12).map(function(d) {
+                                    return '• [' + (d.date || '') + ' ' + (d.time || '') + '] #' + (d.id || '') + ' (' + (d.staff || 'NV') + ' - ' + (d.paymentMethod || 'Tiền') + '): ' + (d.items || '') + ' => ' + (d.total || 0).toLocaleString('vi-VN') + 'đ';
+                                }).join('\n');
                             }
 
                             appState.storeMetrics.store_cafe_anvat = {
                                 revenue: revCF.toLocaleString('vi-VN'),
                                 cost: '0',
-                                orders: ${soDonCF} đơn ( món) | TM: đ | CK: đ,
-                                leads: Ca hiện tại | Cập nhật lúc ,
-                                notes: SỔ ĐƠN HÀNG ĐỘC LẬP - CAFE ĂN VẶT ĐÔNG THẠNH:\n
+                                orders: soDonCF + ' đơn (' + soMonCF + ' món) | TM: ' + tmCF.toLocaleString('vi-VN') + 'đ | CK: ' + ckCF.toLocaleString('vi-VN') + 'đ',
+                                leads: 'Ca hiện tại | Cập nhật lúc ' + (dataCF.kpi && dataCF.kpi.ngayCapNhat ? dataCF.kpi.ngayCapNhat : ''),
+                                notes: 'SỔ ĐƠN HÀNG ĐỘC LẬP - CAFE ĂN VẶT ĐÔNG THẠNH:\n' + (linesCF || 'Chưa phát sinh đơn trong ca hôm nay.')
                             };
                             const elRev = document.getElementById('dashRevCafe');
                             const elOrd = document.getElementById('dashOrdersCafe');
                             const elStat = document.getElementById('dashStatusCafe');
                             if (elRev) elRev.textContent = revCF.toLocaleString('vi-VN') + ' đ';
-                            if (elOrd) elOrd.textContent = ${soDonCF} đơn ( món);
-                            if (elStat) elStat.textContent = Live POS Đông Thạnh:  đơn • Doanh thu thật:  đ;
+                            if (elOrd) elOrd.textContent = soDonCF + ' đơn (' + soMonCF + ' món)';
+                            if (elStat) elStat.textContent = 'Live POS Đông Thạnh: ' + soDonCF + ' đơn • Doanh thu thật: ' + revCF.toLocaleString('vi-VN') + ' đ';
                         }
                     }
                 } catch (e) {}
@@ -4473,7 +4475,7 @@ ${m.notes}
             document.getElementById('apiKeyOpenAI').value = s.openaiKey || '';
             document.getElementById('gasUrlComTam').value = s.gasComTam || DEFAULT_GAS_COMTAM;
             if (document.getElementById('gasUrlCafe')) document.getElementById('gasUrlCafe').value = s.gasCafe || DEFAULT_GAS_CAFE;
-            document.getElementById('gasUrl7A').value = s.gas7A || '';
+            document.getElementById('gasUrl7A').value = s.gas7A || DEFAULT_GAS_7A;
             document.getElementById('telegramBotToken').value = s.telegramToken || '';
             document.getElementById('telegramChatId').value = s.telegramChatId || '';
         }
@@ -4488,7 +4490,7 @@ ${m.notes}
                 openaiKey: document.getElementById('apiKeyOpenAI').value.trim(),
                 gasComTam: document.getElementById('gasUrlComTam').value.trim() || DEFAULT_GAS_COMTAM,
                 gasCafe: document.getElementById('gasUrlCafe') ? document.getElementById('gasUrlCafe').value.trim() : DEFAULT_GAS_CAFE,
-                gas7A: document.getElementById('gasUrl7A').value.trim(),
+                gas7A: document.getElementById('gasUrl7A').value.trim() || DEFAULT_GAS_7A,
                 telegramToken: document.getElementById('telegramBotToken').value.trim(),
                 telegramChatId: document.getElementById('telegramChatId').value.trim()
             };

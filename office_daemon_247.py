@@ -53,7 +53,7 @@ NINE_ROUTER_API_KEY = "sk-c8ddee65dadacbf8-2orlgk-2451fb73"
 # Live Google Apps Script endpoints (100% Real Sheet Data)
 GAS_URL_COMTAM = "https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec"
 GAS_URL_CAFE = "https://script.google.com/macros/s/AKfycbyktPQSBZEi6FSVMDBV27SWCQSzHMItoKHG8_um4TtAvREYmkVx1PTRncc1-E-3CVZk/exec"
-GAS_URL_7A = ""
+GAS_URL_7A = "https://script.google.com/macros/s/AKfycbyCtOrTDhFcBA7rMl-VsHttNOVCJWQv5V9yzZ2N9CGLTfr2Y99zW6ayU0exKvX4syM9/exec"
 
 # Local Repository Paths
 REPO_PATHS = {
@@ -563,7 +563,7 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             cfg = load_or_init_config()
             ct = fetch_live_pos_data(cfg.get("gas_url_comtam", GAS_URL_COMTAM))
             cf = fetch_live_pos_data(cfg.get("gas_url_cafe", GAS_URL_CAFE))
-            s7a = fetch_live_pos_data(cfg.get("gas_url_7a", "")) if cfg.get("gas_url_7a") else None
+            s7a = fetch_live_pos_data(cfg.get("gas_url_7a", GAS_URL_7A))
 
             payload = {
                 "ok": True,
