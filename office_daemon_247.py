@@ -213,7 +213,7 @@ def call_9router_chat(messages: list, model_chain=None, api_key=NINE_ROUTER_API_
                     "Authorization": f"Bearer {api_key}"
                 }
             )
-            with urllib.request.urlopen(req, timeout=22) as resp:
+            with urllib.request.urlopen(req, timeout=3) as resp:
                 raw_text = resp.read().decode("utf-8", errors="ignore")
                 content = parse_9router_raw_response(raw_text)
                 if content:

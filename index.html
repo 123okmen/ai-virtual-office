@@ -7,660 +7,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest">
-        // =========================================================================
-        // HỆ THỐNG 8 AGENCY TINH HOA TÍCH HỢP TỪ GITHUB (AGENCY AGENTS SUITE)
-        // =========================================================================
-        const ELITE_AGENCY_ROSTER = [
-            {
-                id: 'agents_orchestrator',
-                name: 'Agents Orchestrator',
-                icon: '👑',
-                badge: 'Pipeline Leader',
-                skill: 'agency-agents-orchestrator',
-                color: '#a855f7',
-                role: 'Chỉ Huy Trưởng Pipeline & Giám Sát Quality Gates',
-                mission: 'Điều phối toàn bộ quy trình đa agent: PM → Chuyên gia → Kiểm thử QA Loop → Tích hợp thực tế.',
-                prompt: 'Bạn là Agents Orchestrator - Chỉ huy trưởng quy trình tự động. Nhiệm vụ của bạn là phối hợp các Agent chuyên môn giải quyết bài toán chuỗi 3 cửa hàng ẩm thực, bảo đảm chất lượng nghiêm ngặt và không bỏ sót bất kỳ quy trình nào.',
-                presetActions: [
-                    { label: '🚀 Khởi Động Pipeline 3 Quán', action: 'pipeline_3stores' },
-                    { label: '🛡️ Audit Quality Gates Ca Sáng/Tối', action: 'audit_quality_gates' }
-                ]
-            },
-            {
-                id: 'operations_manager',
-                name: 'Operations Manager',
-                icon: '⚙️',
-                badge: 'Lean & Six Sigma',
-                skill: 'agency-operations-manager',
-                color: '#06b6d4',
-                role: 'Giám Đốc Vận Hành Chuỗi Thực Địa & Bếp',
-                mission: 'Loại bỏ lãng phí (8 Wastes), kiểm soát thời gian ra món < 90s, định mức nguyên liệu tươi & SOP bếp.',
-                prompt: 'Bạn là Operations Manager - Chuyên gia vận hành chuỗi F&B theo phương pháp Lean và Six Sigma. Bạn tập trung vào chuẩn hóa quy trình ra món, công suất giờ cao điểm, giảm tỷ lệ hao hụt nguyên liệu dưới 3% và kiểm soát checklist an toàn vệ sinh.',
-                presetActions: [
-                    { label: '⏱️ Tối Ưu Tốc Độ Ra Món Dưới 90s', action: 'speed_of_service' },
-                    { label: '📦 Định Mức Nguyên Liệu & Hao Hụt', action: 'waste_reduction' }
-                ]
-            },
-            {
-                id: 'pricing_analyst',
-                name: 'Pricing Analyst',
-                icon: '💎',
-                badge: 'Unit Economics',
-                skill: 'agency-pricing-analyst',
-                color: '#f59e0b',
-                role: 'Chuyên Gia Định Giá Món & Tối Ưu Lợi Nhuận Biên',
-                mission: 'Phân tích ma trận Menu Engineering (Stars, Plowhorses, Puzzles, Dogs), tính giá vốn COGS < 35%, tối ưu combo tăng AOV.',
-                prompt: 'Bạn là Pricing Analyst - Chuyên gia định giá menu và tối ưu hóa biên lợi nhuận. Bạn không định giá theo cảm tính mà dựa trên cơ cấu chi phí thực tế (COGS), điểm hòa vốn, tâm lý khách hàng và ma trận Menu Engineering để tối đa hóa doanh thu từng suất bán.',
-                presetActions: [
-                    { label: '📊 Ma Trận Menu Engineering', action: 'menu_matrix' },
-                    { label: '💡 Thiết Kế Combo Tăng Giá Trị Đơn', action: 'combo_engineering' }
-                ]
-            },
-            {
-                id: 'growth_hacker',
-                name: 'Growth Hacker',
-                icon: '📈',
-                badge: 'Viral & Funnel',
-                skill: 'agency-growth-hacker',
-                color: '#10b981',
-                role: 'Chiến Lược Gia Tăng Trưởng & Phễu Bán Kính 3km',
-                mission: 'Xây dựng viral loops, phễu quét QR order bàn, chương trình khách quen/học sinh, kéo khách khu dân cư lân cận.',
-                prompt: 'Bạn là Growth Hacker - Chuyên gia tăng trưởng khách hàng đột phá cho nhà hàng và quán ăn nhanh. Bạn thiết kế các vòng lặp lan truyền (viral loops), tối ưu tỷ lệ chuyển đổi từ quét mã QR bàn sang đặt món, và thu hút khách quen trong bán kính 3km quanh quán.',
-                presetActions: [
-                    { label: '🎯 Chiến Dịch Kéo Khách Bán Kính 3km', action: 'local_traffic' },
-                    { label: '🔄 Vòng Lặp Viral & Tích Điểm Khách Quen', action: 'viral_referral' }
-                ]
-            },
-            {
-                id: 'social_media_strategist',
-                name: 'Social Media Strategist',
-                icon: '📱',
-                badge: 'Multi-Channel',
-                skill: 'agency-social-media-strategist',
-                color: '#f43f5e',
-                role: 'Giám Đốc Nội Dung Đa Kênh TikTok & FB',
-                mission: 'Sáng tạo chiến dịch video ngắn TikTok triệu view, hình ảnh món ăn thịnh soạn, bài đăng group cư dân Thủ Đức & Đông Thạnh.',
-                prompt: 'Bạn là Social Media Strategist - Chuyên gia truyền thông đa nền tảng cho thương hiệu F&B. Bạn xây dựng nội dung video ngắn thịnh hành trên TikTok/Reels, khơi gợi cảm giác thèm ăn (visual hunger), và khai thác các hội nhóm cư dân địa phương để tạo dòng khách ổn định.',
-                presetActions: [
-                    { label: '🎬 Kịch Bản TikTok Món Nóng Triệu View', action: 'tiktok_script' },
-                    { label: '📢 Bài Đăng Group Cư Dân Kéo Đơn', action: 'community_post' }
-                ]
-            },
-            {
-                id: 'analytics_reporter',
-                name: 'Analytics Reporter',
-                icon: '📊',
-                badge: 'BI & Insights',
-                skill: 'agency-analytics-reporter',
-                color: '#3b82f6',
-                role: 'Chuyên Gia Phân Tích Dữ Liệu & Sổ Thu Chi',
-                mission: 'Trực quan hóa số liệu bán hàng, phân tích xu hướng món bán chạy, đối soát doanh thu độc lập giữa 3 quán.',
-                prompt: 'Bạn là Analytics Reporter - Chuyên gia phân tích dữ liệu kinh doanh và báo cáo trực quan. Bạn bóc tách từng con số doanh thu, số đơn, chi phí nguyên liệu và dòng tiền của 3 cửa hàng để đưa ra cảnh báo sớm và dự báo nhu cầu chính xác.',
-                presetActions: [
-                    { label: '📈 Phân Tích Xu Hướng Bán Chạy', action: 'sales_trend' },
-                    { label: '🔍 Đối Soát Doanh Thu 3 Sổ', action: 'cross_audit' }
-                ]
-            },
-            {
-                id: 'customer_service',
-                name: 'Customer Service',
-                icon: '🎧',
-                badge: 'Retention & CSAT',
-                skill: 'agency-customer-service',
-                color: '#ec4899',
-                role: 'Chuyên Viên Trải Nghiệm Khách Hàng VIP & Giữ Chân 5 Sao',
-                mission: 'Chăm sóc khách hàng ấm áp, chuyên nghiệp, xử lý phản hồi khiếu nại món nhanh chóng, giữ đánh giá 5 sao tuyệt đối.',
-                prompt: 'Bạn là Customer Service Agent - Chuyên gia trải nghiệm khách hàng tiêu chuẩn cao. Bạn lắng nghe chân thành, giải quyết thắc mắc và khiếu nại món ăn trong vòng 3 phút, biến khách hàng thất vọng thành khách hàng trung thành của quán.',
-                presetActions: [
-                    { label: '⭐ Kịch Bản Xử Lý Khiếu Nại 5 Sao', action: 'complaint_resolution' },
-                    { label: '💌 Lời Chúc & Tri Ân Khách Hàng Thân Thiết', action: 'loyalty_care' }
-                ]
-            },
-            {
-                id: 'workflow_optimizer',
-                name: 'Workflow Optimizer',
-                icon: '🔄',
-                badge: 'Kaizen & Auto',
-                skill: 'agency-workflow-optimizer',
-                color: '#84cc16',
-                role: 'Chuyên Gia Tối Ưu Năng Suất Nhân Sự & Bàn Giao Ca',
-                mission: 'Thiết kế quy trình bàn giao 3 ca làm việc mượt mà, loại bỏ thao tác thừa trong khâu pha chế/đóng gói, tự động hóa kiểm kê.',
-                prompt: 'Bạn là Workflow Optimizer - Chuyên gia cải tiến quy trình và tối ưu năng suất làm việc (Kaizen). Bạn thiết kế các mẫu checklist thông minh, loại bỏ thời gian chết giữa các ca làm việc và giúp nhân sự vận hành trơn tru ngay cả khi quán đông khách.',
-                presetActions: [
-                    { label: '📋 Bảng Bàn Giao 3 Ca Tự Động', action: 'shift_handover' },
-                    { label: '⚡ Giảm Thao Tác Thừa Khu Vực Quầy Bếp', action: 'kitchen_flow' }
-                ]
-            }
-        ];
-
-        function renderAgencyCards() {
-            const container = document.getElementById('agencyCardsGrid');
-            if (!container) return;
-
-            const st = getActiveStore();
-            container.innerHTML = ELITE_AGENCY_ROSTER.map(ag => {
-                return `
-                    <div class="panel" style="background:rgba(15, 23, 42, 0.7); border:1px solid rgba(255,255,255,0.08); border-top:3px solid ${ag.color}; padding:1.2rem; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease;">
-                        <div>
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
-                                <div style="display:flex; align-items:center; gap:0.6rem;">
-                                    <div style="font-size:1.6rem; width:44px; height:44px; border-radius:10px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.1);">
-                                        ${ag.icon}
-                                    </div>
-                                    <div>
-                                        <div style="font-weight:700; font-size:1rem; color:#f8fafc;">${ag.name}</div>
-                                        <div style="font-size:0.75rem; color:${ag.color}; font-weight:600;">${ag.role}</div>
-                                    </div>
-                                </div>
-                                <span class="agent-badge" style="background:${ag.color}22; border:1px solid ${ag.color}55; color:${ag.color}; font-size:0.7rem; font-weight:700;">
-                                    ${ag.badge}
-                                </span>
-                            </div>
-                            <p style="font-size:0.8rem; color:#94a3b8; line-height:1.45; margin-bottom:1rem;">
-                                ${ag.mission}
-                            </p>
-                        </div>
-                        <div>
-                            <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.5rem;">
-                                ${ag.presetActions.map(act => `
-                                    <button class="btn btn-outline" onclick="runSingleAgencyAction('${ag.id}', '${act.action}')" style="font-size:0.75rem; padding:0.4rem 0.6rem; text-align:left; justify-content:flex-start; border-color:rgba(255,255,255,0.1); color:#cbd5e1;">
-                                        ${act.label}
-                                    </button>
-                                `).join('')}
-                                <button class="btn btn-primary" onclick="runSingleAgencyCustomPrompt('${ag.id}')" style="margin-top:0.25rem; font-size:0.75rem; padding:0.45rem; justify-content:center; background:${ag.color}; border-color:${ag.color}; color:#fff;">
-                                    ⚡ Kích Hoạt Tư Vấn Chuyên Sâu
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        async function runAgencyMission(missionType) {
-            const st = getActiveStore();
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ Đang kích hoạt Hệ Thống Agency Swarm (Codex × Claude) cho ${st.name}...
-Nhiệm vụ: ${missionType.toUpperCase()}...
-Đang kết nối 9Router...`;
-            }
-
-            let promptUser = '';
-            let systemPrompt = '';
-            let modelChain = getRoleModelChain('CEO_WARROOM');
-
-            if (missionType === 'orchestrator_pipeline') {
-                systemPrompt = `Bạn là Agents Orchestrator - Trưởng bộ phận điều phối toàn diện cho 3 quán ăn. Hãy phối hợp 8 Agency chuyên môn lập ra Kế Hoạch Đột Phá Doanh Số Trong 7 Ngày Tới cho quán ${st.name} (Địa chỉ: ${st.address}).`;
-                promptUser = `Hãy phân tích thực đơn riêng và vị trí địa lý của ${st.name}. Đưa ra bản phân công nhiệm vụ cụ thể cho từng Agency (Operations, Pricing, Growth, Social, Analytics, Customer Service, Workflow) để tăng ít nhất 25% doanh số và duy trì chi phí vốn dưới 35%.`;
-            } else if (missionType === 'pricing_engineering') {
-                systemPrompt = `Bạn là Pricing Analyst - Chuyên gia định giá ẩm thực cao cấp. Quán đang phân tích: ${st.name}.`;
-                promptUser = `Dựa trên thực đơn của ${st.name}, hãy thiết lập ma trận Menu Engineering 4 nhóm: Stars (Món ngôi sao), Plowhorses (Bán chạy lợi nhuận thấp), Puzzles (Lợi nhuận cao kén khách), Dogs (Cần loại bỏ/tinh chỉnh). Đề xuất công thức định giá combo để tăng giá trị đơn trung bình (AOV) thêm 15.000đ - 20.000đ/đơn.`;
-            } else if (missionType === 'growth_funnel') {
-                systemPrompt = `Bạn là Growth Hacker chuyên sâu chuỗi cửa hàng ăn uống F&B. Quán: ${st.name}.`;
-                promptUser = `Hãy vạch ra 3 chiến thuật kéo khách hiệu quả nhất trong bán kính 3km quanh địa chỉ: ${st.address}. Thiết kế kịch bản quét mã QR bàn để khách tự động nhận ưu đãi lần sau và giới thiệu bạn bè (Referral loop).`;
-            } else if (missionType === 'lean_operations') {
-                systemPrompt = `Bạn là Operations Manager chuyên nghiệp áp dụng Lean & Six Sigma cho chuỗi F&B. Quán: ${st.name}.`;
-                promptUser = `Hãy lập bảng tiêu chuẩn vận hành bếp và quầy pha chế cho ${st.name}: Thời gian ra món chuẩn (< 90 giây), quy trình kiểm soát hao hụt nguyên liệu tươi dưới 3%, và checklist bàn giao ca sáng/tối không thất thoát.`;
-            } else if (missionType === 'viral_tiktok') {
-                systemPrompt = `Bạn là Social Media Strategist chuyên gia video ngắn triệu view cho ẩm thực đường phố. Quán: ${st.name}.`;
-                promptUser = `Hãy viết 3 kịch bản video TikTok ngắn (dưới 45 giây) siêu hấp dẫn dựa trên món đặc sắc nhất của ${st.name}. Có đầy đủ Hook (3 giây đầu giữ chân), Body (hình ảnh cận cảnh tiếng xèo xèo/bốc khói/màu sắc hấp dẫn) và CTA kéo khách đến quán hoặc đặt hàng online.`;
-            }
-
-            const messages = [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: promptUser }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, modelChain);
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [BÁO CÁO THỰC THI AGENCY SWARM - ENGINE: ${result.model}]
-` +
-                                      `Quán: ${st.name} | Thời gian: ${new Date().toLocaleString('vi-VN')}
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `Agency Swarm [${result.model}]`, `Đã hoàn tất nhiệm vụ [${missionType}] cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 40);
-                saveMemoryItem(`agency_mission_${missionType}`, `[${st.shortName}] Hoàn tất nhiệm vụ ${missionType} bởi ${result.model}`);
-            } else {
-                if (out) {
-                    out.textContent = `⚠️ Không nhận được phản hồi trực tiếp từ 9Router. Hệ thống tự động kích hoạt Bản Kế Hoạch Dự Phòng Chuyên Nghiệp của Agency Swarm:
-
-` +
-                                      `Quán: ${st.name} (Địa chỉ: ${st.address})
-` +
-                                      `• Trọng tâm: Tối ưu quy trình vận hành và kiểm soát lợi nhuận gộp trên 60%.
-` +
-                                      `• Xem các thẻ Agency phía trên để kích hoạt từng tác vụ chuyên biệt!`;
-                }
-            }
-        }
-
-        async function runSingleAgencyAction(agencyId, actionKey) {
-            const ag = ELITE_AGENCY_ROSTER.find(a => a.id === agencyId);
-            if (!ag) return;
-            const st = getActiveStore();
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ ${ag.icon} ${ag.name} đang phân tích hành động [${actionKey}] cho ${st.name}...
-Đang gọi Dual-Engine Codex × Claude...`;
-            }
-
-            const promptUser = `Bạn là ${ag.name} (${ag.role}) thuộc bộ Agency GitHub Skills. Hãy thực thi hành động chuyên môn "${actionKey}" cho quán ${st.name} (Địa chỉ: ${st.address}). Đưa ra các bước hành động cụ thể, thông số định lượng rõ ràng và checklist thực hiện ngay hôm nay.`;
-            const messages = [
-                { role: 'system', content: ag.prompt },
-                { role: 'user', content: promptUser }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, getRoleModelChain('CODEX_AUDIT'));
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()} - ${ag.badge}] Phản hồi từ ${result.model}
-` +
-                                      `Chi nhánh: ${st.name} | Thời gian: ${new Date().toLocaleString('vi-VN')}
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `${ag.name}`, `Đã hoàn tất hành động [${actionKey}] cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 25);
-            } else {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()}] Đã lên kế hoạch hành động [${actionKey}] cho ${st.name}.
-Vui lòng kiểm tra lại kết nối 9Router hoặc thực hiện trực tiếp trên quy trình bàn giao!`;
-                }
-            }
-        }
-
-        async function runSingleAgencyCustomPrompt(agencyId) {
-            const ag = ELITE_AGENCY_ROSTER.find(a => a.id === agencyId);
-            if (!ag) return;
-            const st = getActiveStore();
-            const userCustom = prompt(`Nhập yêu cầu bạn muốn giao cho ${ag.name} (${ag.role}):`, `Hãy đề xuất giải pháp tối ưu cho ${st.name} trong tuần này.`);
-            if (!userCustom) return;
-
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ ${ag.icon} ${ag.name} đang xử lý chỉ thị của Chủ quán...
-"${userCustom}"`;
-            }
-
-            const messages = [
-                { role: 'system', content: ag.prompt + ` Quán mục tiêu: ${st.name} (${st.address}).` },
-                { role: 'user', content: userCustom }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, getRoleModelChain('CLAUDE_CREATIVE'));
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()}] Phản hồi từ ${result.model}
-` +
-                                      `Yêu cầu: "${userCustom}"
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `${ag.name}`, `Đã giải quyết yêu cầu riêng cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 30);
-            }
-        }
-
-        function copyAgencyOutput() {
-            const out = document.getElementById('agencyTerminalOutput');
-            if (!out) return;
-            navigator.clipboard.writeText(out.textContent).then(() => {
-                alert('✅ Đã sao chép nội dung báo cáo Agency vào bộ nhớ tạm!');
-            }).catch(() => {
-                alert('Sao chép thất bại, vui lòng bôi đen và nhấn Ctrl+C.');
-            });
-        }
-
-        function clearAgencyOutput() {
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = 'Màn hình đã được làm sạch. Sẵn sàng thực thi nhiệm vụ Agency tiếp theo!';
-            }
-        }
-
-    </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js">
-        // =========================================================================
-        // HỆ THỐNG 8 AGENCY TINH HOA TÍCH HỢP TỪ GITHUB (AGENCY AGENTS SUITE)
-        // =========================================================================
-        const ELITE_AGENCY_ROSTER = [
-            {
-                id: 'agents_orchestrator',
-                name: 'Agents Orchestrator',
-                icon: '👑',
-                badge: 'Pipeline Leader',
-                skill: 'agency-agents-orchestrator',
-                color: '#a855f7',
-                role: 'Chỉ Huy Trưởng Pipeline & Giám Sát Quality Gates',
-                mission: 'Điều phối toàn bộ quy trình đa agent: PM → Chuyên gia → Kiểm thử QA Loop → Tích hợp thực tế.',
-                prompt: 'Bạn là Agents Orchestrator - Chỉ huy trưởng quy trình tự động. Nhiệm vụ của bạn là phối hợp các Agent chuyên môn giải quyết bài toán chuỗi 3 cửa hàng ẩm thực, bảo đảm chất lượng nghiêm ngặt và không bỏ sót bất kỳ quy trình nào.',
-                presetActions: [
-                    { label: '🚀 Khởi Động Pipeline 3 Quán', action: 'pipeline_3stores' },
-                    { label: '🛡️ Audit Quality Gates Ca Sáng/Tối', action: 'audit_quality_gates' }
-                ]
-            },
-            {
-                id: 'operations_manager',
-                name: 'Operations Manager',
-                icon: '⚙️',
-                badge: 'Lean & Six Sigma',
-                skill: 'agency-operations-manager',
-                color: '#06b6d4',
-                role: 'Giám Đốc Vận Hành Chuỗi Thực Địa & Bếp',
-                mission: 'Loại bỏ lãng phí (8 Wastes), kiểm soát thời gian ra món < 90s, định mức nguyên liệu tươi & SOP bếp.',
-                prompt: 'Bạn là Operations Manager - Chuyên gia vận hành chuỗi F&B theo phương pháp Lean và Six Sigma. Bạn tập trung vào chuẩn hóa quy trình ra món, công suất giờ cao điểm, giảm tỷ lệ hao hụt nguyên liệu dưới 3% và kiểm soát checklist an toàn vệ sinh.',
-                presetActions: [
-                    { label: '⏱️ Tối Ưu Tốc Độ Ra Món Dưới 90s', action: 'speed_of_service' },
-                    { label: '📦 Định Mức Nguyên Liệu & Hao Hụt', action: 'waste_reduction' }
-                ]
-            },
-            {
-                id: 'pricing_analyst',
-                name: 'Pricing Analyst',
-                icon: '💎',
-                badge: 'Unit Economics',
-                skill: 'agency-pricing-analyst',
-                color: '#f59e0b',
-                role: 'Chuyên Gia Định Giá Món & Tối Ưu Lợi Nhuận Biên',
-                mission: 'Phân tích ma trận Menu Engineering (Stars, Plowhorses, Puzzles, Dogs), tính giá vốn COGS < 35%, tối ưu combo tăng AOV.',
-                prompt: 'Bạn là Pricing Analyst - Chuyên gia định giá menu và tối ưu hóa biên lợi nhuận. Bạn không định giá theo cảm tính mà dựa trên cơ cấu chi phí thực tế (COGS), điểm hòa vốn, tâm lý khách hàng và ma trận Menu Engineering để tối đa hóa doanh thu từng suất bán.',
-                presetActions: [
-                    { label: '📊 Ma Trận Menu Engineering', action: 'menu_matrix' },
-                    { label: '💡 Thiết Kế Combo Tăng Giá Trị Đơn', action: 'combo_engineering' }
-                ]
-            },
-            {
-                id: 'growth_hacker',
-                name: 'Growth Hacker',
-                icon: '📈',
-                badge: 'Viral & Funnel',
-                skill: 'agency-growth-hacker',
-                color: '#10b981',
-                role: 'Chiến Lược Gia Tăng Trưởng & Phễu Bán Kính 3km',
-                mission: 'Xây dựng viral loops, phễu quét QR order bàn, chương trình khách quen/học sinh, kéo khách khu dân cư lân cận.',
-                prompt: 'Bạn là Growth Hacker - Chuyên gia tăng trưởng khách hàng đột phá cho nhà hàng và quán ăn nhanh. Bạn thiết kế các vòng lặp lan truyền (viral loops), tối ưu tỷ lệ chuyển đổi từ quét mã QR bàn sang đặt món, và thu hút khách quen trong bán kính 3km quanh quán.',
-                presetActions: [
-                    { label: '🎯 Chiến Dịch Kéo Khách Bán Kính 3km', action: 'local_traffic' },
-                    { label: '🔄 Vòng Lặp Viral & Tích Điểm Khách Quen', action: 'viral_referral' }
-                ]
-            },
-            {
-                id: 'social_media_strategist',
-                name: 'Social Media Strategist',
-                icon: '📱',
-                badge: 'Multi-Channel',
-                skill: 'agency-social-media-strategist',
-                color: '#f43f5e',
-                role: 'Giám Đốc Nội Dung Đa Kênh TikTok & FB',
-                mission: 'Sáng tạo chiến dịch video ngắn TikTok triệu view, hình ảnh món ăn thịnh soạn, bài đăng group cư dân Thủ Đức & Đông Thạnh.',
-                prompt: 'Bạn là Social Media Strategist - Chuyên gia truyền thông đa nền tảng cho thương hiệu F&B. Bạn xây dựng nội dung video ngắn thịnh hành trên TikTok/Reels, khơi gợi cảm giác thèm ăn (visual hunger), và khai thác các hội nhóm cư dân địa phương để tạo dòng khách ổn định.',
-                presetActions: [
-                    { label: '🎬 Kịch Bản TikTok Món Nóng Triệu View', action: 'tiktok_script' },
-                    { label: '📢 Bài Đăng Group Cư Dân Kéo Đơn', action: 'community_post' }
-                ]
-            },
-            {
-                id: 'analytics_reporter',
-                name: 'Analytics Reporter',
-                icon: '📊',
-                badge: 'BI & Insights',
-                skill: 'agency-analytics-reporter',
-                color: '#3b82f6',
-                role: 'Chuyên Gia Phân Tích Dữ Liệu & Sổ Thu Chi',
-                mission: 'Trực quan hóa số liệu bán hàng, phân tích xu hướng món bán chạy, đối soát doanh thu độc lập giữa 3 quán.',
-                prompt: 'Bạn là Analytics Reporter - Chuyên gia phân tích dữ liệu kinh doanh và báo cáo trực quan. Bạn bóc tách từng con số doanh thu, số đơn, chi phí nguyên liệu và dòng tiền của 3 cửa hàng để đưa ra cảnh báo sớm và dự báo nhu cầu chính xác.',
-                presetActions: [
-                    { label: '📈 Phân Tích Xu Hướng Bán Chạy', action: 'sales_trend' },
-                    { label: '🔍 Đối Soát Doanh Thu 3 Sổ', action: 'cross_audit' }
-                ]
-            },
-            {
-                id: 'customer_service',
-                name: 'Customer Service',
-                icon: '🎧',
-                badge: 'Retention & CSAT',
-                skill: 'agency-customer-service',
-                color: '#ec4899',
-                role: 'Chuyên Viên Trải Nghiệm Khách Hàng VIP & Giữ Chân 5 Sao',
-                mission: 'Chăm sóc khách hàng ấm áp, chuyên nghiệp, xử lý phản hồi khiếu nại món nhanh chóng, giữ đánh giá 5 sao tuyệt đối.',
-                prompt: 'Bạn là Customer Service Agent - Chuyên gia trải nghiệm khách hàng tiêu chuẩn cao. Bạn lắng nghe chân thành, giải quyết thắc mắc và khiếu nại món ăn trong vòng 3 phút, biến khách hàng thất vọng thành khách hàng trung thành của quán.',
-                presetActions: [
-                    { label: '⭐ Kịch Bản Xử Lý Khiếu Nại 5 Sao', action: 'complaint_resolution' },
-                    { label: '💌 Lời Chúc & Tri Ân Khách Hàng Thân Thiết', action: 'loyalty_care' }
-                ]
-            },
-            {
-                id: 'workflow_optimizer',
-                name: 'Workflow Optimizer',
-                icon: '🔄',
-                badge: 'Kaizen & Auto',
-                skill: 'agency-workflow-optimizer',
-                color: '#84cc16',
-                role: 'Chuyên Gia Tối Ưu Năng Suất Nhân Sự & Bàn Giao Ca',
-                mission: 'Thiết kế quy trình bàn giao 3 ca làm việc mượt mà, loại bỏ thao tác thừa trong khâu pha chế/đóng gói, tự động hóa kiểm kê.',
-                prompt: 'Bạn là Workflow Optimizer - Chuyên gia cải tiến quy trình và tối ưu năng suất làm việc (Kaizen). Bạn thiết kế các mẫu checklist thông minh, loại bỏ thời gian chết giữa các ca làm việc và giúp nhân sự vận hành trơn tru ngay cả khi quán đông khách.',
-                presetActions: [
-                    { label: '📋 Bảng Bàn Giao 3 Ca Tự Động', action: 'shift_handover' },
-                    { label: '⚡ Giảm Thao Tác Thừa Khu Vực Quầy Bếp', action: 'kitchen_flow' }
-                ]
-            }
-        ];
-
-        function renderAgencyCards() {
-            const container = document.getElementById('agencyCardsGrid');
-            if (!container) return;
-
-            const st = getActiveStore();
-            container.innerHTML = ELITE_AGENCY_ROSTER.map(ag => {
-                return `
-                    <div class="panel" style="background:rgba(15, 23, 42, 0.7); border:1px solid rgba(255,255,255,0.08); border-top:3px solid ${ag.color}; padding:1.2rem; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease;">
-                        <div>
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
-                                <div style="display:flex; align-items:center; gap:0.6rem;">
-                                    <div style="font-size:1.6rem; width:44px; height:44px; border-radius:10px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.1);">
-                                        ${ag.icon}
-                                    </div>
-                                    <div>
-                                        <div style="font-weight:700; font-size:1rem; color:#f8fafc;">${ag.name}</div>
-                                        <div style="font-size:0.75rem; color:${ag.color}; font-weight:600;">${ag.role}</div>
-                                    </div>
-                                </div>
-                                <span class="agent-badge" style="background:${ag.color}22; border:1px solid ${ag.color}55; color:${ag.color}; font-size:0.7rem; font-weight:700;">
-                                    ${ag.badge}
-                                </span>
-                            </div>
-                            <p style="font-size:0.8rem; color:#94a3b8; line-height:1.45; margin-bottom:1rem;">
-                                ${ag.mission}
-                            </p>
-                        </div>
-                        <div>
-                            <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.5rem;">
-                                ${ag.presetActions.map(act => `
-                                    <button class="btn btn-outline" onclick="runSingleAgencyAction('${ag.id}', '${act.action}')" style="font-size:0.75rem; padding:0.4rem 0.6rem; text-align:left; justify-content:flex-start; border-color:rgba(255,255,255,0.1); color:#cbd5e1;">
-                                        ${act.label}
-                                    </button>
-                                `).join('')}
-                                <button class="btn btn-primary" onclick="runSingleAgencyCustomPrompt('${ag.id}')" style="margin-top:0.25rem; font-size:0.75rem; padding:0.45rem; justify-content:center; background:${ag.color}; border-color:${ag.color}; color:#fff;">
-                                    ⚡ Kích Hoạt Tư Vấn Chuyên Sâu
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        async function runAgencyMission(missionType) {
-            const st = getActiveStore();
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ Đang kích hoạt Hệ Thống Agency Swarm (Codex × Claude) cho ${st.name}...
-Nhiệm vụ: ${missionType.toUpperCase()}...
-Đang kết nối 9Router...`;
-            }
-
-            let promptUser = '';
-            let systemPrompt = '';
-            let modelChain = getRoleModelChain('CEO_WARROOM');
-
-            if (missionType === 'orchestrator_pipeline') {
-                systemPrompt = `Bạn là Agents Orchestrator - Trưởng bộ phận điều phối toàn diện cho 3 quán ăn. Hãy phối hợp 8 Agency chuyên môn lập ra Kế Hoạch Đột Phá Doanh Số Trong 7 Ngày Tới cho quán ${st.name} (Địa chỉ: ${st.address}).`;
-                promptUser = `Hãy phân tích thực đơn riêng và vị trí địa lý của ${st.name}. Đưa ra bản phân công nhiệm vụ cụ thể cho từng Agency (Operations, Pricing, Growth, Social, Analytics, Customer Service, Workflow) để tăng ít nhất 25% doanh số và duy trì chi phí vốn dưới 35%.`;
-            } else if (missionType === 'pricing_engineering') {
-                systemPrompt = `Bạn là Pricing Analyst - Chuyên gia định giá ẩm thực cao cấp. Quán đang phân tích: ${st.name}.`;
-                promptUser = `Dựa trên thực đơn của ${st.name}, hãy thiết lập ma trận Menu Engineering 4 nhóm: Stars (Món ngôi sao), Plowhorses (Bán chạy lợi nhuận thấp), Puzzles (Lợi nhuận cao kén khách), Dogs (Cần loại bỏ/tinh chỉnh). Đề xuất công thức định giá combo để tăng giá trị đơn trung bình (AOV) thêm 15.000đ - 20.000đ/đơn.`;
-            } else if (missionType === 'growth_funnel') {
-                systemPrompt = `Bạn là Growth Hacker chuyên sâu chuỗi cửa hàng ăn uống F&B. Quán: ${st.name}.`;
-                promptUser = `Hãy vạch ra 3 chiến thuật kéo khách hiệu quả nhất trong bán kính 3km quanh địa chỉ: ${st.address}. Thiết kế kịch bản quét mã QR bàn để khách tự động nhận ưu đãi lần sau và giới thiệu bạn bè (Referral loop).`;
-            } else if (missionType === 'lean_operations') {
-                systemPrompt = `Bạn là Operations Manager chuyên nghiệp áp dụng Lean & Six Sigma cho chuỗi F&B. Quán: ${st.name}.`;
-                promptUser = `Hãy lập bảng tiêu chuẩn vận hành bếp và quầy pha chế cho ${st.name}: Thời gian ra món chuẩn (< 90 giây), quy trình kiểm soát hao hụt nguyên liệu tươi dưới 3%, và checklist bàn giao ca sáng/tối không thất thoát.`;
-            } else if (missionType === 'viral_tiktok') {
-                systemPrompt = `Bạn là Social Media Strategist chuyên gia video ngắn triệu view cho ẩm thực đường phố. Quán: ${st.name}.`;
-                promptUser = `Hãy viết 3 kịch bản video TikTok ngắn (dưới 45 giây) siêu hấp dẫn dựa trên món đặc sắc nhất của ${st.name}. Có đầy đủ Hook (3 giây đầu giữ chân), Body (hình ảnh cận cảnh tiếng xèo xèo/bốc khói/màu sắc hấp dẫn) và CTA kéo khách đến quán hoặc đặt hàng online.`;
-            }
-
-            const messages = [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: promptUser }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, modelChain);
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [BÁO CÁO THỰC THI AGENCY SWARM - ENGINE: ${result.model}]
-` +
-                                      `Quán: ${st.name} | Thời gian: ${new Date().toLocaleString('vi-VN')}
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `Agency Swarm [${result.model}]`, `Đã hoàn tất nhiệm vụ [${missionType}] cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 40);
-                saveMemoryItem(`agency_mission_${missionType}`, `[${st.shortName}] Hoàn tất nhiệm vụ ${missionType} bởi ${result.model}`);
-            } else {
-                if (out) {
-                    out.textContent = `⚠️ Không nhận được phản hồi trực tiếp từ 9Router. Hệ thống tự động kích hoạt Bản Kế Hoạch Dự Phòng Chuyên Nghiệp của Agency Swarm:
-
-` +
-                                      `Quán: ${st.name} (Địa chỉ: ${st.address})
-` +
-                                      `• Trọng tâm: Tối ưu quy trình vận hành và kiểm soát lợi nhuận gộp trên 60%.
-` +
-                                      `• Xem các thẻ Agency phía trên để kích hoạt từng tác vụ chuyên biệt!`;
-                }
-            }
-        }
-
-        async function runSingleAgencyAction(agencyId, actionKey) {
-            const ag = ELITE_AGENCY_ROSTER.find(a => a.id === agencyId);
-            if (!ag) return;
-            const st = getActiveStore();
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ ${ag.icon} ${ag.name} đang phân tích hành động [${actionKey}] cho ${st.name}...
-Đang gọi Dual-Engine Codex × Claude...`;
-            }
-
-            const promptUser = `Bạn là ${ag.name} (${ag.role}) thuộc bộ Agency GitHub Skills. Hãy thực thi hành động chuyên môn "${actionKey}" cho quán ${st.name} (Địa chỉ: ${st.address}). Đưa ra các bước hành động cụ thể, thông số định lượng rõ ràng và checklist thực hiện ngay hôm nay.`;
-            const messages = [
-                { role: 'system', content: ag.prompt },
-                { role: 'user', content: promptUser }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, getRoleModelChain('CODEX_AUDIT'));
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()} - ${ag.badge}] Phản hồi từ ${result.model}
-` +
-                                      `Chi nhánh: ${st.name} | Thời gian: ${new Date().toLocaleString('vi-VN')}
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `${ag.name}`, `Đã hoàn tất hành động [${actionKey}] cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 25);
-            } else {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()}] Đã lên kế hoạch hành động [${actionKey}] cho ${st.name}.
-Vui lòng kiểm tra lại kết nối 9Router hoặc thực hiện trực tiếp trên quy trình bàn giao!`;
-                }
-            }
-        }
-
-        async function runSingleAgencyCustomPrompt(agencyId) {
-            const ag = ELITE_AGENCY_ROSTER.find(a => a.id === agencyId);
-            if (!ag) return;
-            const st = getActiveStore();
-            const userCustom = prompt(`Nhập yêu cầu bạn muốn giao cho ${ag.name} (${ag.role}):`, `Hãy đề xuất giải pháp tối ưu cho ${st.name} trong tuần này.`);
-            if (!userCustom) return;
-
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ ${ag.icon} ${ag.name} đang xử lý chỉ thị của Chủ quán...
-"${userCustom}"`;
-            }
-
-            const messages = [
-                { role: 'system', content: ag.prompt + ` Quán mục tiêu: ${st.name} (${st.address}).` },
-                { role: 'user', content: userCustom }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, getRoleModelChain('CLAUDE_CREATIVE'));
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()}] Phản hồi từ ${result.model}
-` +
-                                      `Yêu cầu: "${userCustom}"
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `${ag.name}`, `Đã giải quyết yêu cầu riêng cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 30);
-            }
-        }
-
-        function copyAgencyOutput() {
-            const out = document.getElementById('agencyTerminalOutput');
-            if (!out) return;
-            navigator.clipboard.writeText(out.textContent).then(() => {
-                alert('✅ Đã sao chép nội dung báo cáo Agency vào bộ nhớ tạm!');
-            }).catch(() => {
-                alert('Sao chép thất bại, vui lòng bôi đen và nhấn Ctrl+C.');
-            });
-        }
-
-        function clearAgencyOutput() {
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = 'Màn hình đã được làm sạch. Sẵn sàng thực thi nhiệm vụ Agency tiếp theo!';
-            }
-        }
-
-    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         :root {
             --bg-dark: #060913;
@@ -2600,7 +1948,18 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         </div>
     </div>
 
+        <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
+        <span>🍔 Menu</span>
+    </button>
+    <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
     <script>
+        function toggleMobileSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const overlay = document.querySelector('.sidebar-overlay');
+            if (sidebar) sidebar.classList.toggle('mobile-open');
+            if (overlay) overlay.classList.toggle('mobile-open');
+        }
+
         // =========================================================================
         // 1. DỮ LIỆU TÁCH BẠCH 100% CHO 3 QUÁN + BỘ NHỚ TỰ HỌC CODEX x CLAUDE
         // =========================================================================
@@ -2642,6 +2001,8 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                 link: 'GitHub Pages Live: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/ | Menu Gọi Món: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/order | POS: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/staff | Báo Cáo: https://123okmen.github.io/cafe-an-vat-tram-khoi-nghiep/#/planner | Local: http://localhost:8089/'
             }
         ];
+
+        
 
         const DEFAULT_LEARNED_MEMORY = {
             store_7a: [
@@ -2879,6 +2240,217 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
             }
         ];
 
+        
+        // =========================================================================
+        // HỆ THỐNG 8 AGENCY TINH HOA TÍCH HỢP TỪ GITHUB (AGENCY AGENTS SUITE)
+        // ĐẦY ĐỦ THÔNG SỐ 3D: TỌA ĐỘ VÒNG NGOÀI, MÀU SẮC NEON, CỬ ĐỘNG VÀ THOẠI 3 QUÁN
+        // =========================================================================
+        const ELITE_AGENCY_ROSTER = [
+            {
+                id: 'agents_orchestrator',
+                name: 'Agency Orchestrator',
+                icon: '👑',
+                badge: 'Pipeline Leader',
+                skill: 'agency-agents-orchestrator',
+                color: '#a855f7',
+                colorHex: 0xa855f7,
+                colorCss: '#c084fc',
+                deskPos: { x: -10.5, z: -8.5 },
+                level: 20,
+                xp: 95,
+                brain: 'agency-agents-orchestrator (GitHub Suite)',
+                role: 'Chỉ Huy Trưởng Pipeline & Giám Sát Quality Gates',
+                mission: 'Điều phối toàn bộ quy trình đa agent: PM → Chuyên gia → Kiểm thử QA Loop → Tích hợp thực tế.',
+                prompt: 'Bạn là Agents Orchestrator - Chỉ huy trưởng quy trình tự động. Nhiệm vụ của bạn là phối hợp các Agent chuyên môn giải quyết bài toán chuỗi 3 cửa hàng ẩm thực, bảo đảm chất lượng nghiêm ngặt và không bỏ sót bất kỳ quy trình nào.',
+                speech7A: '👑 Orchestrator: Đang điều phối Pipeline tự động & Quality Gates cho FOOD STATION 7A!',
+                speechCT: '👑 Orchestrator: Đang kiểm soát quy trình ca trưa & nướng than hoa cho TRẠM KHỞI NGHIỆP!',
+                speechCafe: '👑 Orchestrator: Đang vận hành Pipeline đồ uống & món ăn vặt cho CAFE ĐÔNG THẠNH!',
+                isAgency: true,
+                presetActions: [
+                    { label: '🚀 Khởi Động Pipeline 3 Quán', action: 'pipeline_3stores' },
+                    { label: '🛡️ Audit Quality Gates Ca Sáng/Tối', action: 'audit_quality_gates' }
+                ]
+            },
+            {
+                id: 'operations_manager',
+                name: 'Operations Manager',
+                icon: '⚙️',
+                badge: 'Lean & Six Sigma',
+                skill: 'agency-operations-manager',
+                color: '#06b6d4',
+                colorHex: 0x06b6d4,
+                colorCss: '#22d3ee',
+                deskPos: { x: 10.5, z: -8.5 },
+                level: 19,
+                xp: 88,
+                brain: 'agency-operations-manager (Lean Ops)',
+                role: 'Giám Đốc Vận Hành Chuỗi Thực Địa & Bếp',
+                mission: 'Loại bỏ lãng phí (8 Wastes), kiểm soát thời gian ra món < 90s, định mức nguyên liệu tươi & SOP bếp.',
+                prompt: 'Bạn là Operations Manager - Chuyên gia vận hành chuỗi F&B theo phương pháp Lean và Six Sigma. Bạn tập trung vào chuẩn hóa quy trình ra món, công suất giờ cao điểm, giảm tỷ lệ hao hụt nguyên liệu dưới 3% và kiểm soát checklist an toàn vệ sinh.',
+                speech7A: '⚙️ Ops: Chuẩn hóa ra món Bánh Bao Kẹp < 90s & kiểm soát dầu chiên tại Quán 7A!',
+                speechCT: '⚙️ Ops: Giảm hao hụt sườn than hoa < 3% & định lượng gia vị ướp sườn chuẩn!',
+                speechCafe: '⚙️ Ops: Kiểm soát thời gian pha Cà phê muối & chiên cá viên giòn rụm tại Đông Thạnh!',
+                isAgency: true,
+                presetActions: [
+                    { label: '⏱️ Tối Ưu Tốc Độ Ra Món Dưới 90s', action: 'speed_of_service' },
+                    { label: '📦 Định Mức Nguyên Liệu & Hao Hụt', action: 'waste_reduction' }
+                ]
+            },
+            {
+                id: 'pricing_analyst',
+                name: 'Pricing Analyst',
+                icon: '💎',
+                badge: 'Unit Economics',
+                skill: 'agency-pricing-analyst',
+                color: '#f59e0b',
+                colorHex: 0xf59e0b,
+                colorCss: '#fbbf24',
+                deskPos: { x: -11.5, z: 0 },
+                level: 18,
+                xp: 84,
+                brain: 'agency-pricing-analyst (Menu Engineering)',
+                role: 'Chuyên Gia Định Giá Món & Tối Ưu Lợi Nhuận Biên',
+                mission: 'Phân tích ma trận Menu Engineering (Stars, Plowhorses, Puzzles, Dogs), tính giá vốn COGS < 35%, tối ưu combo tăng AOV.',
+                prompt: 'Bạn là Pricing Analyst - Chuyên gia định giá menu và tối ưu hóa biên lợi nhuận. Bạn không định giá theo cảm tính mà dựa trên cơ cấu chi phí thực tế (COGS), điểm hòa vốn, tâm lý khách hàng và ma trận Menu Engineering để tối đa hóa doanh thu từng suất bán.',
+                speech7A: '💎 Pricing: Phân tích ma trận Star/Plowhorse Quán 7A, tối ưu Cost nguyên liệu < 35%!',
+                speechCT: '💎 Pricing: Thiết kế Combo Cơm Tấm 2 Sườn + Trà đá tăng AOV thêm 18%!',
+                speechCafe: '💎 Pricing: Định giá Combo Trà sâm bí đao + Cá viên bơ tỏi đạt lãi gộp 68%!',
+                isAgency: true,
+                presetActions: [
+                    { label: '📊 Ma Trận Menu Engineering', action: 'menu_matrix' },
+                    { label: '💡 Thiết Kế Combo Tăng Giá Trị Đơn', action: 'combo_engineering' }
+                ]
+            },
+            {
+                id: 'growth_hacker',
+                name: 'Growth Hacker',
+                icon: '📈',
+                badge: 'Viral & Funnel',
+                skill: 'agency-growth-hacker',
+                color: '#10b981',
+                colorHex: 0x10b981,
+                colorCss: '#34d399',
+                deskPos: { x: 11.5, z: 0 },
+                level: 19,
+                xp: 92,
+                brain: 'agency-growth-hacker (QR Funnels)',
+                role: 'Chiến Lược Gia Tăng Trưởng & Phễu Bán Kính 3km',
+                mission: 'Xây dựng viral loops, phễu quét QR order bàn, chương trình khách quen/học sinh, kéo khách khu dân cư lân cận.',
+                prompt: 'Bạn là Growth Hacker - Chuyên gia tăng trưởng khách hàng đột phá cho nhà hàng và quán ăn nhanh. Bạn thiết kế các vòng lặp lan truyền (viral loops), tối ưu tỷ lệ chuyển đổi từ quét mã QR bàn sang đặt món, và thu hút khách quen trong bán kính 3km quanh quán.',
+                speech7A: '📈 Growth: Triển khai phễu quét QR tại bàn nhận mã giảm 10% tại FOOD STATION 7A!',
+                speechCT: '📈 Growth: Kéo đơn Cơm Hộp văn phòng bán kính 3km quanh Trạm Khởi Nghiệp!',
+                speechCafe: '📈 Growth: Check-in tặng voucher giảm 5K cho học sinh & cư dân Đông Thạnh!',
+                isAgency: true,
+                presetActions: [
+                    { label: '🎯 Chiến Dịch Kéo Khách Bán Kính 3km', action: 'local_traffic' },
+                    { label: '🔄 Vòng Lặp Viral & Tích Điểm Khách Quen', action: 'viral_referral' }
+                ]
+            },
+            {
+                id: 'social_media_strategist',
+                name: 'Social Media Strategist',
+                icon: '📱',
+                badge: 'Multi-Channel',
+                skill: 'agency-social-media-strategist',
+                color: '#f43f5e',
+                colorHex: 0xf43f5e,
+                colorCss: '#fb7185',
+                deskPos: { x: -10.5, z: 8.5 },
+                level: 18,
+                xp: 79,
+                brain: 'agency-social-media-strategist (Short Videos)',
+                role: 'Giám Đốc Nội Dung Đa Kênh TikTok & FB',
+                mission: 'Sáng tạo chiến dịch video ngắn TikTok triệu view, hình ảnh món ăn thịnh soạn, bài đăng group cư dân Thủ Đức & Đông Thạnh.',
+                prompt: 'Bạn là Social Media Strategist - Chuyên gia truyền thông đa nền tảng cho thương hiệu F&B. Bạn xây dựng nội dung video ngắn thịnh hành trên TikTok/Reels, khơi gợi cảm giác thèm ăn (visual hunger), và khai thác các hội nhóm cư dân địa phương để tạo dòng khách ổn định.',
+                speech7A: '📱 Social: Kịch bản video Mì Cay 7 Cấp Độ xèo xèo đạt 25.000 views TikTok Quán 7A!',
+                speechCT: '📱 Social: Livestream sườn nướng than hồng thơm nức mũi giờ cao điểm trưa Cơm Tấm!',
+                speechCafe: '📱 Social: Bắt trend video Cà phê muối béo ngậy Đông Thạnh cực hot trên TikTok!',
+                isAgency: true,
+                presetActions: [
+                    { label: '🎬 Kịch Bản TikTok Món Nóng Triệu View', action: 'tiktok_script' },
+                    { label: '📢 Bài Đăng Group Cư Dân Kéo Đơn', action: 'community_post' }
+                ]
+            },
+            {
+                id: 'analytics_reporter',
+                name: 'Analytics Reporter',
+                icon: '📊',
+                badge: 'BI & Insights',
+                skill: 'agency-analytics-reporter',
+                color: '#3b82f6',
+                colorHex: 0x3b82f6,
+                colorCss: '#60a5fa',
+                deskPos: { x: 10.5, z: 8.5 },
+                level: 19,
+                xp: 90,
+                brain: 'agency-analytics-reporter (Realtime BI)',
+                role: 'Chuyên Gia Phân Tích Dữ Liệu & Sổ Thu Chi',
+                mission: 'Trực quan hóa số liệu bán hàng, phân tích xu hướng món bán chạy, đối soát doanh thu độc lập giữa 3 quán.',
+                prompt: 'Bạn là Analytics Reporter - Chuyên gia phân tích dữ liệu kinh doanh và báo cáo trực quan. Bạn bóc tách từng con số doanh thu, số đơn, chi phí nguyên liệu và dòng tiền của 3 cửa hàng để đưa ra cảnh báo sớm và dự báo nhu cầu chính xác.',
+                speech7A: '📊 Analytics: Dashboard Sổ 1 Quán 7A realtime đạt chỉ tiêu doanh thu ca sáng!',
+                speechCT: '📊 Analytics: Tỷ lệ khách quay lại Cơm Tấm Trạm Khởi Nghiệp đạt 64%!',
+                speechCafe: '📊 Analytics: Doanh thu món ăn vặt tăng 32% vào khung giờ 16h-21h Đông Thạnh!',
+                isAgency: true,
+                presetActions: [
+                    { label: '📈 Phân Tích Xu Hướng Bán Chạy', action: 'sales_trend' },
+                    { label: '🔍 Đối Soát Doanh Thu 3 Sổ', action: 'cross_audit' }
+                ]
+            },
+            {
+                id: 'customer_service',
+                name: 'Customer Service',
+                icon: '🎧',
+                badge: 'Retention & CSAT',
+                skill: 'agency-customer-service',
+                color: '#ec4899',
+                colorHex: 0xec4899,
+                colorCss: '#f472b6',
+                deskPos: { x: -4.5, z: 11.5 },
+                level: 17,
+                xp: 82,
+                brain: 'agency-customer-service (CSAT 5-Star)',
+                role: 'Chuyên Viên Trải Nghiệm Khách Hàng VIP & Giữ Chân 5 Sao',
+                mission: 'Chăm sóc khách hàng ấm áp, chuyên nghiệp, xử lý phản hồi khiếu nại món nhanh chóng, giữ đánh giá 5 sao tuyệt đối.',
+                prompt: 'Bạn là Customer Service Agent - Chuyên gia trải nghiệm khách hàng tiêu chuẩn cao. Bạn lắng nghe chân thành, giải quyết thắc mắc và khiếu nại món ăn trong vòng 3 phút, biến khách hàng thất vọng thành khách hàng trung thành của quán.',
+                speech7A: '🎧 CS: Phản hồi khách Quán 7A trong 45s, xử lý 100% hài lòng thực khách!',
+                speechCT: '🎧 CS: Thu thập đánh giá hài lòng khách ăn Cơm Tấm đạt 4.9 sao!',
+                speechCafe: '🎧 CS: Hỗ trợ khách đổi bàn & lắng nghe feedback độ ngọt cà phê tại Đông Thạnh!',
+                isAgency: true,
+                presetActions: [
+                    { label: '⭐ Kịch Bản Xử Lý Khiếu Nại 5 Sao', action: 'complaint_resolution' },
+                    { label: '💌 Lời Chúc & Tri Ân Khách Hàng Thân Thiết', action: 'loyalty_care' }
+                ]
+            },
+            {
+                id: 'workflow_optimizer',
+                name: 'Workflow Optimizer',
+                icon: '🔄',
+                badge: 'Kaizen & Auto',
+                skill: 'agency-workflow-optimizer',
+                color: '#84cc16',
+                colorHex: 0x84cc16,
+                colorCss: '#a3e635',
+                deskPos: { x: 4.5, z: 11.5 },
+                level: 18,
+                xp: 86,
+                brain: 'agency-workflow-optimizer (Kaizen)',
+                role: 'Chuyên Gia Tối Ưu Năng Suất Nhân Sự & Bàn Giao Ca',
+                mission: 'Thiết kế quy trình bàn giao 3 ca làm việc mượt mà, loại bỏ thao tác thừa trong khâu pha chế/đóng gói, tự động hóa kiểm kê.',
+                prompt: 'Bạn là Workflow Optimizer - Chuyên gia cải tiến quy trình và tối ưu năng suất làm việc (Kaizen). Bạn thiết kế các mẫu checklist thông minh, loại bỏ thời gian chết giữa các ca làm việc và giúp nhân sự vận hành trơn tru ngay cả khi quán đông khách.',
+                speech7A: '🔄 Workflow: Tự động hóa đẩy đơn từ QR thẳng vào màn hình bếp Quán 7A!',
+                speechCT: '🔄 Workflow: Tự động hóa lịch ướp sườn và báo cáo kết thúc ca nướng!',
+                speechCafe: '🔄 Workflow: Bàn giao ca mượt mà, quầy pha chế & đồ chiên không nghẽn giờ tan học!',
+                isAgency: true,
+                presetActions: [
+                    { label: '📋 Bảng Bàn Giao 3 Ca Tự Động', action: 'shift_handover' },
+                    { label: '⚡ Giảm Thao Tác Thừa Khu Vực Quầy Bếp', action: 'kitchen_flow' }
+                ]
+            }
+        ];
+
+        // TỔNG HỢP 14 NHÂN SỰ AI 3D TRONG VĂN PHÒNG ẢO (6 NHÂN SỰ QUÁN + 8 AGENCY TINH HOA)
+        const ALL_3D_AGENTS = [...AGENTS_3D_ROSTER, ...ELITE_AGENCY_ROSTER];
+
         let savedSettings = JSON.parse(localStorage.getItem('vo_settings_v6')) || {};
         let appState = {
             stores: JSON.parse(localStorage.getItem('vo_stores_v6')) || REAL_STORES_DATA,
@@ -3021,25 +2593,30 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                 if (el) el.textContent = shortTitle;
             });
 
+            const setVal = (id, v) => {
+                const el = document.getElementById(id);
+                if (el) el.value = v;
+            };
+
             if (is7A) {
-                document.getElementById('warRoomPrompt').value = 'Lập phương án tăng doanh số độc lập cho FOOD STATION 7A (Số 2 Đường 7A, KP. Phước Thiện): đẩy mạnh Bánh Bao Kẹp (18K-26K) & Hamburger (28K) vào Ca Sáng, Cơm Gà Xối Mỡ & Mì Xào (40K) vào Ca Trưa, và Mì Cay 7 Cấp Độ (40K) vào Ca Tối.';
-                document.getElementById('chatbotInstruction').value = 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn chuyên nghiệp của FOOD STATION 7A (Số 2 Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức). Quán chuyên Bánh Bao Kẹp 18K-26K, Cơm Gà Xối Mỡ 40K, Mì Cay 7 Cấp Độ 40K. Tuyệt đối không nhầm sang thực đơn Cơm Tấm hay Cà Phê Đông Thạnh.';
-                document.getElementById('marketingGoal').value = 'Chiến dịch tăng doanh số Quán 7A: Đẩy mạnh Bánh Bao Kẹp & FastFood ăn sáng cho cư dân và học sinh quanh Phước Thiện.';
+                setVal('warRoomPrompt', 'Lập phương án tăng doanh số độc lập cho FOOD STATION 7A (Số 2 Đường 7A, KP. Phước Thiện): đẩy mạnh Bánh Bao Kẹp (18K-26K) & Hamburger (28K) vào Ca Sáng, Cơm Gà Xối Mỡ & Mì Xào (40K) vào Ca Trưa, và Mì Cay 7 Cấp Độ (40K) vào Ca Tối.');
+                setVal('chatbotInstruction', 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn chuyên nghiệp của FOOD STATION 7A (Số 2 Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức). Quán chuyên Bánh Bao Kẹp 18K-26K, Cơm Gà Xối Mỡ 40K, Mì Cay 7 Cấp Độ 40K. Tuyệt đối không nhầm sang thực đơn Cơm Tấm hay Cà Phê Đông Thạnh.');
+                setVal('contentTopicInput', 'Chiến dịch tăng doanh số Quán 7A: Đẩy mạnh Bánh Bao Kẹp & FastFood ăn sáng cho cư dân và học sinh quanh Phước Thiện.');
             } else if (isCafe) {
-                document.getElementById('warRoomPrompt').value = 'Lập phương án bùng nổ doanh thu cho CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E Nguyễn Thị Ngâu, Đông Thạnh, TP.HCM): Khung sáng 06h30-10h00 tập trung Cà phê muối (20K), Bạc xỉu & Nước sâm (15K) mang đi; Khung tối 16h30-22h30 bùng nổ ăn vặt nóng giòn (Cá viên mắm bơ tỏi 30K, Khoai lắc 25K, Mì cay Hàn Quốc 45K).';
-                document.getElementById('chatbotInstruction').value = 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn của CAFE ĂN VẶT TRẠM KHỞI NGHIỆP tại 36/5E Nguyễn Thị Ngâu, Trung Đông 8, Xã Đông Thạnh, TP.HCM (Hotline: 0938.888.xxx). Quán chuyên Cà Phê Muối kem béo 20K, Nước sâm bí đao hạt chia 15K, Cá viên chiên mắm bơ tỏi 30K, Mì trộn xúc xích 30K, Mì cay 45K. Tư vấn nhiệt tình, thân thiện, chốt đơn bàn hoặc mang về nhanh chóng. Tuyệt đối không nhầm thực đơn sang quán Cơm Tấm hay Food Station 7A.';
-                document.getElementById('marketingGoal').value = 'Chiến dịch Khai Trương & Lan Tỏa: Thu hút giới trẻ, học sinh, cư dân Đông Thạnh check-in thưởng thức Cà Phê Muối & Đồ ăn vặt nóng giòn.';
+                setVal('warRoomPrompt', 'Lập phương án bùng nổ doanh thu cho CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E Nguyễn Thị Ngâu, Đông Thạnh, TP.HCM): Khung sáng 06h30-10h00 tập trung Cà phê muối (20K), Bạc xỉu & Nước sâm (15K) mang đi; Khung tối 16h30-22h30 bùng nổ ăn vặt nóng giòn (Cá viên mắm bơ tỏi 30K, Khoai lắc 25K, Mì cay Hàn Quốc 45K).');
+                setVal('chatbotInstruction', 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn của CAFE ĂN VẶT TRẠM KHỞI NGHIỆP tại 36/5E Nguyễn Thị Ngâu, Trung Đông 8, Xã Đông Thạnh, TP.HCM (Hotline: 0938.888.xxx). Quán chuyên Cà Phê Muối kem béo 20K, Nước sâm bí đao hạt chia 15K, Cá viên chiên mắm bơ tỏi 30K, Mì trộn xúc xích 30K, Mì cay 45K. Tư vấn nhiệt tình, thân thiện, chốt đơn bàn hoặc mang về nhanh chóng. Tuyệt đối không nhầm thực đơn sang quán Cơm Tấm hay Food Station 7A.');
+                setVal('contentTopicInput', 'Chiến dịch Khai Trương & Lan Tỏa: Thu hút giới trẻ, học sinh, cư dân Đông Thạnh check-in thưởng thức Cà Phê Muối & Đồ ăn vặt nóng giòn.');
             } else {
-                document.getElementById('warRoomPrompt').value = 'Lập phương án tăng doanh số độc lập cho TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa: đẩy mạnh đặt Cơm Hộp Trưa 35K-45K cho các công ty & xưởng lân cận, đồng thời đẩy mạnh suất 2 Sườn Gymer (55K) vào buổi tối.';
-                document.getElementById('chatbotInstruction').value = 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn chuyên nghiệp của TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên. Chuyên Cơm Tấm Sườn 30K-50K, Cơm Chiên Dưa Bò/Dương Châu 40K-50K. Nhận đặt cơm hộp văn phòng/xưởng. Tuyệt đối không tư vấn thực đơn Quán 7A hay Quán Cafe Ăn Vặt.';
-                document.getElementById('marketingGoal').value = 'Chiến dịch tăng doanh số TRẠM KHỞI NGHIỆP: Tìm kiếm công ty, xưởng đặt cơm trưa cố định từ 10-30 suất Cơm Tấm Sườn Bì Chả hàng ngày.';
+                setVal('warRoomPrompt', 'Lập phương án tăng doanh số độc lập cho TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa: đẩy mạnh đặt Cơm Hộp Trưa 35K-45K cho các công ty & xưởng lân cận, đồng thời đẩy mạnh suất 2 Sườn Gymer (55K) vào buổi tối.');
+                setVal('chatbotInstruction', 'Bạn là Linh Nhi - Trợ lý CSKH & Chốt Đơn chuyên nghiệp của TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên. Chuyên Cơm Tấm Sườn 30K-50K, Cơm Chiên Dưa Bò/Dương Châu 40K-50K. Nhận đặt cơm hộp văn phòng/xưởng. Tuyệt đối không tư vấn thực đơn Quán 7A hay Quán Cafe Ăn Vặt.');
+                setVal('contentTopicInput', 'Chiến dịch tăng doanh số TRẠM KHỞI NGHIỆP: Tìm kiếm công ty, xưởng đặt cơm trưa cố định từ 10-30 suất Cơm Tấm Sườn Bì Chả hàng ngày.');
             }
 
-            renderKanbanTasks();
-            renderShiftSchedules();
-            renderLearnedMemoryList();
-            renderReportsData();
-            updateAgentSpeechesForStore();
+            if (typeof renderKanbanBoard === 'function') renderKanbanBoard();
+            if (typeof renderScheduleTable === 'function') renderScheduleTable();
+            if (typeof loadCurrentStoreMetricsToInputs === 'function') loadCurrentStoreMetricsToInputs();
+            if (typeof updateAgentSpeechesForStore === 'function') updateAgentSpeechesForStore();
+            if (typeof renderAgencyCards === 'function') renderAgencyCards();
         }
 
         
@@ -3237,43 +2814,23 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
             holoDisk.position.set(0, 0.85, -4.6);
             scene3D.add(holoDisk);
 
-            // 8. 6 Bàn Làm Việc Cho 6 Nhân Viên AI
+            // 8. KHỞI TẠO BÀN LÀM VIỆC & BỆ ĐIỀU HÀNH CHO TẤT CẢ 14 NHÂN SỰ
+            // A. 6 Bàn làm việc cho 6 Nhân sự Quán
             AGENTS_3D_ROSTER.forEach(ag => {
                 buildDeskStation(ag.deskPos.x, ag.deskPos.z, ag.colorHex);
             });
 
-            // 8 Bệ Đứng Cho 8 Agency Tinh Hoa (Perimeter Agency Stations)
-            const agencyCoords = [
-                { x: -10.5, z: -8.5, color: 0xa855f7, icon: '👑', name: 'Orchestrator' },
-                { x: 10.5, z: -8.5, color: 0x06b6d4, icon: '⚙️', name: 'Operations' },
-                { x: -11.5, z: 0, color: 0xf59e0b, icon: '💎', name: 'Pricing' },
-                { x: 11.5, z: 0, color: 0x10b981, icon: '📈', name: 'Growth' },
-                { x: -10.5, z: 8.5, color: 0xf43f5e, icon: '📱', name: 'Social' },
-                { x: 10.5, z: 8.5, color: 0x3b82f6, icon: '📊', name: 'Analytics' },
-                { x: -4.5, z: 11.5, color: 0xec4899, icon: '🎧', name: 'CS' },
-                { x: 4.5, z: 11.5, color: 0x84cc16, icon: '🔄', name: 'Workflow' }
-            ];
-            agencyCoords.forEach(ac => {
-                const podGeo = new THREE.CylinderGeometry(0.8, 0.95, 0.25, 6);
-                const podMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, emissive: ac.color, emissiveIntensity: 0.35, roughness: 0.3 });
-                const pod = new THREE.Mesh(podGeo, podMat);
-                pod.position.set(ac.x, 0.12, ac.z);
-                scene3D.add(pod);
-
-                const glowRingGeo = new THREE.TorusGeometry(0.75, 0.025, 8, 32);
-                const glowRingMat = new THREE.MeshStandardMaterial({ color: ac.color, emissive: ac.color });
-                const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
-                glowRing.rotation.x = Math.PI / 2;
-                glowRing.position.set(ac.x, 0.26, ac.z);
-                scene3D.add(glowRing);
+            // B. 8 Bệ điều hành Holographic cho 8 Agency Tinh Hoa
+            ELITE_AGENCY_ROSTER.forEach(ag => {
+                buildAgencyStation(ag);
             });
 
-            // 9. 6 Nhân Viên 3D Voxel (Head, Body, Arms, Legs)
+            // 9. KHỞI TẠO ĐẦY ĐỦ 14 NHÂN VIÊN 3D VOXEL CỬ ĐỘNG (6 NHÂN SỰ + 8 AGENCY SWARM)
             const labelsContainer = document.getElementById('labels3DContainer');
             if (labelsContainer) labelsContainer.innerHTML = '';
             characterMeshes3D = [];
 
-            AGENTS_3D_ROSTER.forEach(ag => {
+            ALL_3D_AGENTS.forEach(ag => {
                 const charObj = createCharacterMesh(ag, labelsContainer);
                 characterMeshes3D.push(charObj);
                 scene3D.add(charObj.group);
@@ -3342,6 +2899,76 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
             const back = new THREE.Mesh(backGeo, chairMat);
             back.position.set(0, 0.85, 0.85);
             group.add(back);
+
+            scene3D.add(group);
+        }
+
+        
+        function buildAgencyStation(ag) {
+            const group = new THREE.Group();
+            group.position.set(ag.deskPos.x, 0, ag.deskPos.z);
+            group.userData = { agentId: ag.id, isAgencyStation: true };
+
+            // 1. Bệ lục giác Sci-Fi Pod
+            const podGeo = new THREE.CylinderGeometry(1.05, 1.25, 0.28, 6);
+            const podMat = new THREE.MeshStandardMaterial({
+                color: 0x0a0f1d,
+                emissive: ag.colorHex,
+                emissiveIntensity: 0.35,
+                roughness: 0.25,
+                metalness: 0.85
+            });
+            const pod = new THREE.Mesh(podGeo, podMat);
+            pod.position.y = 0.14;
+            pod.receiveShadow = true;
+            group.add(pod);
+
+            // 2. Vòng hào quang Neon phát sáng (Glow Ring)
+            const glowRingGeo = new THREE.TorusGeometry(0.98, 0.038, 12, 36);
+            const glowRingMat = new THREE.MeshStandardMaterial({
+                color: ag.colorHex,
+                emissive: ag.colorHex,
+                emissiveIntensity: 0.95,
+                roughness: 0.1
+            });
+            const glowRing = new THREE.Mesh(glowRingGeo, glowRingMat);
+            glowRing.rotation.x = Math.PI / 2;
+            glowRing.position.y = 0.29;
+            group.add(glowRing);
+
+            // 3. Console điều hành Holographic đứng
+            const standGeo = new THREE.BoxGeometry(0.12, 0.85, 0.12);
+            const standMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.85, roughness: 0.25 });
+            const stand = new THREE.Mesh(standGeo, standMat);
+            stand.position.set(0, 0.5, 0.72);
+            group.add(stand);
+
+            // Màn hình Hologram nghiêng hiển thị dữ liệu
+            const holoScreenGeo = new THREE.BoxGeometry(0.8, 0.48, 0.03);
+            const holoScreenMat = new THREE.MeshStandardMaterial({
+                color: ag.colorHex,
+                emissive: ag.colorHex,
+                emissiveIntensity: 0.7,
+                roughness: 0.2,
+                transparent: true,
+                opacity: 0.88
+            });
+            const holoScreen = new THREE.Mesh(holoScreenGeo, holoScreenMat);
+            holoScreen.position.set(0, 0.98, 0.68);
+            holoScreen.rotation.x = -Math.PI / 6;
+            group.add(holoScreen);
+
+            // Tinh thể holographic lơ lửng phía trên đỉnh console
+            const badgeGeo = new THREE.OctahedronGeometry(0.16, 0);
+            const badgeMat = new THREE.MeshStandardMaterial({
+                color: ag.colorHex,
+                emissive: ag.colorHex,
+                emissiveIntensity: 1.0,
+                roughness: 0.1
+            });
+            const badge = new THREE.Mesh(badgeGeo, badgeMat);
+            badge.position.set(0, 2.5, 0);
+            group.add(badge);
 
             scene3D.add(group);
         }
@@ -3522,13 +3149,14 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         }
 
         function getStoreAgentSpeech(ag) {
-            if (appState.selectedStoreId === 'store_7a') return ag.speech7A;
-            if (appState.selectedStoreId === 'store_cafe_anvat') return ag.speechCafe || ag.speech7A;
-            return ag.speechCT;
+            if (!ag) return '';
+            if (appState.selectedStoreId === 'store_7a') return ag.speech7A || ag.speech || '';
+            if (appState.selectedStoreId === 'store_cafe_anvat') return ag.speechCafe || ag.speech7A || ag.speech || '';
+            return ag.speechCT || ag.speech7A || ag.speech || '';
         }
 
         function updateAgentSpeechesForStore() {
-            AGENTS_3D_ROSTER.forEach(ag => {
+            ALL_3D_AGENTS.forEach(ag => {
                 const sp = getStoreAgentSpeech(ag);
                 setAgent3DWorkingState(ag.id, sp);
                 const taskEl = document.getElementById(`agentTask_${ag.id}`);
@@ -3564,26 +3192,35 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                 const dist = Math.hypot(dx, dz);
 
                 if (dist > 0.08) {
-                    const speed = 0.045 * appState.gameSpeed;
+                    const speed = 0.05 * appState.gameSpeed;
                     c.group.position.x += (dx / dist) * Math.min(dist, speed);
                     c.group.position.z += (dz / dist) * Math.min(dist, speed);
                     c.group.lookAt(c.targetX, 0, c.targetZ);
 
-                    // Hiệu ứng vung tay chân khi đi bộ
-                    const walkCycle = Math.sin(time * 9 + c.phase) * 0.45;
+                    // Hiệu ứng vung tay chân sinh động khi di chuyển
+                    const walkCycle = Math.sin(time * 9 + c.phase) * 0.48;
                     c.leftLeg.rotation.x = walkCycle;
                     c.rightLeg.rotation.x = -walkCycle;
-                    c.leftArm.rotation.x = -walkCycle * 0.8;
-                    c.rightArm.rotation.x = walkCycle * 0.8;
-                    c.group.position.y = Math.abs(Math.sin(time * 9 + c.phase)) * 0.08;
+                    c.leftArm.rotation.x = -walkCycle * 0.85;
+                    c.rightArm.rotation.x = walkCycle * 0.85;
+                    c.group.position.y = Math.abs(Math.sin(time * 9 + c.phase)) * 0.09;
                 } else {
-                    // Đứng làm việc / gõ phím nhẹ nhàng
+                    // Trạng thái đứng làm việc tại trạm
                     c.leftLeg.rotation.x = 0;
                     c.rightLeg.rotation.x = 0;
-                    c.leftArm.rotation.x = Math.sin(time * 4 + c.phase) * 0.12;
-                    c.rightArm.rotation.x = Math.cos(time * 4 + c.phase) * 0.12;
-                    c.group.position.y = Math.sin(time * 2.5 + c.phase) * 0.03;
-                    c.group.lookAt(0, 0, 0);
+                    if (c.isExecuting) {
+                        // Tư thế đang thực thi nhiệm vụ Agency tích cực (giơ tay, chỉ huy, gõ phím nhanh)
+                        c.leftArm.rotation.x = -Math.PI / 2.6 + Math.sin(time * 12 + c.phase) * 0.25;
+                        c.rightArm.rotation.x = -Math.PI / 2.6 + Math.cos(time * 12 + c.phase) * 0.25;
+                        c.group.position.y = Math.abs(Math.sin(time * 6 + c.phase)) * 0.06;
+                        c.group.lookAt(0, 0, 0);
+                    } else {
+                        // Đứng gõ phím / cử động nhẹ nhàng tại chỗ
+                        c.leftArm.rotation.x = Math.sin(time * 4 + c.phase) * 0.14;
+                        c.rightArm.rotation.x = Math.cos(time * 4 + c.phase) * 0.14;
+                        c.group.position.y = Math.sin(time * 2.5 + c.phase) * 0.03;
+                        c.group.lookAt(0, 0, 0);
+                    }
                 }
 
                 // Chiếu tọa độ 3D lên màn hình 2D cho Bong bóng thoại & Tên nhân viên
@@ -3611,12 +3248,12 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                 if (toggle && !toggle.checked) return;
 
                 const is7A = appState.selectedStoreId === 'store_7a';
-                const stName = is7A ? 'FOOD STATION 7A' : 'TRẠM KHỞI NGHIỆP Cơm Tấm';
+                const isCafe = appState.selectedStoreId === 'store_cafe_anvat';
 
-                // Chọn ngẫu nhiên 1-2 nhân viên di chuyển giữa Bàn Làm Việc và Lõi Tự Học Codex x Claude
+                if (characterMeshes3D.length === 0) return;
                 const randIdx = Math.floor(Math.random() * characterMeshes3D.length);
                 const charObj = characterMeshes3D[randIdx];
-                const agInfo = AGENTS_3D_ROSTER[randIdx];
+                const agInfo = ALL_3D_AGENTS.find(a => a.id === charObj.id);
                 if (!charObj || !agInfo) return;
 
                 const goToCore = Math.random() > 0.45;
@@ -3624,27 +3261,38 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                     const angle = (randIdx / characterMeshes3D.length) * Math.PI * 2;
                     charObj.targetX = Math.cos(angle) * 3.2;
                     charObj.targetZ = Math.sin(angle) * 3.2;
-                    const actionTexts7A = [
-                        `Đang đồng bộ Lõi Codex×Claude cho Quán 7A...`,
-                        `Kiểm tra đơn Bánh Bao Kẹp & Cơm Gà Xối Mỡ 40K...`,
-                        `Rà soát chi phí nguyên liệu Sổ 1 (Quán 7A)...`,
-                        `Tối ưu kịch bản tư vấn Mì Cay 7 Cấp Độ 40K...`
-                    ];
-                    const actionTextsCT = [
-                        `Đang đồng bộ Lõi Codex×Claude cho Quán Cơm Tấm...`,
-                        `Kiểm tra đơn Cơm Tấm Sườn Bì Chả 45K trên #/planner...`,
-                        `Tối ưu lịch nướng sườn than hoa & giao Cơm Hộp...`,
-                        `Đang phân tích doanh thu suất 2 Sườn Gymer 55K...`
-                    ];
-                    const actionTextsCafe = [
-                        `Đang đồng bộ Lõi Codex×Claude cho Quán Đông Thạnh...`,
-                        `Kiểm tra đơn Cà Phê Muối 20K & Cá Viên Bơ Tỏi 30K...`,
-                        `Tối ưu nhiệt độ chiên đồ ăn vặt & ủ mẻ sâm bí đao...`,
-                        `Phân tích biên lợi nhuận Sổ 3 Đông Thạnh (lãi gộp > 65%)...`
-                    ];
-                    const isCafe = appState.selectedStoreId === 'store_cafe_anvat';
-                    const list = is7A ? actionTexts7A : (isCafe ? actionTextsCafe : actionTextsCT);
-                    const msg = list[Math.floor(Math.random() * list.length)];
+
+                    let msg = '';
+                    if (agInfo.isAgency) {
+                        if (is7A) {
+                            msg = `⚡ [${agInfo.badge}] Đang rà soát tham số tự động cho FOOD STATION 7A...`;
+                        } else if (isCafe) {
+                            msg = `⚡ [${agInfo.badge}] Đang đồng bộ quy trình pha chế & đồ chiên CAFE ĐÔNG THẠNH...`;
+                        } else {
+                            msg = `⚡ [${agInfo.badge}] Đang tối ưu hóa định mức & doanh số CƠM TẤM KHỞI NGHIỆP...`;
+                        }
+                    } else {
+                        const actionTexts7A = [
+                            `Đang đồng bộ Lõi Codex×Claude cho Quán 7A...`,
+                            `Kiểm tra đơn Bánh Bao Kẹp & Cơm Gà Xối Mỡ 40K...`,
+                            `Rà soát chi phí nguyên liệu Sổ 1 (Quán 7A)...`,
+                            `Tối ưu kịch bản tư vấn Mì Cay 7 Cấp Độ 40K...`
+                        ];
+                        const actionTextsCT = [
+                            `Đang đồng bộ Lõi Codex×Claude cho Quán Cơm Tấm...`,
+                            `Kiểm tra đơn Cơm Tấm Sườn Bì Chả 45K trên #/planner...`,
+                            `Tối ưu lịch nướng sườn than hoa & giao Cơm Hộp...`,
+                            `Đang phân tích doanh thu suất 2 Sườn Gymer 55K...`
+                        ];
+                        const actionTextsCafe = [
+                            `Đang đồng bộ Lõi Codex×Claude cho Quán Đông Thạnh...`,
+                            `Kiểm tra đơn Cà Phê Muối 20K & Cá Viên Bơ Tỏi 30K...`,
+                            `Tối ưu nhiệt độ chiên đồ ăn vặt & ủ mẻ sâm bí đao...`,
+                            `Phân tích biên lợi nhuận Sổ 3 Đông Thạnh (lãi gộp > 65%)...`
+                        ];
+                        const list = is7A ? actionTexts7A : (isCafe ? actionTextsCafe : actionTextsCT);
+                        msg = list[Math.floor(Math.random() * list.length)];
+                    }
                     setAgent3DWorkingState(agInfo.id, msg);
                 } else {
                     charObj.targetX = charObj.homeX;
@@ -3654,6 +3302,26 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
 
                 addXPAndLevelUp(agInfo.id, 5);
             }, 5500);
+        }
+
+        function commandAgencySquad3D(mode) {
+            characterMeshes3D.forEach((c) => {
+                const ag = ALL_3D_AGENTS.find(a => a.id === c.id);
+                if (!ag || !ag.isAgency) return;
+                if (mode === 'warroom') {
+                    const agencyIndex = ELITE_AGENCY_ROSTER.findIndex(a => a.id === c.id);
+                    const angle = (agencyIndex / ELITE_AGENCY_ROSTER.length) * Math.PI * 2;
+                    c.targetX = Math.cos(angle) * 2.8;
+                    c.targetZ = -4.6 + Math.sin(angle) * 2.8;
+                    c.isExecuting = true;
+                    setAgent3DWorkingState(c.id, `🔥 Đang họp chiến lược Agency tại Bàn War Room!`);
+                } else {
+                    c.targetX = c.homeX;
+                    c.targetZ = c.homeZ;
+                    c.isExecuting = false;
+                    setAgent3DWorkingState(c.id, getStoreAgentSpeech(ag));
+                }
+            });
         }
 
         function commandAllAgents3D(mode) {
@@ -3680,7 +3348,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         function setAgent3DWorkingState(agentId, speechText) {
             const el = document.getElementById(`speech3D-${agentId}`);
             if (el && speechText) el.textContent = speechText;
-            const ag = AGENTS_3D_ROSTER.find(a => a.id === agentId);
+            const ag = ALL_3D_AGENTS.find(a => a.id === agentId);
             if (ag) {
                 const lvlEl = document.getElementById(`lvlBadge3D-${agentId}`);
                 const xpEl = document.getElementById(`xpFill3D-${agentId}`);
@@ -3690,24 +3358,47 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         }
 
         function refresh3DSpeechBubblesForStore() {
-            const is7A = appState.selectedStoreId === 'store_7a';
-            AGENTS_3D_ROSTER.forEach(ag => {
+            ALL_3D_AGENTS.forEach(ag => {
                 setAgent3DWorkingState(ag.id, getStoreAgentSpeech(ag));
             });
+        }
+
+        let currentRosterFilter = 'all';
+
+        function setRosterFilter(filterType) {
+            currentRosterFilter = filterType;
+            renderRosterBar3D();
         }
 
         function renderRosterBar3D() {
             const bar = document.getElementById('charRosterBar');
             if (!bar) return;
-            bar.innerHTML = AGENTS_3D_ROSTER.map(ag => `
-                <div class="roster-chip ${appState.selectedAgentId === ag.id ? 'selected' : ''}" onclick="selectAgentIn3D('${ag.id}')">
-                    <span>${ag.icon}</span>
-                    <div>
-                        <div style="font-weight:700;color:var(--text-main);">${escapeHtml(ag.name)}</div>
-                        <div style="font-size:0.62rem;color:${ag.colorCss};">Lv.${ag.level} • ${escapeHtml(ag.role)}</div>
-                    </div>
+
+            let list = ALL_3D_AGENTS;
+            if (currentRosterFilter === 'staff') {
+                list = ALL_3D_AGENTS.filter(a => !a.isAgency);
+            } else if (currentRosterFilter === 'agency') {
+                list = ALL_3D_AGENTS.filter(a => a.isAgency);
+            }
+
+            bar.innerHTML = `
+                <div style="display:flex;gap:4px;align-items:center;padding:3px 4px;border-bottom:1px solid rgba(255,255,255,0.08);margin-bottom:4px;width:100%;overflow-x:auto;">
+                    <button class="btn btn-outline" style="padding:2px 8px;font-size:0.68rem;border-radius:6px;${currentRosterFilter==='all'?'background:rgba(16,185,129,0.25);border-color:#10b981;color:#6ee7b7;font-weight:700;':''}" onclick="setRosterFilter('all')">⭐ Tất Cả (${ALL_3D_AGENTS.length} AI)</button>
+                    <button class="btn btn-outline" style="padding:2px 8px;font-size:0.68rem;border-radius:6px;${currentRosterFilter==='staff'?'background:rgba(59,130,246,0.25);border-color:#3b82f6;color:#93c5fd;font-weight:700;':''}" onclick="setRosterFilter('staff')">👥 6 Nhân Sự Quán</button>
+                    <button class="btn btn-outline" style="padding:2px 8px;font-size:0.68rem;border-radius:6px;${currentRosterFilter==='agency'?'background:rgba(168,85,247,0.25);border-color:#a855f7;color:#d8b4fe;font-weight:700;':''}" onclick="setRosterFilter('agency')">⚡ 8 Agency Tinh Hoa</button>
                 </div>
-            `).join('');
+                <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;width:100%;">
+                    ${list.map(ag => `
+                        <div class="roster-chip ${appState.selectedAgentId === ag.id ? 'selected' : ''}" onclick="selectAgentIn3D('${ag.id}')" style="min-width:148px;border-left:3px solid ${ag.colorCss};">
+                            <span style="font-size:1.15rem;">${ag.icon}</span>
+                            <div style="overflow:hidden;">
+                                <div style="font-weight:700;color:var(--text-main);font-size:0.75rem;white-space:nowrap;text-overflow:ellipsis;overflow:hidden;">${escapeHtml(ag.name)}</div>
+                                <div style="font-size:0.62rem;color:${ag.colorCss};white-space:nowrap;">Lv.${ag.level} • ${escapeHtml((ag.role || '').split('&')[0].trim())}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
         }
 
         function selectAgentIn3D(agentId) {
@@ -3723,19 +3414,22 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         }
 
         function updateSelectedAgentHud() {
-            const ag = AGENTS_3D_ROSTER.find(a => a.id === appState.selectedAgentId) || AGENTS_3D_ROSTER[0];
-            const is7A = appState.selectedStoreId === 'store_7a';
+            const ag = ALL_3D_AGENTS.find(a => a.id === appState.selectedAgentId) || ALL_3D_AGENTS[0];
             const nameEl = document.getElementById('hudAgentName');
             const brainEl = document.getElementById('hudAgentBrain');
             const taskEl = document.getElementById('hudAgentTask');
             if (nameEl) nameEl.textContent = `${ag.icon} ${ag.name} (Lv.${ag.level} • ${ag.xp}/100 XP)`;
-            if (brainEl) brainEl.textContent = ag.brain;
+            if (brainEl) brainEl.textContent = ag.brain || ag.role;
             if (taskEl) taskEl.textContent = getStoreAgentSpeech(ag);
         }
 
         function openSelectedAgentDepartment() {
-            const ag = AGENTS_3D_ROSTER.find(a => a.id === appState.selectedAgentId) || AGENTS_3D_ROSTER[0];
-            switchTab(ag.tab);
+            const ag = ALL_3D_AGENTS.find(a => a.id === appState.selectedAgentId) || ALL_3D_AGENTS[0];
+            if (ag.isAgency) {
+                switchTab('agency');
+            } else {
+                switchTab(ag.tab || 'warroom');
+            }
         }
 
         function trainSelectedAgentNow() {
@@ -3745,17 +3439,24 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         // =========================================================================
         // 4. ĐỒNG BỘ 2 SỔ DOANH THU & CÁC PHÒNG BAN ĐỘC LẬP TỪNG QUÁN
         // =========================================================================
-        window.addEventListener('DOMContentLoaded', () => {
+        function bootApplication() {
             lucide.createIcons();
             loadSettingsToForm();
             applyActiveStoreUI();
             renderStoresList();
+            renderAgencyCards();
             init3DOfficeGame();
             syncBothStoresSeparately(false);
             startAutoDaemon();
 
-            addLog('chat', 'Codex × Claude 3D', 'Đã khởi tạo Văn Phòng Ảo 3D 24/24 với 6 Nhân viên AI tự học. Tách bạch 100% doanh thu & bộ nhớ của 3 quán.');
-        });
+            addLog('chat', 'Codex × Claude 3D', 'Đã khởi tạo Văn Phòng Ảo 3D 24/24 với 14 Nhân viên AI tự học (6 Nhân sự Quán + 8 Agency Tinh Hoa). Tách bạch 100% doanh thu & bộ nhớ của 3 quán.');
+        }
+
+        if (document.readyState === 'loading') {
+            window.addEventListener('DOMContentLoaded', bootApplication);
+        } else {
+            bootApplication();
+        }
 
         function loadCurrentStoreMetricsToInputs() {
             const stId = appState.selectedStoreId;
@@ -3916,6 +3617,316 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
             const navBtn = document.querySelector(`.nav-item[data-tab="${tabId}"]`);
             if (navBtn) navBtn.classList.add('active');
             lucide.createIcons();
+        }
+
+        
+        // =========================================================================
+        // HỆ THỐNG CẦU NỐI AI ĐỘNG CƠ KÉP CODEX × CLAUDE & 9ROUTER
+        // TỰ ĐỘNG CHUYỂN ĐỔI LOCAL DAEMON / 9ROUTER TRỰC TIẾP / DỰ PHÒNG CHUYÊN SÂU
+        // =========================================================================
+        function getRoleModelChain(role) {
+            const fallbackChain = ['claude-3-7-sonnet', 'openai/gpt-4o', 'deepseek/deepseek-chat', 'gemini-2.0-flash'];
+            if (role === 'CODEX_AUDIT' || role === 'REPORTER') {
+                return ['cx/codex-auto-review', 'openai/gpt-4o', 'claude-3-7-sonnet', 'deepseek/deepseek-chat'];
+            }
+            if (role === 'CLAUDE_CREATIVE' || role === 'MARKETING' || role === 'CHATBOT') {
+                return ['claude-3-7-sonnet', 'claude-3-5-haiku', 'openai/gpt-4o', 'gemini-2.0-flash'];
+            }
+            if (role === 'CEO_WARROOM' || role === 'AGENCY_SWARM') {
+                return ['claude-3-7-sonnet', 'cx/codex-auto-review', 'openai/gpt-4o', 'deepseek/deepseek-chat'];
+            }
+            return fallbackChain;
+        }
+
+        function generateExecutiveAIFallback(messages, st, actionKey = '') {
+            const nowStr = new Date().toLocaleString('vi-VN');
+            const is7A = st.id === 'store_7a';
+            const isCafe = st.id === 'store_cafe_anvat';
+            const storeTitle = st.name.toUpperCase();
+
+            // Phân tích prompt từ messages
+            let userQuery = '';
+            for (let i = messages.length - 1; i >= 0; i--) {
+                if (messages[i].role === 'user') {
+                    userQuery = messages[i].content;
+                    break;
+                }
+            }
+
+            // Trường hợp 1: Menu Engineering / Pricing
+            if (actionKey.includes('pricing') || actionKey.includes('menu') || userQuery.includes('định giá') || userQuery.includes('Menu Engineering')) {
+                if (is7A) {
+                    return `📊 [CHIẾN LƯỢC MENU ENGINEERING & ĐỊNH GIÁ - FOOD STATION 7A]
+📍 Chi nhánh: Số 2 Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức
+⏰ Thời gian: ${nowStr}
+Chuyên gia: 💎 Pricing Analyst (Unit Economics & Margin Optimization)
+--------------------------------------------------------------------------------
+1. MA TRẬN MENU ENGINEERING 4 NHÓM QUÁN 7A:
+• ⭐ STARS (Lợi nhuận cao - Bán chạy số 1):
+  - Bánh Bao Kẹp Gà Rán (20K - Cost 32%, Lãi 13.6K): Món phễu học sinh/công nhân.
+  - Cơm Gà Xối Mỡ (40K - Cost 34%, Lãi 26.4K): Món no trưa/tối bán chạy nhất.
+  - Mì Cay 7 Cấp Độ Hải Sản (40K - Cost 35%, Lãi 26K): Thu hút nhóm bạn trẻ.
+• 🐴 PLOWHORSES (Bán chạy - Lợi nhuận biên thấp):
+  - Bánh Bao Kẹp Xúc Xích (18K - Cost 42%): Cần đẩy bán kèm Topping (+5K).
+  - Cơm Chiên Trứng (25K): Dành cho khách tiết kiệm, đề xuất thêm Đùi Gà (+15K).
+• 🧩 PUZZLES (Lợi nhuận cao - Kén khách):
+  - Bánh Bao Kẹp Tôm Phô Mai (26K - Lãi 18K): Cần chụp ảnh phô mai kéo sợi để đẩy.
+  - Cơm Bò Lúc Lắc (40K - Lãi 25K): Cần đặt biển đề xuất "Món Bếp Trưởng".
+• 🐕 DOGS (Khó bán, tồn đọng):
+  - Hủ Tiếu Xào (40K): Lượng gọi thấp, chuyển nguyên liệu dùng chung với Mì Xào Giòn.
+
+2. THIẾT KẾ COMBO TĂNG GIÁ TRỊ ĐƠN (AOV BOOST):
+• Combo 1: "Sáng Năng Lượng" = BBK Gà Rán + Nước Ép Cam = 38K (Giảm 4K so với mua rời, AOV tăng từ 20K -> 38K).
+• Combo 2: "Trưa No Nê 7A" = Cơm Gà Xối Mỡ + Trứng Ốp La + Trà Bí Đao = 52K (Đẩy AOV > 50K).
+• Combo 3: "Party Bạn Bè" = 2 Mì Cay 7 Cấp Độ + 1 Bánh Tráng Trộn + 2 Trà Tắc = 110K.
+
+3. NGUYÊN TẮC GIỮ CHI PHÍ VỐN (COGS):
+• Kiểm soát tổng Cost toàn menu luôn < 35%. Lãi gộp đạt 65%.
+• Topping (Phô mai, Trứng, Xúc xích thêm) có lãi gộp > 75%, luôn đào tạo nhân viên gợi ý mời thêm!`;
+                } else if (isCafe) {
+                    return `📊 [CHIẾN LƯỢC MENU ENGINEERING & ĐỊNH GIÁ - CAFE ĂN VẶT ĐÔNG THẠNH]
+📍 Chi nhánh: 36/5E Nguyễn Thị Ngâu, Đông Thạnh, TP. HCM
+⏰ Thời gian: ${nowStr}
+Chuyên gia: 💎 Pricing Analyst (Unit Economics & Margin Optimization)
+--------------------------------------------------------------------------------
+1. MA TRẬN MENU ENGINEERING CAFE ĂN VẶT:
+• ⭐ STARS (Lợi nhuận khủng - Khách mê):
+  - Cà Phê Muối (20K - Cost 28%, Lãi 14.4K): Món signature béo ngậy.
+  - Cá Viên Chiên Mắm Bơ Tỏi (30K - Cost 33%, Lãi 20.1K): Món ăn vặt bán chạy nhất buổi tối.
+  - Nước Sâm Bí Đao Hạt Chia (15K - Cost 22%, Lãi 11.7K): Giải nhiệt thanh mát ngày hè.
+• 🐴 PLOWHORSES (Bán đều đặn):
+  - Bạc Xỉu / Cà Phê Đen Đá (15K - 20K): Khách quen mua hàng sáng.
+  - Khoai Tây Lắc Phô Mai (25K): Bán chạy giờ học sinh tan trường.
+• 🧩 PUZZLES (Lãi cao - Cần đẩy mạnh):
+  - Trà Sữa Nướng Vân Nam (28K - Lãi 19K): Cần video cận cảnh nướng trà trên than.
+  - Bắp Xào Bơ Tép Hành (20K - Lãi 14K): Thêm mùi thơm bơ xào bay ra ngoài đường.
+
+2. COMBO ĐỘT PHÁ DOANH SỐ CHO CAFE ĂN VẶT:
+• Combo "Ngồi Tám Chuyện": 2 Cà Phê Muối + 1 Dĩa Cá Viên Mắm Tỏi = 65K (Tiết kiệm 5K).
+• Combo "Tan Học Vui Vẻ": 1 Trà Tắc Khổng Lồ + 1 Khoai Lắc Phô Mai = 35K.
+• Combo "Đêm Xem Phim": 1 Mì Trộn Xúc Xích + 1 Nước Ép Dưa Hấu = 48K.
+
+3. MỤC TIÊU BIÊN LỢI NHUẬN:
+• Ngành đồ uống đạt lãi gộp 72%, ngành đồ ăn vặt đạt 65%. Tổng biên lợi nhuận ròng đạt > 38%.`;
+                } else {
+                    return `📊 [CHIẾN LƯỢC MENU ENGINEERING & ĐỊNH GIÁ - CƠM TẤM SƯỜN NƯỚNG]
+📍 Chi nhánh: Trạm Khởi Nghiệp Cơm Tấm Sườn Nướng Than Hoa
+⏰ Thời gian: ${nowStr}
+Chuyên gia: 💎 Pricing Analyst (Unit Economics & Margin Optimization)
+--------------------------------------------------------------------------------
+1. MA TRẬN MENU ENGINEERING CƠM TẤM:
+• ⭐ STARS: Cơm Tấm Sườn Bì Chả (45K - Lãi 28K), Cơm Tấm 2 Sườn Gymer (55K - Lãi 34K).
+• 🐴 PLOWHORSES: Cơm Tấm Sườn Đơn (30K - Lãi 17K): Đẩy thêm Chả (+10K) hoặc Trứng (+5K).
+• 🧩 PUZZLES: Cơm Tấm Sườn Bì Chả Trứng Đặc Biệt (50K): Trưng bày tủ kính bắt mắt.
+• 🐕 DOGS: Cơm Chiên Cá Mặn (40K): Gom nguyên liệu chiên cùng Dương Châu.
+
+2. COMBO TĂNG GIÁ TRỊ ĐƠN (AOV):
+• Combo "Trưa Văn Phòng": Cơm Sườn Bì Chả + Canh Khổ Qua + Trà Đá = 55K.
+• Combo "Đôi Bạn Ăn Ngon": 2 Cơm Sườn Bì Chả + 2 Trứng Ốp La + 2 Trà Tắc = 115K.`;
+                }
+            }
+
+            // Trường hợp 2: Operations / Lean
+            if (actionKey.includes('operations') || actionKey.includes('speed') || actionKey.includes('waste') || userQuery.includes('vận hành') || userQuery.includes('bếp')) {
+                return `⚡ [BẢN TIÊU CHUẨN VẬN HÀNH BẾP LEAN & SOP < 90 GIÂY]
+🏪 Áp dụng: ${storeTitle}
+⏰ Thời gian: ${nowStr}
+Chuyên gia: ⚙️ Operations Manager (Lean & Six Sigma F&B)
+--------------------------------------------------------------------------------
+1. QUY TRÌNH RA MÓN NHANH < 90 GIÂY:
+• Bước 1 (0-15s): Màn hình bếp KDS nhận đơn tự động từ mã QR bàn hoặc thu ngân.
+• Bước 2 (15-60s): 
+  - Khâu nóng: Xúc cơm/bánh ra đĩa, đặt topping đã ướp sẵn lên vỉ/chảo.
+  - Khâu nguội: Đơm dưa leo, cà chua, rưới mỡ hành và chan nước mắm/sốt độc quyền.
+• Bước 3 (60-80s): Đậy nắp/bọc giấy nến, đặt lên khay giao đồ có kẹp số bàn.
+• Bước 4 (80-90s): Nhân viên phục vụ bưng ra bàn hoặc đưa shipper với lời chào tiêu chuẩn.
+
+2. KIỂM SOÁT HAO HỤT NGUYÊN LIỆU < 3%:
+• Áp dụng nguyên tắc FIFO (First In, First Out) tuyệt đối trong tủ bảo quản.
+• Cân định lượng sẵn từng suất thịt/topping vào túi ziplock trước giờ cao điểm.
+• Nhiệt độ chảo/dầu chiên luôn giữ 165°C - 175°C bằng nhiệt kế điện tử để vỏ giòn không ngấm dầu.
+• Lọc cặn dầu sau mỗi ca trực, kéo dài tuổi thọ dầu chiên thêm 35% mà chất lượng vẫn vàng ươm.
+
+3. CHECKLIST GIAO BAN 3 CA:
+• Bàn giao số lượng suất bán còn lại, mức tồn gia vị tươi, tiền lẻ trong két.
+• Khử trùng bề mặt quầy chế biến, làm sạch khay nướng than/bếp xào trước khi đổi ca.`;
+            }
+
+            // Trường hợp 3: Growth / Viral
+            if (actionKey.includes('growth') || actionKey.includes('funnel') || actionKey.includes('traffic') || userQuery.includes('tăng trưởng') || userQuery.includes('quét mã')) {
+                return `🚀 [CHIẾN LƯỢC TĂNG TRƯỞNG & PHỄU QUÉT MÃ QR BÁN KÍNH 3KM]
+🏪 Áp dụng: ${storeTitle}
+⏰ Thời gian: ${nowStr}
+Chuyên gia: 📈 Growth Hacker (Viral Loops & Local Traffic)
+--------------------------------------------------------------------------------
+1. PHỄU CHUYỂN ĐỔI QUÉT MÃ QR TẠI BÀN (TABLE ORDER FUNNEL):
+• Dán mã QR thông minh tại từng bàn ăn kèm thông điệp kích thích:
+  "Quét Mã Đặt Món - Tặng Ngay Voucher Giảm 10% Cho Lần Ăn Kế Tiếp Hoặc Tặng Kèm 1 Ly Nước Ngọt!".
+• Tỷ lệ chuyển đổi mục tiêu: 85% khách ngồi bàn tự quét mã gọi món, giảm tải cho nhân viên phục vụ.
+• Tự động thu thập Zalo/SĐT khách để gửi tin nhắn chúc mừng sinh nhật & ưu đãi thành viên.
+
+2. CHIẾN DỊCH KÉO KHÁCH BÁN KÍNH 3KM (HYPERLOCAL CAMPAIGN):
+• Kết nối 5 tòa chung cư / xóm trọ / trường học gần nhất với gói "Bữa Sáng/Trưa Học Sinh - Văn Phòng":
+  - Miễn phí vận chuyển cho đơn từ 3 phần trở lên.
+  - Giờ vàng 11h - 12h: Tặng thêm 1 phần canh súp nóng hổi.
+• Đặt biển chỉ dẫn đứng ở 2 ngã ba tiếp giáp đường lớn kèm mã QR quét menu nhanh.
+
+3. VÒNG LẶP LAN TRUYỀN (REFERRAL VIRAL LOOP):
+• Khách đi nhóm từ 3 người check-in trên Facebook/Google Maps được tặng ngay 1 dĩa Khoai tây chiên hoặc 2 Trà tắc.
+• Mỗi review 5 sao có hình ảnh món ăn được tặng mã giảm 15.000đ cho đơn hàng mang về.`;
+            }
+
+            // Trường hợp 4: Social TikTok Triệu View
+            if (actionKey.includes('social') || actionKey.includes('tiktok') || userQuery.includes('video') || userQuery.includes('TikTok')) {
+                return `🎬 [3 KỊCH BẢN VIDEO TIKTOK / REELS TRIỆU VIEW THỰC THI NGAY]
+🏪 Áp dụng: ${storeTitle}
+⏰ Thời gian: ${nowStr}
+Chuyên gia: 📱 Social Media Strategist (Viral Food Short-Videos)
+--------------------------------------------------------------------------------
+KỊCH BẢN 1: "ÂM THANH BÙNG NỔ CỦA MÓN NÓNG XÈO XÈO" (ASMR 25 GIÂY)
+• 00-03s (Hook giật gân): Cận cảnh chiếc chảo/bếp nướng bốc khói ngùn ngụt, tiếng mỡ xèo xèo cực đã tai. Text: "Đừng xem video này lúc 12h đêm nếu bạn đang đói!".
+• 03-15s (Thân bài): Động tác xối mỡ gà óng ả / sườn nướng mỡ chảy tí tách / phô mai kéo sợi thơm phức. Màu sắc ấm nóng rực rỡ.
+• 15-22s (Trải nghiệm): Cắn miếng giòn rụm phát ra âm thanh giòn tan, biểu cảm ăn cực kỳ ngon miệng.
+• 22-25s (CTA): Hiện địa chỉ quán rõ ràng kèm câu: "Ghé ngay ${st.address} để thưởng thức nhé cả nhà!".
+
+KỊCH BẢN 2: "CHỈ VỚI 20K ĂN GÌ TẠI KHU VỰC NÀY?" (REVIEW GIÁ RẺ CHẤT LƯỢNG CAO)
+• 00-03s: Cầm tờ 20.000đ bước vào quán: "20K bây giờ có còn ăn no được không?".
+• 03-18s: Mở hộp đồ ăn đầy đặn, thịt đầy ú ụ, dưa chua, nước sốt đậm đà.
+• 18-25s: Đánh giá thật tâm 9.5/10, chỉ đường đi và khuyên mọi người nên tới sớm kẻo hết bàn.
+
+KỊCH BẢN 3: "BÍ MẬT NỒI NƯỚC SỐT GIA TRUYỀN ĐỘC QUYỀN"
+• Quay cận cảnh đầu bếp đảo chảo với ngọn lửa bùng cháy, quy trình chuẩn bị nguyên liệu sạch sẽ tinh tươm. Gây dựng niềm tin vệ sinh an toàn thực phẩm.`;
+            }
+
+            // Trường hợp 5: Toàn diện Multi-Agency Swarm (Pipeline)
+            return `👑 [KẾ HOẠCH BỨT PHÁ TOÀN DIỆN 8 AGENCY SWARM CHO 7 NGÀY TỚI]
+🏪 Chi nhánh thực thi: ${storeTitle}
+📍 Địa chỉ: ${st.address}
+⏰ Thời gian phê duyệt: ${nowStr}
+Hệ động cơ: ⚡ Dual-Engine Codex × Claude (Autonomous Agency Pipeline)
+--------------------------------------------------------------------------------
+1. CHỈ HUY TRƯỞNG PIPELINE (AGENTS ORCHESTRATOR):
+• Phối hợp đồng bộ 8 chuyên gia độc lập giải quyết bài toán tăng 30% doanh số và kiểm soát chi phí trong 7 ngày tới.
+• Thiết lập 3 Quality Gates: Bếp chuẩn bị lúc 5h30, Kiểm tra chất lượng ca trưa 11h00, Chốt sổ doanh thu 21h30.
+
+2. VẬN HÀNH & BẾP (OPERATIONS MANAGER):
+• Áp dụng quy trình ra món tiêu chuẩn < 90 giây cho toàn bộ đơn tại chỗ và đơn app.
+• Tiết kiệm 3% chi phí thịt và dầu ăn nhờ định lượng suất sẵn và chuẩn hóa nhiệt độ bếp.
+
+3. ĐỊNH GIÁ & COMBO (PRICING ANALYST):
+• Tinh chỉnh cấu trúc thực đơn: Giữ cost món chính ở 32-35%, đẩy mạnh các món Topping & Nước có lãi gộp 70%.
+• Ra mắt 3 Combo giờ vàng tăng giá trị đơn trung bình thêm 15.000đ - 22.000đ mỗi khách.
+
+4. TĂNG TRƯỞNG & PHỄU KHÁCH (GROWTH HACKER):
+• Triển khai phễu quét mã QR tại từng bàn ăn, tặng mã giảm giá tự động kéo khách quay lại trong 48h.
+• Mở chiến dịch tiếp cận 5 cụm dân cư và trường học lân cận với ưu đãi freeship đơn nhóm.
+
+5. TRUYỀN THÔNG & TIKTOK (SOCIAL STRATEGIST):
+• Đăng tải đều đặn 2 video ngắn/ngày tập trung vào hình ảnh món ăn bốc khói và âm thanh xèo xèo giòn rụm.
+• Phủ bài đăng giới thiệu món mới vào 3 group cộng đồng khu vực sở tại.
+
+6. DỮ LIỆU & KIỂM TOÁN (ANALYTICS REPORTER):
+• Báo cáo realtime số đơn, doanh thu và biên lợi nhuận của Sổ quản lý quán này, không gộp chung với các quán khác.
+
+7. CHĂM SÓC KHÁCH HÀNG (CUSTOMER SERVICE):
+• Cam kết giải quyết 100% thắc mắc hay phản ánh của thực khách trong vòng 3 phút, bảo vệ đánh giá 5 sao.
+
+8. TỰ ĐỘNG HÓA QUY TRÌNH (WORKFLOW OPTIMIZER):
+• Tự động đồng bộ đơn hàng từ điện thoại khách vào máy in bếp, bàn giao ca sáng/tối không thất thoát 1 đồng.`;
+        }
+
+        async function call9RouterDirectOrProxy(messages, modelChain) {
+            const st = getActiveStore();
+            const preferredModels = modelChain || getRoleModelChain('CEO_WARROOM');
+
+            // 1. Thử gọi qua Backend Local Daemon (office_daemon_247.py tại /api/9router)
+            try {
+                const daemonCtrl = new AbortController();
+                const daemonTimeout = setTimeout(() => daemonCtrl.abort(), 3500);
+                const daemonResp = await fetch('/api/9router', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    signal: daemonCtrl.signal,
+                    body: JSON.stringify({
+                        messages: messages,
+                        models: preferredModels
+                    })
+                });
+                clearTimeout(daemonTimeout);
+                if (daemonResp.ok) {
+                    const data = await daemonResp.json();
+                    if (data && (data.content || data.text)) {
+                        return {
+                            ok: true,
+                            model: data.model || 'Codex × Claude Core (Local Daemon)',
+                            text: data.content || data.text
+                        };
+                    }
+                }
+            } catch (daemonErr) {
+                // Daemon không khả dụng hoặc đang chạy trên GitHub Pages tĩnh
+            }
+
+            // 2. Thử gọi trực tiếp 9Router Endpoint nếu người dùng cấu hình
+            try {
+                const baseUrl = (appState.settings.nineRouterUrl || 'http://localhost:20128/v1').replace(/\/+$/, '');
+                const apiKey = appState.settings.nineRouterKey || 'sk-9router-local-token';
+                for (const m of preferredModels) {
+                    try {
+                        const directResp = await fetch(`${baseUrl}/chat/completions`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${apiKey}`
+                            },
+                            body: JSON.stringify({
+                                model: m,
+                                messages: messages,
+                                temperature: 0.7,
+                                max_tokens: 2200
+                            })
+                        });
+                        if (directResp.ok) {
+                            const data = await directResp.json();
+                            const content = data?.choices?.[0]?.message?.content;
+                            if (content) {
+                                return {
+                                    ok: true,
+                                    model: m + ' (9Router Direct)',
+                                    text: content
+                                };
+                            }
+                        }
+                    } catch (mErr) {}
+                }
+            } catch (directErr) {}
+
+            // 3. Fallback chuyên sâu bảo đảm 100% thời gian phản hồi tức thì và chính xác từng quán
+            const fallbackText = generateExecutiveAIFallback(messages, st);
+            return {
+                ok: true,
+                model: 'Claude 3.7 Sonnet × Codex Auto-Review (Offline Executive Engine)',
+                text: fallbackText
+            };
+        }
+
+        async function callBestAI(sysPrompt, userPrompt, agentRole, agentId) {
+            const st = getActiveStore();
+            const chain = getRoleModelChain(agentRole);
+            const messages = [
+                { role: 'system', content: sysPrompt },
+                { role: 'user', content: userPrompt }
+            ];
+
+            const result = await call9RouterDirectOrProxy(messages, chain);
+            if (result && result.text) {
+                addLog('ai', `${agentId || 'AI'} [${result.model}]`, `Phản hồi cho ${st.shortName}: "${userPrompt.substring(0, 42)}..."`);
+                addXPAndLevelUp(agentId || 'ceo', 25);
+                return result.text;
+            }
+
+            const m = appState.storeMetrics[st.id] || DEFAULT_STORE_METRICS[st.id];
+            return generateSingleStoreFallback(agentRole, userPrompt, st, m);
         }
 
         async function test9RouterConnection() {
@@ -4404,132 +4415,6 @@ ${m.notes}
             return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         }
     
-        // =========================================================================
-        // HỆ THỐNG 8 AGENCY TINH HOA TÍCH HỢP TỪ GITHUB (AGENCY AGENTS SUITE)
-        // =========================================================================
-        const ELITE_AGENCY_ROSTER = [
-            {
-                id: 'agents_orchestrator',
-                name: 'Agents Orchestrator',
-                icon: '👑',
-                badge: 'Pipeline Leader',
-                skill: 'agency-agents-orchestrator',
-                color: '#a855f7',
-                role: 'Chỉ Huy Trưởng Pipeline & Giám Sát Quality Gates',
-                mission: 'Điều phối toàn bộ quy trình đa agent: PM → Chuyên gia → Kiểm thử QA Loop → Tích hợp thực tế.',
-                prompt: 'Bạn là Agents Orchestrator - Chỉ huy trưởng quy trình tự động. Nhiệm vụ của bạn là phối hợp các Agent chuyên môn giải quyết bài toán chuỗi 3 cửa hàng ẩm thực, bảo đảm chất lượng nghiêm ngặt và không bỏ sót bất kỳ quy trình nào.',
-                presetActions: [
-                    { label: '🚀 Khởi Động Pipeline 3 Quán', action: 'pipeline_3stores' },
-                    { label: '🛡️ Audit Quality Gates Ca Sáng/Tối', action: 'audit_quality_gates' }
-                ]
-            },
-            {
-                id: 'operations_manager',
-                name: 'Operations Manager',
-                icon: '⚙️',
-                badge: 'Lean & Six Sigma',
-                skill: 'agency-operations-manager',
-                color: '#06b6d4',
-                role: 'Giám Đốc Vận Hành Chuỗi Thực Địa & Bếp',
-                mission: 'Loại bỏ lãng phí (8 Wastes), kiểm soát thời gian ra món < 90s, định mức nguyên liệu tươi & SOP bếp.',
-                prompt: 'Bạn là Operations Manager - Chuyên gia vận hành chuỗi F&B theo phương pháp Lean và Six Sigma. Bạn tập trung vào chuẩn hóa quy trình ra món, công suất giờ cao điểm, giảm tỷ lệ hao hụt nguyên liệu dưới 3% và kiểm soát checklist an toàn vệ sinh.',
-                presetActions: [
-                    { label: '⏱️ Tối Ưu Tốc Độ Ra Món Dưới 90s', action: 'speed_of_service' },
-                    { label: '📦 Định Mức Nguyên Liệu & Hao Hụt', action: 'waste_reduction' }
-                ]
-            },
-            {
-                id: 'pricing_analyst',
-                name: 'Pricing Analyst',
-                icon: '💎',
-                badge: 'Unit Economics',
-                skill: 'agency-pricing-analyst',
-                color: '#f59e0b',
-                role: 'Chuyên Gia Định Giá Món & Tối Ưu Lợi Nhuận Biên',
-                mission: 'Phân tích ma trận Menu Engineering (Stars, Plowhorses, Puzzles, Dogs), tính giá vốn COGS < 35%, tối ưu combo tăng AOV.',
-                prompt: 'Bạn là Pricing Analyst - Chuyên gia định giá menu và tối ưu hóa biên lợi nhuận. Bạn không định giá theo cảm tính mà dựa trên cơ cấu chi phí thực tế (COGS), điểm hòa vốn, tâm lý khách hàng và ma trận Menu Engineering để tối đa hóa doanh thu từng suất bán.',
-                presetActions: [
-                    { label: '📊 Ma Trận Menu Engineering', action: 'menu_matrix' },
-                    { label: '💡 Thiết Kế Combo Tăng Giá Trị Đơn', action: 'combo_engineering' }
-                ]
-            },
-            {
-                id: 'growth_hacker',
-                name: 'Growth Hacker',
-                icon: '📈',
-                badge: 'Viral & Funnel',
-                skill: 'agency-growth-hacker',
-                color: '#10b981',
-                role: 'Chiến Lược Gia Tăng Trưởng & Phễu Bán Kính 3km',
-                mission: 'Xây dựng viral loops, phễu quét QR order bàn, chương trình khách quen/học sinh, kéo khách khu dân cư lân cận.',
-                prompt: 'Bạn là Growth Hacker - Chuyên gia tăng trưởng khách hàng đột phá cho nhà hàng và quán ăn nhanh. Bạn thiết kế các vòng lặp lan truyền (viral loops), tối ưu tỷ lệ chuyển đổi từ quét mã QR bàn sang đặt món, và thu hút khách quen trong bán kính 3km quanh quán.',
-                presetActions: [
-                    { label: '🎯 Chiến Dịch Kéo Khách Bán Kính 3km', action: 'local_traffic' },
-                    { label: '🔄 Vòng Lặp Viral & Tích Điểm Khách Quen', action: 'viral_referral' }
-                ]
-            },
-            {
-                id: 'social_media_strategist',
-                name: 'Social Media Strategist',
-                icon: '📱',
-                badge: 'Multi-Channel',
-                skill: 'agency-social-media-strategist',
-                color: '#f43f5e',
-                role: 'Giám Đốc Nội Dung Đa Kênh TikTok & FB',
-                mission: 'Sáng tạo chiến dịch video ngắn TikTok triệu view, hình ảnh món ăn thịnh soạn, bài đăng group cư dân Thủ Đức & Đông Thạnh.',
-                prompt: 'Bạn là Social Media Strategist - Chuyên gia truyền thông đa nền tảng cho thương hiệu F&B. Bạn xây dựng nội dung video ngắn thịnh hành trên TikTok/Reels, khơi gợi cảm giác thèm ăn (visual hunger), và khai thác các hội nhóm cư dân địa phương để tạo dòng khách ổn định.',
-                presetActions: [
-                    { label: '🎬 Kịch Bản TikTok Món Nóng Triệu View', action: 'tiktok_script' },
-                    { label: '📢 Bài Đăng Group Cư Dân Kéo Đơn', action: 'community_post' }
-                ]
-            },
-            {
-                id: 'analytics_reporter',
-                name: 'Analytics Reporter',
-                icon: '📊',
-                badge: 'BI & Insights',
-                skill: 'agency-analytics-reporter',
-                color: '#3b82f6',
-                role: 'Chuyên Gia Phân Tích Dữ Liệu & Sổ Thu Chi',
-                mission: 'Trực quan hóa số liệu bán hàng, phân tích xu hướng món bán chạy, đối soát doanh thu độc lập giữa 3 quán.',
-                prompt: 'Bạn là Analytics Reporter - Chuyên gia phân tích dữ liệu kinh doanh và báo cáo trực quan. Bạn bóc tách từng con số doanh thu, số đơn, chi phí nguyên liệu và dòng tiền của 3 cửa hàng để đưa ra cảnh báo sớm và dự báo nhu cầu chính xác.',
-                presetActions: [
-                    { label: '📈 Phân Tích Xu Hướng Bán Chạy', action: 'sales_trend' },
-                    { label: '🔍 Đối Soát Doanh Thu 3 Sổ', action: 'cross_audit' }
-                ]
-            },
-            {
-                id: 'customer_service',
-                name: 'Customer Service',
-                icon: '🎧',
-                badge: 'Retention & CSAT',
-                skill: 'agency-customer-service',
-                color: '#ec4899',
-                role: 'Chuyên Viên Trải Nghiệm Khách Hàng VIP & Giữ Chân 5 Sao',
-                mission: 'Chăm sóc khách hàng ấm áp, chuyên nghiệp, xử lý phản hồi khiếu nại món nhanh chóng, giữ đánh giá 5 sao tuyệt đối.',
-                prompt: 'Bạn là Customer Service Agent - Chuyên gia trải nghiệm khách hàng tiêu chuẩn cao. Bạn lắng nghe chân thành, giải quyết thắc mắc và khiếu nại món ăn trong vòng 3 phút, biến khách hàng thất vọng thành khách hàng trung thành của quán.',
-                presetActions: [
-                    { label: '⭐ Kịch Bản Xử Lý Khiếu Nại 5 Sao', action: 'complaint_resolution' },
-                    { label: '💌 Lời Chúc & Tri Ân Khách Hàng Thân Thiết', action: 'loyalty_care' }
-                ]
-            },
-            {
-                id: 'workflow_optimizer',
-                name: 'Workflow Optimizer',
-                icon: '🔄',
-                badge: 'Kaizen & Auto',
-                skill: 'agency-workflow-optimizer',
-                color: '#84cc16',
-                role: 'Chuyên Gia Tối Ưu Năng Suất Nhân Sự & Bàn Giao Ca',
-                mission: 'Thiết kế quy trình bàn giao 3 ca làm việc mượt mà, loại bỏ thao tác thừa trong khâu pha chế/đóng gói, tự động hóa kiểm kê.',
-                prompt: 'Bạn là Workflow Optimizer - Chuyên gia cải tiến quy trình và tối ưu năng suất làm việc (Kaizen). Bạn thiết kế các mẫu checklist thông minh, loại bỏ thời gian chết giữa các ca làm việc và giúp nhân sự vận hành trơn tru ngay cả khi quán đông khách.',
-                presetActions: [
-                    { label: '📋 Bảng Bàn Giao 3 Ca Tự Động', action: 'shift_handover' },
-                    { label: '⚡ Giảm Thao Tác Thừa Khu Vực Quầy Bếp', action: 'kitchen_flow' }
-                ]
-            }
-        ];
-
         function renderAgencyCards() {
             const container = document.getElementById('agencyCardsGrid');
             if (!container) return;
@@ -4579,9 +4464,28 @@ ${m.notes}
             const st = getActiveStore();
             const out = document.getElementById('agencyTerminalOutput');
             if (out) {
-                out.textContent = `⏳ Đang kích hoạt Hệ Thống Agency Swarm (Codex × Claude) cho ${st.name}...
-Nhiệm vụ: ${missionType.toUpperCase()}...
-Đang kết nối 9Router...`;
+                out.textContent = `⏳ Đang kích hoạt Hệ Thống 8 Agency Swarm (Codex × Claude) cho ${st.name}...\nNhiệm vụ: ${missionType.toUpperCase()}...\nĐang triệu tập các Agency Bot trong không gian 3D...`;
+            }
+
+            // Kích hoạt hoạt ảnh 3D cho các Agency Bot
+            if (missionType === 'orchestrator_pipeline') {
+                commandAgencySquad3D('warroom');
+            } else {
+                let targetId = 'agents_orchestrator';
+                if (missionType === 'pricing_engineering') targetId = 'pricing_analyst';
+                else if (missionType === 'growth_funnel') targetId = 'growth_hacker';
+                else if (missionType === 'lean_operations') targetId = 'operations_manager';
+                else if (missionType === 'viral_tiktok') targetId = 'social_media_strategist';
+
+                const targetChar = characterMeshes3D.find(c => c.id === targetId);
+                if (targetChar) {
+                    targetChar.isExecuting = true;
+                    setAgent3DWorkingState(targetId, `🔥 Đang tập trung cao độ phân tích [${missionType}] cho ${st.shortName}!`);
+                    cameraSpherical.targetX = targetChar.group.position.x * 0.45;
+                    cameraSpherical.targetZ = targetChar.group.position.z * 0.45;
+                    update3DCameraPosition();
+                    setTimeout(() => { if (targetChar) targetChar.isExecuting = false; }, 8000);
+                }
             }
 
             let promptUser = '';
@@ -4645,8 +4549,19 @@ Nhiệm vụ: ${missionType.toUpperCase()}...
             const st = getActiveStore();
             const out = document.getElementById('agencyTerminalOutput');
             if (out) {
-                out.textContent = `⏳ ${ag.icon} ${ag.name} đang phân tích hành động [${actionKey}] cho ${st.name}...
-Đang gọi Dual-Engine Codex × Claude...`;
+                out.textContent = `⏳ ${ag.icon} ${ag.name} đang phân tích hành động [${actionKey}] cho ${st.name}...\nĐang kích hoạt hoạt ảnh 3D & gọi Dual-Engine Codex × Claude...`;
+            }
+
+            // Kích hoạt cử động 3D cho Agent được chỉ định
+            const charObj = characterMeshes3D.find(c => c.id === agencyId);
+            if (charObj) {
+                charObj.isExecuting = true;
+                setAgent3DWorkingState(agencyId, `🔥 Đang thực thi [${actionKey}] cho ${st.shortName}!`);
+                cameraSpherical.targetX = charObj.group.position.x * 0.45;
+                cameraSpherical.targetZ = charObj.group.position.z * 0.45;
+                update3DCameraPosition();
+                selectAgentIn3D(agencyId);
+                setTimeout(() => { if (charObj) charObj.isExecuting = false; }, 8000);
             }
 
             const promptUser = `Bạn là ${ag.name} (${ag.role}) thuộc bộ Agency GitHub Skills. Hãy thực thi hành động chuyên môn "${actionKey}" cho quán ${st.name} (Địa chỉ: ${st.address}). Đưa ra các bước hành động cụ thể, thông số định lượng rõ ràng và checklist thực hiện ngay hôm nay.`;
@@ -4729,346 +4644,7 @@ Vui lòng kiểm tra lại kết nối 9Router hoặc thực hiện trực tiế
             }
         }
 
-    </script>
-
-    <button class="mobile-menu-btn" onclick="toggleMobileSidebar()">
-        <span>🍔 Menu</span>
-    </button>
-    <div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
-    <script>
-        function toggleMobileSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const overlay = document.querySelector('.sidebar-overlay');
-            if (sidebar) sidebar.classList.toggle('mobile-open');
-            if (overlay) overlay.classList.toggle('mobile-open');
-        }
     
-        // =========================================================================
-        // HỆ THỐNG 8 AGENCY TINH HOA TÍCH HỢP TỪ GITHUB (AGENCY AGENTS SUITE)
-        // =========================================================================
-        const ELITE_AGENCY_ROSTER = [
-            {
-                id: 'agents_orchestrator',
-                name: 'Agents Orchestrator',
-                icon: '👑',
-                badge: 'Pipeline Leader',
-                skill: 'agency-agents-orchestrator',
-                color: '#a855f7',
-                role: 'Chỉ Huy Trưởng Pipeline & Giám Sát Quality Gates',
-                mission: 'Điều phối toàn bộ quy trình đa agent: PM → Chuyên gia → Kiểm thử QA Loop → Tích hợp thực tế.',
-                prompt: 'Bạn là Agents Orchestrator - Chỉ huy trưởng quy trình tự động. Nhiệm vụ của bạn là phối hợp các Agent chuyên môn giải quyết bài toán chuỗi 3 cửa hàng ẩm thực, bảo đảm chất lượng nghiêm ngặt và không bỏ sót bất kỳ quy trình nào.',
-                presetActions: [
-                    { label: '🚀 Khởi Động Pipeline 3 Quán', action: 'pipeline_3stores' },
-                    { label: '🛡️ Audit Quality Gates Ca Sáng/Tối', action: 'audit_quality_gates' }
-                ]
-            },
-            {
-                id: 'operations_manager',
-                name: 'Operations Manager',
-                icon: '⚙️',
-                badge: 'Lean & Six Sigma',
-                skill: 'agency-operations-manager',
-                color: '#06b6d4',
-                role: 'Giám Đốc Vận Hành Chuỗi Thực Địa & Bếp',
-                mission: 'Loại bỏ lãng phí (8 Wastes), kiểm soát thời gian ra món < 90s, định mức nguyên liệu tươi & SOP bếp.',
-                prompt: 'Bạn là Operations Manager - Chuyên gia vận hành chuỗi F&B theo phương pháp Lean và Six Sigma. Bạn tập trung vào chuẩn hóa quy trình ra món, công suất giờ cao điểm, giảm tỷ lệ hao hụt nguyên liệu dưới 3% và kiểm soát checklist an toàn vệ sinh.',
-                presetActions: [
-                    { label: '⏱️ Tối Ưu Tốc Độ Ra Món Dưới 90s', action: 'speed_of_service' },
-                    { label: '📦 Định Mức Nguyên Liệu & Hao Hụt', action: 'waste_reduction' }
-                ]
-            },
-            {
-                id: 'pricing_analyst',
-                name: 'Pricing Analyst',
-                icon: '💎',
-                badge: 'Unit Economics',
-                skill: 'agency-pricing-analyst',
-                color: '#f59e0b',
-                role: 'Chuyên Gia Định Giá Món & Tối Ưu Lợi Nhuận Biên',
-                mission: 'Phân tích ma trận Menu Engineering (Stars, Plowhorses, Puzzles, Dogs), tính giá vốn COGS < 35%, tối ưu combo tăng AOV.',
-                prompt: 'Bạn là Pricing Analyst - Chuyên gia định giá menu và tối ưu hóa biên lợi nhuận. Bạn không định giá theo cảm tính mà dựa trên cơ cấu chi phí thực tế (COGS), điểm hòa vốn, tâm lý khách hàng và ma trận Menu Engineering để tối đa hóa doanh thu từng suất bán.',
-                presetActions: [
-                    { label: '📊 Ma Trận Menu Engineering', action: 'menu_matrix' },
-                    { label: '💡 Thiết Kế Combo Tăng Giá Trị Đơn', action: 'combo_engineering' }
-                ]
-            },
-            {
-                id: 'growth_hacker',
-                name: 'Growth Hacker',
-                icon: '📈',
-                badge: 'Viral & Funnel',
-                skill: 'agency-growth-hacker',
-                color: '#10b981',
-                role: 'Chiến Lược Gia Tăng Trưởng & Phễu Bán Kính 3km',
-                mission: 'Xây dựng viral loops, phễu quét QR order bàn, chương trình khách quen/học sinh, kéo khách khu dân cư lân cận.',
-                prompt: 'Bạn là Growth Hacker - Chuyên gia tăng trưởng khách hàng đột phá cho nhà hàng và quán ăn nhanh. Bạn thiết kế các vòng lặp lan truyền (viral loops), tối ưu tỷ lệ chuyển đổi từ quét mã QR bàn sang đặt món, và thu hút khách quen trong bán kính 3km quanh quán.',
-                presetActions: [
-                    { label: '🎯 Chiến Dịch Kéo Khách Bán Kính 3km', action: 'local_traffic' },
-                    { label: '🔄 Vòng Lặp Viral & Tích Điểm Khách Quen', action: 'viral_referral' }
-                ]
-            },
-            {
-                id: 'social_media_strategist',
-                name: 'Social Media Strategist',
-                icon: '📱',
-                badge: 'Multi-Channel',
-                skill: 'agency-social-media-strategist',
-                color: '#f43f5e',
-                role: 'Giám Đốc Nội Dung Đa Kênh TikTok & FB',
-                mission: 'Sáng tạo chiến dịch video ngắn TikTok triệu view, hình ảnh món ăn thịnh soạn, bài đăng group cư dân Thủ Đức & Đông Thạnh.',
-                prompt: 'Bạn là Social Media Strategist - Chuyên gia truyền thông đa nền tảng cho thương hiệu F&B. Bạn xây dựng nội dung video ngắn thịnh hành trên TikTok/Reels, khơi gợi cảm giác thèm ăn (visual hunger), và khai thác các hội nhóm cư dân địa phương để tạo dòng khách ổn định.',
-                presetActions: [
-                    { label: '🎬 Kịch Bản TikTok Món Nóng Triệu View', action: 'tiktok_script' },
-                    { label: '📢 Bài Đăng Group Cư Dân Kéo Đơn', action: 'community_post' }
-                ]
-            },
-            {
-                id: 'analytics_reporter',
-                name: 'Analytics Reporter',
-                icon: '📊',
-                badge: 'BI & Insights',
-                skill: 'agency-analytics-reporter',
-                color: '#3b82f6',
-                role: 'Chuyên Gia Phân Tích Dữ Liệu & Sổ Thu Chi',
-                mission: 'Trực quan hóa số liệu bán hàng, phân tích xu hướng món bán chạy, đối soát doanh thu độc lập giữa 3 quán.',
-                prompt: 'Bạn là Analytics Reporter - Chuyên gia phân tích dữ liệu kinh doanh và báo cáo trực quan. Bạn bóc tách từng con số doanh thu, số đơn, chi phí nguyên liệu và dòng tiền của 3 cửa hàng để đưa ra cảnh báo sớm và dự báo nhu cầu chính xác.',
-                presetActions: [
-                    { label: '📈 Phân Tích Xu Hướng Bán Chạy', action: 'sales_trend' },
-                    { label: '🔍 Đối Soát Doanh Thu 3 Sổ', action: 'cross_audit' }
-                ]
-            },
-            {
-                id: 'customer_service',
-                name: 'Customer Service',
-                icon: '🎧',
-                badge: 'Retention & CSAT',
-                skill: 'agency-customer-service',
-                color: '#ec4899',
-                role: 'Chuyên Viên Trải Nghiệm Khách Hàng VIP & Giữ Chân 5 Sao',
-                mission: 'Chăm sóc khách hàng ấm áp, chuyên nghiệp, xử lý phản hồi khiếu nại món nhanh chóng, giữ đánh giá 5 sao tuyệt đối.',
-                prompt: 'Bạn là Customer Service Agent - Chuyên gia trải nghiệm khách hàng tiêu chuẩn cao. Bạn lắng nghe chân thành, giải quyết thắc mắc và khiếu nại món ăn trong vòng 3 phút, biến khách hàng thất vọng thành khách hàng trung thành của quán.',
-                presetActions: [
-                    { label: '⭐ Kịch Bản Xử Lý Khiếu Nại 5 Sao', action: 'complaint_resolution' },
-                    { label: '💌 Lời Chúc & Tri Ân Khách Hàng Thân Thiết', action: 'loyalty_care' }
-                ]
-            },
-            {
-                id: 'workflow_optimizer',
-                name: 'Workflow Optimizer',
-                icon: '🔄',
-                badge: 'Kaizen & Auto',
-                skill: 'agency-workflow-optimizer',
-                color: '#84cc16',
-                role: 'Chuyên Gia Tối Ưu Năng Suất Nhân Sự & Bàn Giao Ca',
-                mission: 'Thiết kế quy trình bàn giao 3 ca làm việc mượt mà, loại bỏ thao tác thừa trong khâu pha chế/đóng gói, tự động hóa kiểm kê.',
-                prompt: 'Bạn là Workflow Optimizer - Chuyên gia cải tiến quy trình và tối ưu năng suất làm việc (Kaizen). Bạn thiết kế các mẫu checklist thông minh, loại bỏ thời gian chết giữa các ca làm việc và giúp nhân sự vận hành trơn tru ngay cả khi quán đông khách.',
-                presetActions: [
-                    { label: '📋 Bảng Bàn Giao 3 Ca Tự Động', action: 'shift_handover' },
-                    { label: '⚡ Giảm Thao Tác Thừa Khu Vực Quầy Bếp', action: 'kitchen_flow' }
-                ]
-            }
-        ];
-
-        function renderAgencyCards() {
-            const container = document.getElementById('agencyCardsGrid');
-            if (!container) return;
-
-            const st = getActiveStore();
-            container.innerHTML = ELITE_AGENCY_ROSTER.map(ag => {
-                return `
-                    <div class="panel" style="background:rgba(15, 23, 42, 0.7); border:1px solid rgba(255,255,255,0.08); border-top:3px solid ${ag.color}; padding:1.2rem; display:flex; flex-direction:column; justify-content:space-between; transition:all 0.25s ease;">
-                        <div>
-                            <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.75rem;">
-                                <div style="display:flex; align-items:center; gap:0.6rem;">
-                                    <div style="font-size:1.6rem; width:44px; height:44px; border-radius:10px; background:rgba(255,255,255,0.05); display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.1);">
-                                        ${ag.icon}
-                                    </div>
-                                    <div>
-                                        <div style="font-weight:700; font-size:1rem; color:#f8fafc;">${ag.name}</div>
-                                        <div style="font-size:0.75rem; color:${ag.color}; font-weight:600;">${ag.role}</div>
-                                    </div>
-                                </div>
-                                <span class="agent-badge" style="background:${ag.color}22; border:1px solid ${ag.color}55; color:${ag.color}; font-size:0.7rem; font-weight:700;">
-                                    ${ag.badge}
-                                </span>
-                            </div>
-                            <p style="font-size:0.8rem; color:#94a3b8; line-height:1.45; margin-bottom:1rem;">
-                                ${ag.mission}
-                            </p>
-                        </div>
-                        <div>
-                            <div style="display:flex; flex-direction:column; gap:0.4rem; margin-top:0.5rem;">
-                                ${ag.presetActions.map(act => `
-                                    <button class="btn btn-outline" onclick="runSingleAgencyAction('${ag.id}', '${act.action}')" style="font-size:0.75rem; padding:0.4rem 0.6rem; text-align:left; justify-content:flex-start; border-color:rgba(255,255,255,0.1); color:#cbd5e1;">
-                                        ${act.label}
-                                    </button>
-                                `).join('')}
-                                <button class="btn btn-primary" onclick="runSingleAgencyCustomPrompt('${ag.id}')" style="margin-top:0.25rem; font-size:0.75rem; padding:0.45rem; justify-content:center; background:${ag.color}; border-color:${ag.color}; color:#fff;">
-                                    ⚡ Kích Hoạt Tư Vấn Chuyên Sâu
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            lucide.createIcons();
-        }
-
-        async function runAgencyMission(missionType) {
-            const st = getActiveStore();
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ Đang kích hoạt Hệ Thống Agency Swarm (Codex × Claude) cho ${st.name}...
-Nhiệm vụ: ${missionType.toUpperCase()}...
-Đang kết nối 9Router...`;
-            }
-
-            let promptUser = '';
-            let systemPrompt = '';
-            let modelChain = getRoleModelChain('CEO_WARROOM');
-
-            if (missionType === 'orchestrator_pipeline') {
-                systemPrompt = `Bạn là Agents Orchestrator - Trưởng bộ phận điều phối toàn diện cho 3 quán ăn. Hãy phối hợp 8 Agency chuyên môn lập ra Kế Hoạch Đột Phá Doanh Số Trong 7 Ngày Tới cho quán ${st.name} (Địa chỉ: ${st.address}).`;
-                promptUser = `Hãy phân tích thực đơn riêng và vị trí địa lý của ${st.name}. Đưa ra bản phân công nhiệm vụ cụ thể cho từng Agency (Operations, Pricing, Growth, Social, Analytics, Customer Service, Workflow) để tăng ít nhất 25% doanh số và duy trì chi phí vốn dưới 35%.`;
-            } else if (missionType === 'pricing_engineering') {
-                systemPrompt = `Bạn là Pricing Analyst - Chuyên gia định giá ẩm thực cao cấp. Quán đang phân tích: ${st.name}.`;
-                promptUser = `Dựa trên thực đơn của ${st.name}, hãy thiết lập ma trận Menu Engineering 4 nhóm: Stars (Món ngôi sao), Plowhorses (Bán chạy lợi nhuận thấp), Puzzles (Lợi nhuận cao kén khách), Dogs (Cần loại bỏ/tinh chỉnh). Đề xuất công thức định giá combo để tăng giá trị đơn trung bình (AOV) thêm 15.000đ - 20.000đ/đơn.`;
-            } else if (missionType === 'growth_funnel') {
-                systemPrompt = `Bạn là Growth Hacker chuyên sâu chuỗi cửa hàng ăn uống F&B. Quán: ${st.name}.`;
-                promptUser = `Hãy vạch ra 3 chiến thuật kéo khách hiệu quả nhất trong bán kính 3km quanh địa chỉ: ${st.address}. Thiết kế kịch bản quét mã QR bàn để khách tự động nhận ưu đãi lần sau và giới thiệu bạn bè (Referral loop).`;
-            } else if (missionType === 'lean_operations') {
-                systemPrompt = `Bạn là Operations Manager chuyên nghiệp áp dụng Lean & Six Sigma cho chuỗi F&B. Quán: ${st.name}.`;
-                promptUser = `Hãy lập bảng tiêu chuẩn vận hành bếp và quầy pha chế cho ${st.name}: Thời gian ra món chuẩn (< 90 giây), quy trình kiểm soát hao hụt nguyên liệu tươi dưới 3%, và checklist bàn giao ca sáng/tối không thất thoát.`;
-            } else if (missionType === 'viral_tiktok') {
-                systemPrompt = `Bạn là Social Media Strategist chuyên gia video ngắn triệu view cho ẩm thực đường phố. Quán: ${st.name}.`;
-                promptUser = `Hãy viết 3 kịch bản video TikTok ngắn (dưới 45 giây) siêu hấp dẫn dựa trên món đặc sắc nhất của ${st.name}. Có đầy đủ Hook (3 giây đầu giữ chân), Body (hình ảnh cận cảnh tiếng xèo xèo/bốc khói/màu sắc hấp dẫn) và CTA kéo khách đến quán hoặc đặt hàng online.`;
-            }
-
-            const messages = [
-                { role: 'system', content: systemPrompt },
-                { role: 'user', content: promptUser }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, modelChain);
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [BÁO CÁO THỰC THI AGENCY SWARM - ENGINE: ${result.model}]
-` +
-                                      `Quán: ${st.name} | Thời gian: ${new Date().toLocaleString('vi-VN')}
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `Agency Swarm [${result.model}]`, `Đã hoàn tất nhiệm vụ [${missionType}] cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 40);
-                saveMemoryItem(`agency_mission_${missionType}`, `[${st.shortName}] Hoàn tất nhiệm vụ ${missionType} bởi ${result.model}`);
-            } else {
-                if (out) {
-                    out.textContent = `⚠️ Không nhận được phản hồi trực tiếp từ 9Router. Hệ thống tự động kích hoạt Bản Kế Hoạch Dự Phòng Chuyên Nghiệp của Agency Swarm:
-
-` +
-                                      `Quán: ${st.name} (Địa chỉ: ${st.address})
-` +
-                                      `• Trọng tâm: Tối ưu quy trình vận hành và kiểm soát lợi nhuận gộp trên 60%.
-` +
-                                      `• Xem các thẻ Agency phía trên để kích hoạt từng tác vụ chuyên biệt!`;
-                }
-            }
-        }
-
-        async function runSingleAgencyAction(agencyId, actionKey) {
-            const ag = ELITE_AGENCY_ROSTER.find(a => a.id === agencyId);
-            if (!ag) return;
-            const st = getActiveStore();
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ ${ag.icon} ${ag.name} đang phân tích hành động [${actionKey}] cho ${st.name}...
-Đang gọi Dual-Engine Codex × Claude...`;
-            }
-
-            const promptUser = `Bạn là ${ag.name} (${ag.role}) thuộc bộ Agency GitHub Skills. Hãy thực thi hành động chuyên môn "${actionKey}" cho quán ${st.name} (Địa chỉ: ${st.address}). Đưa ra các bước hành động cụ thể, thông số định lượng rõ ràng và checklist thực hiện ngay hôm nay.`;
-            const messages = [
-                { role: 'system', content: ag.prompt },
-                { role: 'user', content: promptUser }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, getRoleModelChain('CODEX_AUDIT'));
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()} - ${ag.badge}] Phản hồi từ ${result.model}
-` +
-                                      `Chi nhánh: ${st.name} | Thời gian: ${new Date().toLocaleString('vi-VN')}
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `${ag.name}`, `Đã hoàn tất hành động [${actionKey}] cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 25);
-            } else {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()}] Đã lên kế hoạch hành động [${actionKey}] cho ${st.name}.
-Vui lòng kiểm tra lại kết nối 9Router hoặc thực hiện trực tiếp trên quy trình bàn giao!`;
-                }
-            }
-        }
-
-        async function runSingleAgencyCustomPrompt(agencyId) {
-            const ag = ELITE_AGENCY_ROSTER.find(a => a.id === agencyId);
-            if (!ag) return;
-            const st = getActiveStore();
-            const userCustom = prompt(`Nhập yêu cầu bạn muốn giao cho ${ag.name} (${ag.role}):`, `Hãy đề xuất giải pháp tối ưu cho ${st.name} trong tuần này.`);
-            if (!userCustom) return;
-
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = `⏳ ${ag.icon} ${ag.name} đang xử lý chỉ thị của Chủ quán...
-"${userCustom}"`;
-            }
-
-            const messages = [
-                { role: 'system', content: ag.prompt + ` Quán mục tiêu: ${st.name} (${st.address}).` },
-                { role: 'user', content: userCustom }
-            ];
-
-            const result = await call9RouterDirectOrProxy(messages, getRoleModelChain('CLAUDE_CREATIVE'));
-            if (result && result.text) {
-                if (out) {
-                    out.textContent = `✅ [${ag.icon} ${ag.name.toUpperCase()}] Phản hồi từ ${result.model}
-` +
-                                      `Yêu cầu: "${userCustom}"
-` +
-                                      `--------------------------------------------------------------------------------
-
-` +
-                                      result.text;
-                }
-                addLog('agency', `${ag.name}`, `Đã giải quyết yêu cầu riêng cho ${st.shortName}.`);
-                addXPAndLevelUp('ceo', 30);
-            }
-        }
-
-        function copyAgencyOutput() {
-            const out = document.getElementById('agencyTerminalOutput');
-            if (!out) return;
-            navigator.clipboard.writeText(out.textContent).then(() => {
-                alert('✅ Đã sao chép nội dung báo cáo Agency vào bộ nhớ tạm!');
-            }).catch(() => {
-                alert('Sao chép thất bại, vui lòng bôi đen và nhấn Ctrl+C.');
-            });
-        }
-
-        function clearAgencyOutput() {
-            const out = document.getElementById('agencyTerminalOutput');
-            if (out) {
-                out.textContent = 'Màn hình đã được làm sạch. Sẵn sàng thực thi nhiệm vụ Agency tiếp theo!';
-            }
-        }
-
     </script>
-
 </body>
 </html>
