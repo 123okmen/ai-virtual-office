@@ -252,6 +252,7 @@ def send_telegram_notification(token: str, chat_id: str, text: str):
 
 def daemon_worker_247():
     write_log("Codex x Claude Core", f"Đã kích hoạt Văn Phòng Ảo 3D 24/24 trên 9Router ({NINE_ROUTER_BASE_URL}).")
+    write_log("Elite Agency Swarm", "Hệ thống 8 Agency Tinh Hoa (Github Suite) đã sẵn sàng phục vụ 3 Quán.")
     triggered_minutes = set()
     last_order_count = -1
 
@@ -309,6 +310,25 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
+        if self.path.startswith("/api/agency"):
+            agency_list = [
+                {"id": "agents_orchestrator", "name": "Agents Orchestrator", "skill": "agency-agents-orchestrator", "status": "active"},
+                {"id": "operations_manager", "name": "Operations Manager", "skill": "agency-operations-manager", "status": "active"},
+                {"id": "pricing_analyst", "name": "Pricing Analyst", "skill": "agency-pricing-analyst", "status": "active"},
+                {"id": "growth_hacker", "name": "Growth Hacker", "skill": "agency-growth-hacker", "status": "active"},
+                {"id": "social_media_strategist", "name": "Social Media Strategist", "skill": "agency-social-media-strategist", "status": "active"},
+                {"id": "analytics_reporter", "name": "Analytics Reporter", "skill": "agency-analytics-reporter", "status": "active"},
+                {"id": "customer_service", "name": "Customer Service", "skill": "agency-customer-service", "status": "active"},
+                {"id": "workflow_optimizer", "name": "Workflow Optimizer", "skill": "agency-workflow-optimizer", "status": "active"}
+            ]
+            resp_bytes = json.dumps({"ok": True, "count": len(agency_list), "agents": agency_list}, ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
         if self.path.startswith("/api/memory"):
             mem = load_or_init_memory()
             resp_bytes = json.dumps({"ok": True, "memory": mem}, ensure_ascii=False).encode("utf-8")
@@ -330,6 +350,27 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             base_url = body.get("baseUrl") or NINE_ROUTER_BASE_URL
 
             result = call_9router_chat(messages, models, api_key, base_url)
+            resp_bytes = json.dumps(result, ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        if self.path == "/api/agency/execute":
+            length = int(self.headers.get("Content-Length", 0))
+            body = json.loads(self.rfile.read(length).decode("utf-8", errors="ignore")) if length > 0 else {}
+            agent_id = body.get("agentId", "agents_orchestrator")
+            prompt = body.get("prompt", "")
+            store_name = body.get("storeName", "FOOD STATION 7A")
+            
+            system_msg = f"Bạn là chuyên gia Agency {agent_id} từ bộ Agency Agents GitHub. Vận hành trên Hệ Động Cơ Kép Codex x Claude. Thực thi cho quán: {store_name}."
+            messages = [
+                {"role": "system", "content": system_msg},
+                {"role": "user", "content": prompt}
+            ]
+            result = call_9router_chat(messages)
             resp_bytes = json.dumps(result, ensure_ascii=False).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
