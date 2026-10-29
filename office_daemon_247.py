@@ -57,13 +57,13 @@ GAS_URL_7A = "https://script.google.com/macros/s/AKfycbyCtOrTDhFcBA7rMl-VsHttNOV
 
 # Local Repository Paths
 REPO_PATHS = {
-    "store_7a": r"c:\Users\pc\Desktop\mô hình quán ăn nhanh",
-    "7a": r"c:\Users\pc\Desktop\mô hình quán ăn nhanh",
-    "store_comtam": r"c:\Users\pc\Desktop\Plan\com-tam-suon-nuong-app",
-    "comtam": r"c:\Users\pc\Desktop\Plan\com-tam-suon-nuong-app",
-    "store_cafe": r"c:\Users\pc\Desktop\cafe-an-vat-tram-khoi-nghiep",
-    "store_cafe_anvat": r"c:\Users\pc\Desktop\cafe-an-vat-tram-khoi-nghiep",
-    "cafe": r"c:\Users\pc\Desktop\cafe-an-vat-tram-khoi-nghiep",
+    "store_7a": r"c:\Users\pc\Desktop\Cong viec\mô hình quán ăn nhanh",
+    "7a": r"c:\Users\pc\Desktop\Cong viec\mô hình quán ăn nhanh",
+    "store_comtam": r"c:\Users\pc\Desktop\Cong viec\Plan\com-tam-suon-nuong-app",
+    "comtam": r"c:\Users\pc\Desktop\Cong viec\Plan\com-tam-suon-nuong-app",
+    "store_cafe": r"c:\Users\pc\Desktop\Cong viec\cafe-an-vat-tram-khoi-nghiep",
+    "store_cafe_anvat": r"c:\Users\pc\Desktop\Cong viec\cafe-an-vat-tram-khoi-nghiep",
+    "cafe": r"c:\Users\pc\Desktop\Cong viec\cafe-an-vat-tram-khoi-nghiep",
 }
 
 DEFAULT_CONFIG = {
@@ -474,6 +474,51 @@ def daemon_worker_247():
         time.sleep(30)
 
 
+
+import time
+from concurrent.futures import ThreadPoolExecutor
+
+CACHED_POS_LOCK = threading.Lock()
+CACHED_POS_DATA = {
+    "ok": True,
+    "timestamp": None,
+    "store_7a": None,
+    "store_comtam": None,
+    "store_cafe_anvat": None
+}
+LAST_CACHE_FETCH = 0
+
+def get_pos_summary_cached(force=False):
+    global LAST_CACHE_FETCH, CACHED_POS_DATA
+    now_ts = time.time()
+    with CACHED_POS_LOCK:
+        if not force and (now_ts - LAST_CACHE_FETCH < 45) and (CACHED_POS_DATA.get("timestamp") is not None):
+            return CACHED_POS_DATA
+
+    cfg = load_or_init_config()
+    url_ct = cfg.get("gas_url_comtam", GAS_URL_COMTAM)
+    url_cf = cfg.get("gas_url_cafe", GAS_URL_CAFE)
+    url_7a = cfg.get("gas_url_7a", GAS_URL_7A)
+
+    with ThreadPoolExecutor(max_workers=3) as executor:
+        f_ct = executor.submit(fetch_live_pos_data, url_ct)
+        f_cf = executor.submit(fetch_live_pos_data, url_cf)
+        f_7a = executor.submit(fetch_live_pos_data, url_7a)
+        ct = f_ct.result()
+        cf = f_cf.result()
+        s7a = f_7a.result()
+
+    with CACHED_POS_LOCK:
+        CACHED_POS_DATA = {
+            "ok": True,
+            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "store_7a": s7a or {"ok": False, "message": "Chưa kết nối được Google Sheet 7A"},
+            "store_comtam": ct or {"ok": False, "message": "Chưa kết nối được Google Sheet Cơm Tấm"},
+            "store_cafe_anvat": cf or {"ok": False, "message": "Chưa kết nối được Google Sheet Cafe Đông Thạnh"}
+        }
+        LAST_CACHE_FETCH = now_ts
+        return CACHED_POS_DATA
+
 class VirtualOfficeHandler(SimpleHTTPRequestHandler):
     timeout = 10
 
@@ -566,20 +611,10 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             self.wfile.write(resp_bytes)
             return
 
-        # 5. Live POS Summary API (100% Real Sheet Data)
+        # 5. Live POS Summary API (100% Real Sheet Data - Cached & Fast)
         if self.path.startswith("/api/pos/summary"):
-            cfg = load_or_init_config()
-            ct = fetch_live_pos_data(cfg.get("gas_url_comtam", GAS_URL_COMTAM))
-            cf = fetch_live_pos_data(cfg.get("gas_url_cafe", GAS_URL_CAFE))
-            s7a = fetch_live_pos_data(cfg.get("gas_url_7a", GAS_URL_7A))
-
-            payload = {
-                "ok": True,
-                "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "store_7a": s7a or {"ok": False, "message": "Chưa cấu hình URL Google Sheet"},
-                "store_comtam": ct or {"ok": False, "message": "Chưa kết nối được Google Sheet Cơm Tấm"},
-                "store_cafe_anvat": cf or {"ok": False, "message": "Chưa kết nối được Google Sheet Cafe Đông Thạnh"}
-            }
+            force = "force=true" in self.path
+            payload = get_pos_summary_cached(force=force)
             resp_bytes = json.dumps(payload, ensure_ascii=False).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
