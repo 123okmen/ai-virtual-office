@@ -58,8 +58,12 @@ GAS_URL_7A = "https://script.google.com/macros/s/AKfycbyCtOrTDhFcBA7rMl-VsHttNOV
 # Local Repository Paths
 REPO_PATHS = {
     "store_7a": r"c:\Users\pc\Desktop\mô hình quán ăn nhanh",
+    "7a": r"c:\Users\pc\Desktop\mô hình quán ăn nhanh",
     "store_comtam": r"c:\Users\pc\Desktop\Plan\com-tam-suon-nuong-app",
-    "store_cafe_anvat": r"c:\Users\pc\Desktop\cafe-an-vat-tram-khoi-nghiep"
+    "comtam": r"c:\Users\pc\Desktop\Plan\com-tam-suon-nuong-app",
+    "store_cafe": r"c:\Users\pc\Desktop\cafe-an-vat-tram-khoi-nghiep",
+    "store_cafe_anvat": r"c:\Users\pc\Desktop\cafe-an-vat-tram-khoi-nghiep",
+    "cafe": r"c:\Users\pc\Desktop\cafe-an-vat-tram-khoi-nghiep",
 }
 
 DEFAULT_CONFIG = {
@@ -471,10 +475,13 @@ def daemon_worker_247():
 
 
 class VirtualOfficeHandler(SimpleHTTPRequestHandler):
+    timeout = 10
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=BASE_DIR, **kwargs)
 
     def end_headers(self):
+        self.send_header("Connection", "close")
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
@@ -489,8 +496,9 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self):
         # 1. Image serving proxy for local preview
-        if self.path.startswith("/menu_images/"):
-            parts = self.path[len("/menu_images/"):].split("/")
+        clean_path = self.path.split("?")[0]
+        if clean_path.startswith("/menu_images/"):
+            parts = clean_path[len("/menu_images/"):].split("/")
             if len(parts) >= 2:
                 store_key = parts[0]
                 img_name = parts[1]
@@ -711,6 +719,7 @@ def main():
     t.start()
 
     server = ThreadingHTTPServer(("0.0.0.0", PORT), VirtualOfficeHandler)
+    server.daemon_threads = True
     try:
         webbrowser.open(url)
     except Exception:
