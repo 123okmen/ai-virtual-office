@@ -16,7 +16,7 @@ AI VIRTUAL OFFICE 24/7 (3D GAME SIMULATION + CODEX x CLAUDE SELF-LEARNING ENGINE
   8. Workflow Optimizer
   9. Menu Visual Designer (Tự động cập nhật & tối ưu hóa hình ảnh món ăn)
 - Tách bạch 100% dữ liệu thực tế từ Google Sheets / GAS của 3 Quán (Zero Fake Numbers):
-  1. FOOD STATION 7A (Số 2, Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức)
+  1. CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E Nguyễn Thị Ngâu, Trung Đông 8, Xã Đông Thạnh, Hóc Môn, TP.HCM)
   2. TRẠM KHỞI NGHIỆP – Cơm Tấm Sườn Nướng Than Hoa & Cơm Chiên
   3. CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E Nguyễn Thị Ngâu, Đông Thạnh, TP.HCM)
 """
@@ -68,7 +68,7 @@ REPO_PATHS = {
 
 DEFAULT_CONFIG = {
     "office_name": "Văn Phòng Ảo AI 3D 24/7 - Hệ Động Cơ Kép CODEX x CLAUDE",
-    "address": "Số 2, Đường 7A, KP. Phước Thiện, P. Long Bình, TP. Thủ Đức",
+    "address": "36/5E Nguyễn Thị Ngâu, Trung Đông 8, Xã Đông Thạnh, Hóc Môn, TP.HCM",
     "hotline": "0931.811.872",
     "nine_router_url": NINE_ROUTER_BASE_URL,
     "nine_router_key": NINE_ROUTER_API_KEY,
@@ -99,21 +99,21 @@ DEFAULT_MEMORY = {
             "time": "Khởi tạo Hệ Thống",
             "agent": "CEO Orchestrator (Claude x Codex)",
             "engine": "Codex x Claude",
-            "insight": "Ca Sáng (06h30-10h00) tại Số 2 Đường 7A tập trung tối đa tốc độ ra món dưới 90 giây cho Bánh Bao Kẹp (18K-26K), Hamburger (28K) và Sandwich (22K)."
+            "insight": "Ca Sáng (06h30-10h00) tại 36/5E Nguyễn Thị Ngâu tập trung tối đa tốc độ ra món dưới 90 giây cho Bánh Bao Kẹp (18K-26K), Hamburger (28K) và Sandwich (22K)."
         },
         {
             "id": "mem_7a_2",
             "time": "Khởi tạo Hệ Thống",
             "agent": "Menu Visual Designer (Codex x Claude)",
             "engine": "agency-menu-visual-designer",
-            "insight": "Đã chuẩn hóa 28 hình ảnh món ăn chất lượng HD cho Quán Ăn Nhanh 7A (Bánh Bao Kẹp, Cơm Gà Xối Mỡ, Mì Cay, FastFood)."
+            "insight": "Đã chuẩn hóa 28 hình ảnh món ăn chất lượng HD cho Quán Cafe Ăn Vặt Hóc Môn (Bánh Bao Kẹp, Cơm Gà Xối Mỡ, Mì Cay, FastFood)."
         },
         {
             "id": "mem_7a_3",
             "time": "Khởi tạo Hệ Thống",
             "agent": "Tuyết Mai - Kế Toán POS (Codex)",
             "engine": "cx/codex-auto-review",
-            "insight": "Tỷ lệ giá vốn nguyên liệu chuẩn của FOOD STATION 7A cần giữ ở mức 34%-37%. Luôn gợi ý khách thêm Trứng/Phô mai (+5K) và Pepsi/Trà đá (+10K) để tăng biên lợi nhuận."
+            "insight": "Tỷ lệ giá vốn nguyên liệu chuẩn của CAFE ĂN VẶT TRẠM KHỞI NGHIỆP cần giữ ở mức 34%-37%. Luôn gợi ý khách thêm Trứng/Phô mai (+5K) và Pepsi/Trà đá (+10K) để tăng biên lợi nhuận."
         }
     ],
     "store_comtam": [
@@ -437,7 +437,7 @@ def daemon_worker_247():
                         f"[SỔ 3 - CAFE ĐÔNG THẠNH] {so_don} đơn ca hiện tại | Doanh thu thật: {doanh_thu:,} đ"
                     )
 
-            # 3. Kéo dữ liệu thật Quán 7A nếu có cấu hình
+            # 3. Kéo dữ liệu thật Quán Hóc Môn nếu có cấu hình
             gas_7a = cfg.get("gas_url_7a", "")
             if gas_7a:
                 live_7a = fetch_live_pos_data(gas_7a)
@@ -448,7 +448,7 @@ def daemon_worker_247():
                         last_orders["store_7a"] = so_don
                         write_log(
                             "NV4 Tuyết Mai [Codex POS]",
-                            f"[SỔ 1 - FOOD STATION 7A] Ngày {live_7a.get('ngay')}: {so_don} đơn | Doanh thu thật: {doanh_thu:,} đ"
+                            f"[SỔ 1 - CAFE ĂN VẶT TRẠM KHỞI NGHIỆP] Ngày {live_7a.get('ngay')}: {so_don} đơn | Doanh thu thật: {doanh_thu:,} đ"
                         )
 
             # Báo cáo lịch tự động
@@ -458,7 +458,7 @@ def daemon_worker_247():
                 rev_cf = f"{live_cf.get('kpi', {}).get('doanhThu', 0):,} đ" if live_cf else "0 đ (Chờ kết nối)"
                 msg = (
                     f"⏰ [BÁO CÁO CA TỰ ĐỘNG {hhmm}] Văn Phòng Ảo AI 3D 24/24 (Codex x Claude)\n"
-                    f"🍔 Sổ 1: FOOD STATION 7A (Số 2 Đường 7A, Phước Thiện)\n"
+                    f"🍔 Sổ 1: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (36/5E Nguyễn Thị Ngâu, Hóc Môn)\n"
                     f"🍛 Sổ 2: TRẠM KHỞI NGHIỆP Cơm Tấm (Doanh thu thật: {rev_ct})\n"
                     f"☕ Sổ 3: CAFE ĂN VẶT ĐÔNG THẠNH (Doanh thu thật: {rev_cf})"
                 )
@@ -672,7 +672,7 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             body = json.loads(self.rfile.read(length).decode("utf-8", errors="ignore")) if length > 0 else {}
             agent_id = body.get("agentId", "agents_orchestrator")
             prompt = body.get("prompt", "")
-            store_name = body.get("storeName", "FOOD STATION 7A")
+            store_name = body.get("storeName", "CAFE ĂN VẶT TRẠM KHỞI NGHIỆP")
 
             system_msg = f"Bạn là chuyên gia Agency {agent_id} từ bộ Agency Agents GitHub. Vận hành trên Hệ Động Cơ Kép Codex x Claude. Thực thi cho quán: {store_name}."
             messages = [
