@@ -10,3 +10,15 @@ update_index_html.py
 add_store3_data.py
 add_cafe_actions.py
 upgrade_v6.py
+
+# Security: Never commit secrets or credentials
+.env
+.env.*
+*service_account*.json
+*credentials*.json
+*token*.json
+api key.txt
+office_config_247.json
+*.sqlite*
+*.pem
+*.key

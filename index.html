@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Văn Phòng Ảo AI 3D 24/7 | Hệ Thống Nhân Viên AI CODEX × CLAUDE (Quản Lý Chuỗi 3 Quán)</title>
@@ -1174,11 +1176,13 @@
                     🍔 Sảnh 3D: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP
                 </div>
                 <div class="active-models-pill">
-                    <span style="color:var(--primary);font-weight:700;">⚡ Hệ Kép:</span>
-                    <span class="model-tag tag-codex">CODEX (cx/codex-auto-review)</span>
+                    <span style="color:var(--primary);font-weight:700;">⚡ AI Tri-Engine:</span>
+                    <span class="model-tag" style="background:#1a73e8;color:#fff;font-weight:700;">🌐 GOOGLE CLOUD GEMINI</span>
                     <span style="color:var(--text-muted);">×</span>
-                    <span class="model-tag tag-claude">CLAUDE 4.5 (Sonnet/Haiku)</span>
-                    <span class="model-tag tag-learn" id="topBrainXPBadge">XP Tự Học: 1,250</span>
+                    <span class="model-tag tag-codex">CODEX</span>
+                    <span style="color:var(--text-muted);">×</span>
+                    <span class="model-tag tag-claude">CLAUDE 4.5</span>
+                    <span class="model-tag tag-learn" id="topBrainXPBadge">XP Tự Học: 2,500</span>
                 </div>
             </div>
             <div class="topbar-right">
@@ -1187,6 +1191,9 @@
                 </button>
                 <button class="btn btn-amber" onclick="syncAllStoresSeparately(true)">
                     <i data-lucide="refresh-cw" size="14"></i> Đồng Bộ 3 Sổ POS
+                </button>
+                <button class="btn btn-outline" style="border-color:#1a73e8;color:#4285f4;font-weight:700;" onclick="testGoogleCloudGemini()">
+                    <i data-lucide="cloud" size="14"></i> Test Google Cloud AI
                 </button>
                 <button class="btn btn-outline" style="border-color:var(--primary);color:var(--primary);" onclick="test9RouterConnection()">
                     <i data-lucide="zap" size="14"></i> Test Codex×Claude
@@ -1285,7 +1292,7 @@
                             <div style="display:flex;gap:0.4rem;">
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_7a', 'admin')">Mở #/admin 7A</button>
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_7a', 'plan')">Mở #/plan 7A</button>
-                                <a href="https://docs.google.com/spreadsheets/d/13nzzZ8IfPTQUYwWT2AUKf5xPMv36SKwj5C2EQDwOjxQ/edit" target="_blank" class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#10b981;color:#34d399;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">📊 Mở Google Sheet</a>
+                                <a href="https://docs.google.com/spreadsheets/d/13nzzZ8IfPTQUYwWT2AUKf5xPMv36SKwj5C2EQDwOjxQ/edit" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#10b981;color:#34d399;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">📊 Mở Google Sheet</a>
                             </div>
                         </div>
                     </div>
@@ -1355,7 +1362,7 @@
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#d97706;color:#fcd34d;" onclick="openSpecificPortal('store_cafe_anvat', 'staff')">Mở POS Bán Hàng</button>
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_cafe_anvat', 'order')">Mở Menu Gọi Món</button>
                                 <button class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;" onclick="openSpecificPortal('store_cafe_anvat', 'planner')">Mở Báo Cáo</button>
-                                <a href="https://docs.google.com/spreadsheets/d/1tq1r_PA6TwHrg6f1qXXGR5x13FU4TLqpIGja6YOsSYI/edit" target="_blank" class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#10b981;color:#34d399;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">📊 Mở Google Sheet</a>
+                                <a href="https://docs.google.com/spreadsheets/d/1tq1r_PA6TwHrg6f1qXXGR5x13FU4TLqpIGja6YOsSYI/edit" target="_blank" rel="noopener noreferrer" class="btn btn-outline" style="padding:0.24rem 0.55rem;font-size:0.71rem;border-color:#10b981;color:#34d399;text-decoration:none;display:inline-flex;align-items:center;gap:0.3rem;">📊 Mở Google Sheet</a>
                             </div>
                         </div>
                     </div>
@@ -1472,7 +1479,7 @@
                             <button class="btn btn-outline" style="border-color:var(--accent-amber);color:#fbbf24;" onclick="loadPortalUrl('https://123okmen.github.io/com-tam-suon-nuong/')">
                                 🍽️ Menu Đặt Món Cơm Tấm
                             </button>
-                            <a id="openExternalPortalLink" href="https://123okmen.github.io/quan-an-nhanh-7a/#/admin" target="_blank" class="btn btn-outline">
+                            <a id="openExternalPortalLink" href="https://123okmen.github.io/quan-an-nhanh-7a/#/admin" target="_blank" rel="noopener noreferrer" class="btn btn-outline">
                                 <i data-lucide="external-link" size="13"></i> Mở Tab Rời
                             </a>
                         </div>
@@ -1902,7 +1909,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
                         </div>
                         <div class="form-group">
                             <label class="form-label">Mã API 9Router:</label>
-                            <input type="text" id="nineRouterKey" class="form-input" value="sk-c8ddee65dadacbf8-2orlgk-2451fb73" style="border-color:var(--primary);color:#34d399;font-family:'JetBrains Mono',monospace;">
+                            <input type="text" id="nineRouterKey" class="form-input" value="" style="border-color:var(--primary);color:#34d399;font-family:'JetBrains Mono',monospace;">
                         </div>
                         <div class="form-group">
                             <label class="form-label">Chuỗi Model CODEX × CLAUDE Trong 9Router:</label>
@@ -1986,7 +1993,7 @@ Nhấn vào bất kỳ tác vụ hoặc nút "Kích Hoạt" trên thẻ Agency p
         // 1. DỮ LIỆU TÁCH BẠCH 100% CHO 3 QUÁN + BỘ NHỚ TỰ HỌC CODEX x CLAUDE
         // =========================================================================
         const DEFAULT_9ROUTER_URL = 'http://localhost:20128/v1';
-        const DEFAULT_9ROUTER_KEY = 'sk-c8ddee65dadacbf8-2orlgk-2451fb73';
+        const DEFAULT_9ROUTER_KEY = '';
         const DEFAULT_9ROUTER_MODELS = 'cx/codex-auto-review, kr/claude-sonnet-4.5, kr/claude-sonnet-4.5-agentic, kr/claude-haiku-4.5, ag/claude-sonnet-4-6, ag/gemini-3.8-flash-high, ag/gemini-3-flash, ag/gpt-oss-120b-medium, bazaarlink/auto:free';
         const DEFAULT_GAS_COMTAM = 'https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec';
         const DEFAULT_GAS_CAFE = 'https://script.google.com/macros/s/AKfycbyktPQSBZEi6FSVMDBV27SWCQSzHMItoKHG8_um4TtAvREYmkVx1PTRncc1-E-3CVZk/exec';
@@ -4177,7 +4184,7 @@ Hệ động cơ: ⚡ Dual-Engine Codex × Claude (Autonomous Agency Pipeline)
             // 2. Thử gọi trực tiếp 9Router Endpoint nếu người dùng cấu hình
             try {
                 const baseUrl = (appState.settings.nineRouterUrl || 'http://localhost:20128/v1').replace(/\/+$/, '');
-                const apiKey = appState.settings.nineRouterKey || 'sk-9router-local-token';
+                const apiKey = appState.settings.nineRouterKey || '';
                 for (const m of preferredModels) {
                     try {
                         const directResp = await fetch(`${baseUrl}/chat/completions`, {

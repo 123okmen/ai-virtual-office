@@ -3,7 +3,7 @@
 """
 AI VIRTUAL OFFICE 24/7 (3D GAME SIMULATION + CODEX x CLAUDE SELF-LEARNING ENGINE)
 - Cổng giao diện Văn Phòng Ảo 3D: http://localhost:8088/index.html
-- Cổng kết nối 9Router AI Hub: http://localhost:20128/v1 (API Key: sk-c8ddee65dadacbf8-2orlgk-2451fb73)
+- Cổng kết nối 9Router AI Hub: http://localhost:20128/v1 (API Key: )
 - Động cơ kép: CODEX (cx/codex-auto-review, cx/gpt-5.6-sol) x CLAUDE (kr/claude-sonnet-4.5, kr/claude-haiku-4.5)
 - Hệ thống 9 Agency Tinh Hoa (GitHub Agency Agents Suite):
   1. Agents Orchestrator
@@ -34,6 +34,19 @@ import urllib.request
 import urllib.error
 import mimetypes
 
+# Tích hợp Google Cloud Gemini AI Engine
+try:
+    from google_cloud_ai_engine import gemini_engine
+    HAS_GEMINI = True
+except Exception:
+    try:
+        sys.path.append(os.path.abspath(os.path.join(BASE_DIR, "..")))
+        from google_cloud_ai_engine import gemini_engine
+        HAS_GEMINI = True
+    except Exception:
+        HAS_GEMINI = False
+        gemini_engine = None
+
 try:
     sys.stdout.reconfigure(encoding="utf-8")
     sys.stderr.reconfigure(encoding="utf-8")
@@ -48,7 +61,7 @@ LOG_PATH = os.path.join(BASE_DIR, "office_activity_247.log")
 CATALOG_PATH = os.path.join(BASE_DIR, "menu_catalog.json")
 
 NINE_ROUTER_BASE_URL = "http://localhost:20128/v1"
-NINE_ROUTER_API_KEY = "sk-c8ddee65dadacbf8-2orlgk-2451fb73"
+NINE_ROUTER_API_KEY = ""
 
 # Live Google Apps Script endpoints (100% Real Sheet Data)
 GAS_URL_COMTAM = "https://script.google.com/macros/s/AKfycby8rz7upff345Kvv_pK-AVdClBsUit68aUgj4Cl8bvPN6vmM8_i8NZpJe2VqxE6Mc4qZQ/exec"
@@ -334,6 +347,36 @@ def audit_all_stores():
 
 
 def call_9router_chat(messages, models=None, api_key=None, base_url=None):
+    # 1. Ưu tiên gọi Native Google Cloud Gemini Engine siêu tốc
+    if HAS_GEMINI and gemini_engine:
+        try:
+            sys_msg = ""
+            user_msg = ""
+            for m in messages:
+                role = m.get("role")
+                content = m.get("content", "")
+                if role == "system":
+                    sys_msg += content + "\n"
+                elif role == "user":
+                    user_msg += content + "\n"
+            
+            if user_msg.strip():
+                gem_res = gemini_engine.generate_text(
+                    user_msg.strip(),
+                    system_instruction=sys_msg.strip() if sys_msg else None,
+                    temperature=0.3
+                )
+                if gem_res.get("ok"):
+                    return {
+                        "ok": True,
+                        "model": gem_res.get("model", "Google Cloud Gemini"),
+                        "engine": gem_res.get("engine", "Google Cloud Gemini Native"),
+                        "content": gem_res.get("text")
+                    }
+        except Exception as ge:
+            write_log("Google Cloud AI", f"Tự động chuyển 9Router fallback: {ge}")
+
+    # 2. Dự phòng 9Router Local Hub
     base_url = base_url or NINE_ROUTER_BASE_URL
     api_key = api_key or NINE_ROUTER_API_KEY
     models = models or DEFAULT_CONFIG["preferred_models"]
@@ -519,6 +562,17 @@ def get_pos_summary_cached(force=False):
         LAST_CACHE_FETCH = now_ts
         return CACHED_POS_DATA
 
+ALLOWED_LOCAL_AI_URLS = {
+    "http://localhost:20128/v1",
+    "http://127.0.0.1:20128/v1",
+    "http://localhost:20129/v1",
+    "http://127.0.0.1:20129/v1",
+}
+BLOCKED_STATIC_EXTENSIONS = {".py", ".pyc", ".log", ".bat", ".cmd", ".ps1", ".env", ".sqlite", ".db"}
+BLOCKED_STATIC_FILENAMES = {"office_config_247.json", "office_memory_247.json", ".gitignore"}
+MAX_POST_BODY_BYTES = 2 * 1024 * 1024
+
+
 class VirtualOfficeHandler(SimpleHTTPRequestHandler):
     timeout = 10
 
@@ -526,31 +580,57 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
         super().__init__(*args, directory=BASE_DIR, **kwargs)
 
     def end_headers(self):
+        origin = self.headers.get("Origin", "")
+        if origin.startswith("http://localhost:") or origin.startswith("http://127.0.0.1:"):
+            self.send_header("Access-Control-Allow-Origin", origin)
+        else:
+            self.send_header("Access-Control-Allow-Origin", f"http://localhost:{PORT}")
+        self.send_header("Vary", "Origin")
         self.send_header("Connection", "close")
-        self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
         self.send_header("Access-Control-Allow-Headers", "Content-Type, Authorization")
+        self.send_header("X-Content-Type-Options", "nosniff")
+        self.send_header("X-Frame-Options", "SAMEORIGIN")
+        self.send_header("Referrer-Policy", "strict-origin-when-cross-origin")
+        self.send_header("Permissions-Policy", "camera=(), microphone=(), geolocation=()")
         self.send_header("Cache-Control", "no-cache, no-store, must-revalidate")
         self.send_header("Pragma", "no-cache")
         self.send_header("Expires", "0")
         super().end_headers()
+
+    def _read_json_body(self):
+        try:
+            length = int(self.headers.get("Content-Length", 0))
+        except ValueError:
+            length = 0
+        if length <= 0 or length > MAX_POST_BODY_BYTES:
+            return {}
+        try:
+            raw = self.rfile.read(length).decode("utf-8", errors="ignore")
+            parsed = json.loads(raw)
+            return parsed if isinstance(parsed, dict) else {}
+        except Exception:
+            return {}
 
     def do_OPTIONS(self):
         self.send_response(200)
         self.end_headers()
 
     def do_GET(self):
-        # 1. Image serving proxy for local preview
-        clean_path = self.path.split("?")[0]
+        # 1. Image serving proxy for local preview (Hardened against Path Traversal CWE-22)
+        from urllib.parse import unquote
+        clean_path = unquote(self.path.split("?")[0])
         if clean_path.startswith("/menu_images/"):
-            parts = clean_path[len("/menu_images/"):].split("/")
-            if len(parts) >= 2:
+            parts = [p for p in clean_path[len("/menu_images/"):].split("/") if p]
+            if len(parts) == 2:
                 store_key = parts[0]
-                img_name = parts[1]
+                img_name = os.path.basename(parts[1])
+                ext = os.path.splitext(img_name)[1].lower()
                 repo_path = REPO_PATHS.get("store_" + store_key) or REPO_PATHS.get(store_key)
-                if repo_path:
-                    local_img_path = os.path.join(repo_path, "public", "menu", img_name)
-                    if os.path.exists(local_img_path):
+                if repo_path and ext in {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"}:
+                    menu_root = os.path.realpath(os.path.join(repo_path, "public", "menu"))
+                    local_img_path = os.path.realpath(os.path.join(menu_root, img_name))
+                    if local_img_path.startswith(menu_root + os.sep) and os.path.isfile(local_img_path):
                         mime, _ = mimetypes.guess_type(local_img_path)
                         with open(local_img_path, "rb") as img_f:
                             img_data = img_f.read()
@@ -634,9 +714,30 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             self.wfile.write(resp_bytes)
             return
 
-        # 7. Config API
+        # 6.5. Google Cloud AI Status API
+        if self.path.startswith("/api/ai/status"):
+            ai_status = {
+                "ok": True,
+                "has_gemini": HAS_GEMINI and (gemini_engine is not None),
+                "active_model": "gemini-3.5-flash / gemini-2.5-flash",
+                "nine_router_fallback": NINE_ROUTER_BASE_URL,
+                "features": ["text", "json", "vision_receipt_audit", "pos_executive_insights"]
+            }
+            resp_bytes = json.dumps(ai_status, ensure_ascii=False).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        # 7. Config API (Mask sensitive credentials before returning to browser)
         if self.path.startswith("/api/config"):
-            cfg = load_or_init_config()
+            cfg = dict(load_or_init_config())
+            if cfg.get("nine_router_key"):
+                cfg["nine_router_key"] = "***REDACTED***"
+            if cfg.get("telegram_bot_token"):
+                cfg["telegram_bot_token"] = "***REDACTED***"
             resp_bytes = json.dumps({"ok": True, "config": cfg}, ensure_ascii=False).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -645,17 +746,89 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             self.wfile.write(resp_bytes)
             return
 
+        # Block direct static download of source code, config, logs, or hidden files
+        req_file = os.path.basename(clean_path.rstrip("/"))
+        req_ext = os.path.splitext(req_file)[1].lower()
+        if (
+            req_file in BLOCKED_STATIC_FILENAMES
+            or req_ext in BLOCKED_STATIC_EXTENSIONS
+            or req_file.startswith(".")
+        ):
+            self.send_response(403)
+            self.end_headers()
+            return
+
         super().do_GET()
 
     def do_POST(self):
-        # 1. 9Router AI Call
+        # 0. Google Cloud Gemini Vision Receipt & Invoice Scanner (Hardened against Arbitrary File Read CWE-22)
+        if self.path == "/api/ai/scan_receipt":
+            body = self._read_json_body()
+            raw_path = str(body.get("imagePath", "")).strip()
+            allowed_root = os.path.realpath(os.path.join(BASE_DIR, ".."))
+            image_path = ""
+            if raw_path:
+                cand = os.path.realpath(raw_path if os.path.isabs(raw_path) else os.path.join(allowed_root, os.path.basename(raw_path)))
+                ext = os.path.splitext(cand)[1].lower()
+                if cand.startswith(allowed_root + os.sep) and ext in {".jpg", ".jpeg", ".png", ".webp"} and os.path.isfile(cand):
+                    image_path = cand
+            if not image_path:
+                candidate = r"c:\Users\pc\Desktop\Cong viec\1780926253765_1497280201109217459_449921400893164362_d9c75ca50b3aa111cdb1a357cde59c87.jpg"
+                if os.path.exists(candidate):
+                    image_path = candidate
+
+            prompt = (
+                "Bạn là chuyên gia kế toán F&B. Hãy bóc tách chi tiết hóa đơn nguyên liệu/chứng từ này thành JSON chuẩn: "
+                '{"vendor": "Tên nhà cung cấp", "date": "Ngày lập", "invoice_number": "Số hóa đơn", '
+                '"total_amount": 0, "items": [{"name": "Tên hàng", "qty": "Số lượng", "price": 0, "total": 0}], '
+                '"notes": "Đánh giá giá nhập"}'
+            )
+            if HAS_GEMINI and gemini_engine and image_path and os.path.exists(image_path):
+                v_res = gemini_engine.analyze_image(image_path, prompt, json_mode=True)
+                write_log("Gemini Vision AI", f"Đã quét và bóc tách chứng từ hóa đơn: {os.path.basename(image_path)}")
+                resp_bytes = json.dumps(v_res, ensure_ascii=False).encode("utf-8")
+            else:
+                resp_bytes = json.dumps({"ok": False, "error": "Chưa có ảnh hoặc Gemini Vision không khả dụng"}, ensure_ascii=False).encode("utf-8")
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        # 0.5. Google Cloud Executive Business Insights API
+        if self.path == "/api/ai/executive_insight":
+            pos_data = get_pos_summary_cached(force=True)
+            summary_json_str = json.dumps(pos_data, ensure_ascii=False, indent=2)
+            prompt = (
+                f"Dữ liệu doanh thu thực tế 3 Quán F&B:\n{summary_json_str}\n\n"
+                "Với vai trò CEO & Giám đốc Chiến lược F&B, hãy đưa ra bản phân tích cô đọng dạng JSON gồm: "
+                '{"overall_assessment": "Đánh giá tổng quan doanh thu", "store_action_plans": [{"store": "Tên quán", "top_priority": "Hành động", "suggested_promotion": "Combo"}], '
+                '"inventory_warning": "Cảnh báo nguyên liệu", "executive_summary": "Thông điệp chỉ đạo"}'
+            )
+            if HAS_GEMINI and gemini_engine:
+                ins_res = gemini_engine.generate_json(prompt, system_instruction="Bạn là CEO AI Chiến lược F&B chuỗi cửa hàng.")
+                write_log("CEO Minh Trí [Gemini AI]", "Đã hoàn thành phân tích cố vấn chiến lược đa quán bằng Google Cloud Gemini.")
+                resp_bytes = json.dumps(ins_res, ensure_ascii=False).encode("utf-8")
+            else:
+                resp_bytes = json.dumps({"ok": False, "error": "Gemini Engine không khả dụng"}, ensure_ascii=False).encode("utf-8")
+
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.send_header("Content-Length", str(len(resp_bytes)))
+            self.end_headers()
+            self.wfile.write(resp_bytes)
+            return
+
+        # 1. 9Router / OmniRoute AI Call (Hardened against SSRF CWE-918 & Key Exfiltration)
         if self.path == "/api/9router":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode("utf-8", errors="ignore")) if length > 0 else {}
+            body = self._read_json_body()
             messages = body.get("messages", [])
             models = body.get("models") or DEFAULT_CONFIG["preferred_models"]
-            api_key = body.get("apiKey") or NINE_ROUTER_API_KEY
-            base_url = body.get("baseUrl") or NINE_ROUTER_BASE_URL
+            req_base_url = str(body.get("baseUrl") or NINE_ROUTER_BASE_URL).rstrip("/")
+            base_url = req_base_url if req_base_url in ALLOWED_LOCAL_AI_URLS else NINE_ROUTER_BASE_URL
+            api_key = NINE_ROUTER_API_KEY
 
             result = call_9router_chat(messages, models, api_key, base_url)
             resp_bytes = json.dumps(result, ensure_ascii=False).encode("utf-8")
@@ -668,8 +841,7 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
 
         # 2. Execute Agency Action
         if self.path == "/api/agency/execute":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode("utf-8", errors="ignore")) if length > 0 else {}
+            body = self._read_json_body()
             agent_id = body.get("agentId", "agents_orchestrator")
             prompt = body.get("prompt", "")
             store_name = body.get("storeName", "CAFE ĂN VẶT TRẠM KHỞI NGHIỆP")
@@ -690,8 +862,7 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
 
         # 3. Menu Sync Action
         if self.path == "/api/menu/sync":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode("utf-8", errors="ignore")) if length > 0 else {}
+            body = self._read_json_body()
             target_store = body.get("storeId", "all")
             
             audit_data = audit_all_stores()
@@ -706,9 +877,8 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
 
         # 4. Update Memory
         if self.path == "/api/memory":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode("utf-8", errors="ignore")) if length > 0 else {}
-            if body.get("memory"):
+            body = self._read_json_body()
+            if isinstance(body.get("memory"), dict):
                 save_memory(body["memory"])
             resp_bytes = json.dumps({"ok": True}, ensure_ascii=False).encode("utf-8")
             self.send_response(200)
@@ -718,12 +888,16 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             self.wfile.write(resp_bytes)
             return
 
-        # 5. Update Config
+        # 5. Update Config (Preserve redacted secrets)
         if self.path == "/api/config":
-            length = int(self.headers.get("Content-Length", 0))
-            body = json.loads(self.rfile.read(length).decode("utf-8", errors="ignore")) if length > 0 else {}
-            if body.get("config"):
-                save_config(body["config"])
+            body = self._read_json_body()
+            new_cfg = body.get("config")
+            if isinstance(new_cfg, dict):
+                current_cfg = load_or_init_config()
+                for secret_field in ("nine_router_key", "telegram_bot_token"):
+                    if new_cfg.get(secret_field) in (None, "", "***REDACTED***"):
+                        new_cfg[secret_field] = current_cfg.get(secret_field, "")
+                save_config(new_cfg)
             resp_bytes = json.dumps({"ok": True}, ensure_ascii=False).encode("utf-8")
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -732,7 +906,8 @@ class VirtualOfficeHandler(SimpleHTTPRequestHandler):
             self.wfile.write(resp_bytes)
             return
 
-        super().do_POST()
+        self.send_response(405)
+        self.end_headers()
 
     def log_message(self, format, *args):
         pass
@@ -743,17 +918,18 @@ def main():
     load_or_init_config()
     load_or_init_memory()
 
+    bind_host = os.environ.get("OFFICE_BIND_HOST", "127.0.0.1")
     url = f"http://localhost:{PORT}/index.html"
     print("=" * 82)
     print(f"  VĂN PHÒNG ẢO AI 3D 24/7 (CODEX x CLAUDE GAME SIMULATOR): {url}")
-    print(f"  9Router Endpoint: {NINE_ROUTER_BASE_URL} | Key: {NINE_ROUTER_API_KEY}")
+    print(f"  9Router Endpoint: {NINE_ROUTER_BASE_URL} | Bind: {bind_host}:{PORT}")
     print(f"  Hệ thống 9 Agency Tinh Hoa + Menu Visual Designer đã sẵn sàng.")
     print("=" * 82)
 
     t = threading.Thread(target=daemon_worker_247, daemon=True)
     t.start()
 
-    server = ThreadingHTTPServer(("0.0.0.0", PORT), VirtualOfficeHandler)
+    server = ThreadingHTTPServer((bind_host, PORT), VirtualOfficeHandler)
     server.daemon_threads = True
     try:
         webbrowser.open(url)

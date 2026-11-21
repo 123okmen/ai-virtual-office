@@ -5,21 +5,21 @@
       "time": "Tự học Hệ Thống",
       "agent": "👑 CEO Minh Trí (Claude × Codex)",
       "engine": "Codex × Claude",
-      "insight": "Ca Sáng (06h30-10h00) tại 36/5E Nguyễn Thị Ngâu cần ưu tiên tốc độ ra món dưới 90 giây cho Bánh Bao Kẹp (18K-26K), Hamburger (28K) và Sandwich (22K) để đón luồng học sinh & người đi làm."
+      "insight": "Ca Sáng (06h30-10h00) tại Số 2 Đường 7A cần ưu tiên tốc độ ra món dưới 90 giây cho Bánh Bao Kẹp (18K-26K), Hamburger (28K) và Sandwich (22K) để đón luồng học sinh & người đi làm."
     },
     {
       "id": "m7a_2",
       "time": "Tự học POS",
       "agent": "📊 NV4 Tuyết Mai (Codex Audit)",
       "engine": "cx/codex-auto-review",
-      "insight": "Để giữ tỷ lệ Cost nguyên liệu của CAFE ĂN VẶT TRẠM KHỞI NGHIỆP dưới 36%, luôn gợi ý khách gọi kèm Trứng/Phô mai (+5K) và Nước ngọt/Trà đá (+10K) khi mua Cơm Gà Xối Mỡ hoặc Mì Cay 40K."
+      "insight": "Để giữ tỷ lệ Cost nguyên liệu của FOOD STATION 7A dưới 36%, luôn gợi ý khách gọi kèm Trứng/Phô mai (+5K) và Nước ngọt/Trà đá (+10K) khi mua Cơm Gà Xối Mỡ hoặc Mì Cay 40K."
     },
     {
       "id": "m7a_3",
       "time": "Tự học Marketing",
       "agent": "🚀 NV5 Bảo Ngọc (Claude Creative)",
       "engine": "kr/claude-sonnet-4.5",
-      "insight": "Khung giờ 10h00 và 16h15 đăng bài hình ảnh thật Cơm Gà Xối Mỡ (40K), Mì Xào Giòn (40K), Mì Cay 7 Cấp Độ (40K) vào hội nhóm cư dân Hóc Môn mang lại lượng bấm link đặt món cao nhất."
+      "insight": "Khung giờ 10h00 và 16h15 đăng bài hình ảnh thật Cơm Gà Xối Mỡ (40K), Mì Xào Giòn (40K), Mì Cay 7 Cấp Độ (40K) vào hội nhóm cư dân Phước Thiện mang lại lượng bấm link đặt món cao nhất."
     }
   ],
   "store_comtam": [
