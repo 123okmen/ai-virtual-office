@@ -8,7 +8,7 @@
     <title>Văn Phòng Ảo AI 3D 24/7 | Hệ Thống Nhân Viên AI CODEX × CLAUDE (Quản Lý Chuỗi 3 Quán)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="lucide.min.js"></script>
     <script src="three.min.js"></script>
     <script>
@@ -53,8 +53,8 @@
         body {
             background-color: var(--bg-dark);
             color: var(--text-main);
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            min-height: 100vh;
+            font-family: 'Manrope', system-ui, sans-serif;
+            min-height: 100dvh;
             display: flex;
             overflow-x: hidden;
         }
@@ -63,7 +63,7 @@
         .sidebar {
             width: 295px;
             background: rgba(13, 20, 36, 0.97);
-            border-right: 1px solid var(--border);
+            ;
             display: flex;
             flex-direction: column;
             position: fixed;
@@ -74,7 +74,7 @@
 
         .brand {
             padding: 1rem 1.15rem;
-            border-bottom: 1px solid var(--border);
+            ;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -83,16 +83,16 @@
         .brand-logo {
             width: 44px; height: 44px;
             border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary), var(--accent-purple), var(--accent-amber));
+            background: #1F1F1F;
             display: flex; align-items: center; justify-content: center;
             color: #fff; font-weight: 800; font-size: 0.95rem;
-            box-shadow: 0 0 20px var(--primary-glow);
+            box-shadow: 0 0 20px var(--primary-glow), inset 3px 0 0 #F59E0B;
             flex-shrink: 0;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Manrope', system-ui, sans-serif;
         }
 
         .brand-title h1 {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Manrope', system-ui, sans-serif;
             font-size: 0.98rem;
             font-weight: 800;
             letter-spacing: -0.02em;
@@ -118,15 +118,15 @@
         }
 
         @keyframes pulse {
-            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0); }
-            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+            0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7), inset 3px 0 0 #F59E0B; }
+            70% { transform: scale(1); box-shadow: 0 0 0 8px rgba(16, 185, 129, 0), inset 3px 0 0 #F59E0B; }
+            100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0), inset 3px 0 0 #F59E0B; }
         }
 
         /* CHUYỂN ĐỔI 3 QUÁN ĐỘC LẬP */
         .store-switcher-panel {
             padding: 0.8rem 0.95rem;
-            border-bottom: 1px solid var(--border);
+            ;
             background: rgba(255, 255, 255, 0.02);
         }
 
@@ -158,7 +158,7 @@
             color: var(--text-sub);
             cursor: pointer;
             transition: all 0.2s;
-            font-family: inherit;
+            font-family: 'Manrope', system-ui, sans-serif;
         }
 
         .store-switch-btn:hover {
@@ -170,14 +170,14 @@
             background: rgba(16, 185, 129, 0.16);
             border-color: var(--primary);
             color: #fff;
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.16);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.16), inset 3px 0 0 #F59E0B;
         }
 
         .store-switch-btn.active-cafe {
             background: rgba(217, 119, 6, 0.22);
             border-color: #f59e0b;
             color: #fff;
-            box-shadow: 0 0 15px rgba(217, 119, 6, 0.25);
+            box-shadow: 0 0 15px rgba(217, 119, 6, 0.25), inset 3px 0 0 #F59E0B;
         }
 
         .active-store-banner-pill.banner-cafe {
@@ -188,19 +188,19 @@
 
         .store-finance-card.card-cafe {
             border-color: rgba(217, 119, 6, 0.35);
-            background: linear-gradient(145deg, rgba(30, 41, 59, 0.7), rgba(120, 53, 15, 0.12));
+            background: #1F1F1F;
         }
 
         .store-finance-card.card-cafe.selected-focus {
             border-color: #d97706;
-            box-shadow: 0 0 20px rgba(217, 119, 6, 0.28);
+            box-shadow: 0 0 20px rgba(217, 119, 6, 0.28), inset 3px 0 0 #F59E0B;
         }
 
         .store-switch-btn.active-comtam {
             background: rgba(245, 158, 11, 0.16);
             border-color: var(--accent-amber);
             color: #fff;
-            box-shadow: 0 0 15px rgba(245, 158, 11, 0.16);
+            box-shadow: 0 0 15px rgba(245, 158, 11, 0.16), inset 3px 0 0 #F59E0B;
         }
 
         .store-switch-btn .st-title {
@@ -244,7 +244,7 @@
             border-radius: var(--radius-sm);
             color: var(--text-sub);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.2s cubic-bezier(0.22,1,0.36,1);
             font-size: 0.82rem;
             font-weight: 500;
             border: 1px solid transparent;
@@ -284,7 +284,7 @@
 
         .sidebar-footer {
             padding: 0.75rem 0.95rem;
-            border-top: 1px solid var(--border);
+            ;
             background: rgba(6, 9, 19, 0.75);
         }
 
@@ -307,14 +307,14 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 100dvh;
             width: calc(100% - 295px);
         }
 
         .topbar {
             height: 62px;
             background: rgba(13, 20, 36, 0.92);
-            border-bottom: 1px solid var(--border);
+            ;
             padding: 0 1.35rem;
             display: flex;
             align-items: center;
@@ -395,7 +395,7 @@
             cursor: pointer;
             border: 1px solid transparent;
             transition: all 0.2s;
-            font-family: inherit;
+            font-family: 'Manrope', system-ui, sans-serif;
             color: var(--text-main);
             text-decoration: none;
         }
@@ -415,17 +415,17 @@
         .btn-outline:hover { background: var(--bg-card-hover); border-color: var(--text-sub); }
 
         .btn-purple {
-            background: linear-gradient(135deg, #8b5cf6, #6366f1);
+            background: #8b5cf6;
             color: #fff;
         }
 
         .btn-amber {
-            background: linear-gradient(135deg, #f59e0b, #ea580c);
+            background: #f59e0b;
             color: #fff;
         }
 
         .btn-cyan {
-            background: linear-gradient(135deg, #06b6d4, #2563eb);
+            background: #06b6d4;
             color: #fff;
         }
 
@@ -435,7 +435,7 @@
             flex: 1;
         }
 
-        .tab-pane { display: none; animation: fadeIn 0.2s ease; }
+        .tab-pane { display: none; animation: fadeIn 0.2s cubic-bezier(0.22,1,0.36,1); }
         .tab-pane.active { display: block; }
 
         @keyframes fadeIn {
@@ -453,7 +453,7 @@
             border: 1px solid rgba(16, 185, 129, 0.4);
             overflow: hidden;
             margin-bottom: 1.2rem;
-            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.75);
+            box-shadow: 0 15px 40px -10px rgba(0, 0, 0, 0.75), inset 3px 0 0 #F59E0B;
         }
 
         #threeOfficeCanvas {
@@ -485,7 +485,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.1s cubic-bezier(0.22,1,0.36,1);
             user-select: none;
         }
 
@@ -499,10 +499,10 @@
             max-width: 215px;
             text-align: center;
             margin-bottom: 4px;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.65), inset 3px 0 0 #F59E0B;
             line-height: 1.32;
             backdrop-filter: blur(6px);
-            animation: floatBubble 2.5s ease-in-out infinite;
+            animation: floatBubble 2.5s cubic-bezier(0.22,1,0.36,1) infinite;
         }
 
         @keyframes floatBubble {
@@ -521,7 +521,7 @@
             font-size: 0.68rem;
             font-weight: 700;
             white-space: nowrap;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 3px 0 0 #F59E0B;
         }
 
         .char-xp-bar-wrap {
@@ -535,8 +535,8 @@
 
         .char-xp-bar-fill {
             height: 100%;
-            background: linear-gradient(90deg, #10b981, #06b6d4, #8b5cf6);
-            transition: width 0.3s ease;
+            background: #10b981;
+            transition: width 0.3s cubic-bezier(0.22,1,0.36,1);
         }
 
         /* 3D HUD OVERLAYS */
@@ -557,7 +557,7 @@
             border-radius: 10px;
             padding: 0.55rem 0.8rem;
             pointer-events: auto;
-            box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.5), inset 3px 0 0 #F59E0B;
         }
 
         .hud-controls-row {
@@ -577,7 +577,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.18s;
-            font-family: inherit;
+            font-family: 'Manrope', system-ui, sans-serif;
         }
 
         .hud-btn:hover, .hud-btn.active {
@@ -652,16 +652,16 @@
 
         .store-finance-card.card-7a {
             border-color: rgba(16, 185, 129, 0.35);
-            background: linear-gradient(145deg, rgba(16, 185, 129, 0.08), rgba(15, 23, 42, 0.95));
+            background: #1F1F1F;
         }
 
         .store-finance-card.card-comtam {
             border-color: rgba(245, 158, 11, 0.35);
-            background: linear-gradient(145deg, rgba(245, 158, 11, 0.08), rgba(15, 23, 42, 0.95));
+            background: #1F1F1F;
         }
 
         .store-finance-card.selected-focus {
-            box-shadow: 0 0 25px rgba(16, 185, 129, 0.18);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.18), inset 3px 0 0 #F59E0B;
             transform: translateY(-2px);
         }
 
@@ -671,11 +671,11 @@
             align-items: flex-start;
             margin-bottom: 0.75rem;
             padding-bottom: 0.6rem;
-            border-bottom: 1px solid var(--border);
+            ;
         }
 
         .sfc-title h3 {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Manrope', system-ui, sans-serif;
             font-size: 0.98rem;
             font-weight: 800;
             display: flex;
@@ -711,7 +711,7 @@
         }
 
         .sfc-metric-box strong {
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Manrope', system-ui, sans-serif;
             font-size: 1rem;
             margin-top: 0.15rem;
             display: block;
@@ -753,7 +753,7 @@
             justify-content: space-between;
             margin-bottom: 0.95rem;
             padding-bottom: 0.7rem;
-            border-bottom: 1px solid var(--border);
+            ;
             flex-wrap: wrap;
             gap: 0.5rem;
         }
@@ -762,7 +762,7 @@
             display: flex;
             align-items: center;
             gap: 0.55rem;
-            font-family: 'Outfit', sans-serif;
+            font-family: 'Manrope', system-ui, sans-serif;
             font-size: 1rem;
             font-weight: 700;
         }
@@ -783,7 +783,7 @@
             padding: 0.48rem 0.65rem;
             border-radius: 6px;
             background: rgba(255, 255, 255, 0.025);
-            border-left: 3px solid var(--secondary);
+            ;
             line-height: 1.45;
         }
 
@@ -813,7 +813,7 @@
             color: var(--text-main);
             padding: 0.58rem 0.78rem;
             border-radius: var(--radius-sm);
-            font-family: inherit;
+            font-family: 'Manrope', system-ui, sans-serif;
             font-size: 0.83rem;
             outline: none;
         }
@@ -872,7 +872,7 @@
         .chat-input-bar {
             padding: 0.65rem;
             background: var(--bg-panel);
-            border-top: 1px solid var(--border);
+            ;
             display: flex;
             gap: 0.5rem;
         }
@@ -922,7 +922,7 @@
         .data-table th, .data-table td {
             padding: 0.65rem 0.8rem;
             text-align: left;
-            border-bottom: 1px solid var(--border);
+            ;
         }
 
         .data-table th {
@@ -1011,7 +1011,7 @@
             font-size: 0.85rem;
             font-weight: 700;
             cursor: pointer;
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6);
+            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.6), inset 3px 0 0 #F59E0B;
             align-items: center;
             gap: 6px;
         }
@@ -1118,7 +1118,7 @@
             <div class="nav-section-title">Agency Tinh Hoa (Github Suite)</div>
             <div class="nav-item" data-tab="agency" onclick="switchTab('agency')">
                 <div class="nav-item-left"><i data-lucide="sparkles" size="17" style="color:#f43f5e;"></i> Elite Agency Swarm</div>
-                <span class="agent-badge" style="background:linear-gradient(135deg, #f43f5e, #8b5cf6); color:#fff; font-weight:700;">8 AGENCY</span>
+                <span class="agent-badge" style="background:#f43f5e; color:#fff; font-weight:700;">8 AGENCY</span>
             </div>
 
             <div class="nav-section-title">5 Nhân Viên AI 3D (Theo Quán)</div>
@@ -1216,7 +1216,7 @@
                         <div class="hud-box">
                             <div style="display:flex;align-items:center;gap:0.5rem;margin-bottom:0.3rem;">
                                 <span class="pulse-dot"></span>
-                                <strong style="font-family:'Outfit',sans-serif;font-size:0.86rem;" id="hud3DStoreTitle">MÔ PHỎNG 3D: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (HÓC MÔN)</strong>
+                                <strong style="font-family:'Manrope','JetBrains Mono',sans-serif;font-size:0.86rem;" id="hud3DStoreTitle">MÔ PHỎNG 3D: CAFE ĂN VẶT TRẠM KHỞI NGHIỆP (HÓC MÔN)</strong>
                                 <span class="status-pill pill-cyan" id="hudEngineModePill">Codex × Claude Active</span>
                             </div>
                             <div style="font-size:0.71rem;color:var(--text-sub);">
@@ -1519,10 +1519,10 @@
             
         <!-- TAB AGENCY: HỆ THỐNG 8 AGENCY TINH HOA TÍCH HỢP TỪ GITHUB -->
         <div id="tab-agency" class="tab-pane">
-            <div class="panel" style="background:linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9)); border: 1px solid rgba(139, 92, 246, 0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+            <div class="panel" style="background:rgba(30, 41, 59, 0.7); border: 1px solid rgba(139, 92, 246, 0.35); box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
                 <div class="panel-header" style="flex-direction:column; align-items:flex-start; gap:0.5rem; padding-bottom:1rem; border-bottom:1px solid rgba(255,255,255,0.08);">
                     <div style="display:flex; justify-content:space-between; align-items:center; width:100%; flex-wrap:wrap; gap:0.75rem;">
-                        <div class="panel-title" style="font-size:1.25rem; font-weight:800; background:linear-gradient(135deg, #a78bfa, #f43f5e, #38bdf8); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+                        <div class="panel-title" style="font-size:1.25rem; font-weight:800; background:#a78bfa; -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
                             <i data-lucide="sparkles" size="24" style="color:#a78bfa; margin-right:0.5rem; vertical-align:middle;"></i>
                             Bộ Điều Hành 8 Agency Tinh Hoa (Github Agency Suite)
                         </div>
@@ -5984,5 +5984,9 @@ Vui lòng kiểm tra lại kết nối 9Router hoặc thực hiện trực tiế
         </div>
     </div>
 
+<script>
+/* fail-safe: khong de noi dung bi an neu scroll-reveal khong kich hoat */
+setTimeout(function(){document.querySelectorAll('.reveal,[class*="reveal"]').forEach(function(el){el.classList.add('visible','is-visible','in-view','revealed');});},1800);
+</script>
 </body>
 </html>
